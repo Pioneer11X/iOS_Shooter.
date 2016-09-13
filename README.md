@@ -2,4 +2,4 @@
 
 A retro style Galaxian Shooter.
 
-Getting sounds from http://www.bfxr.net/
+Making sounds from http://www.bfxr.net/
