@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		19CEA4301D8E670E0098620E /* LaserParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 19CEA42E1D8E670E0098620E /* LaserParticle.sks */; };
+		19CEA4311D8E670E0098620E /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 19CEA42F1D8E670E0098620E /* spark.png */; };
 		A03E70581D885790006C50E9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03E70571D885790006C50E9 /* AppDelegate.swift */; };
 		A03E705A1D885790006C50E9 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = A03E70591D885790006C50E9 /* GameScene.sks */; };
 		A03E705C1D885790006C50E9 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03E705B1D885790006C50E9 /* GameScene.swift */; };
@@ -17,6 +19,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		19CEA42E1D8E670E0098620E /* LaserParticle.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = LaserParticle.sks; sourceTree = "<group>"; };
+		19CEA42F1D8E670E0098620E /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spark.png; sourceTree = "<group>"; };
 		A03E70541D885790006C50E9 /* iOS_Shooter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iOS_Shooter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A03E70571D885790006C50E9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A03E70591D885790006C50E9 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -42,6 +46,8 @@
 		A03E704B1D885790006C50E9 = {
 			isa = PBXGroup;
 			children = (
+				19CEA42E1D8E670E0098620E /* LaserParticle.sks */,
+				19CEA42F1D8E670E0098620E /* spark.png */,
 				A03E70561D885790006C50E9 /* iOS_Shooter */,
 				A03E70551D885790006C50E9 /* Products */,
 			);
@@ -131,9 +137,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				A03E705A1D885790006C50E9 /* GameScene.sks in Resources */,
+				19CEA4311D8E670E0098620E /* spark.png in Resources */,
 				A03E70661D885790006C50E9 /* LaunchScreen.storyboard in Resources */,
 				A03E70631D885790006C50E9 /* Assets.xcassets in Resources */,
 				A03E70611D885790006C50E9 /* Main.storyboard in Resources */,
+				19CEA4301D8E670E0098620E /* LaserParticle.sks in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
