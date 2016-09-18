@@ -12,6 +12,8 @@ class GameScene: SKScene {
     
     var playerShip:SKSpriteNode!
     
+    var scoreLabel:SKLabelNode = SKLabelNode(fontNamed:"Chalkduster")
+    
     let rocketSpeed:Double = 1000
     
     var numFingersTouching = 0
@@ -25,12 +27,20 @@ class GameScene: SKScene {
     let rateOfFire:Double = 2
     
     override func didMove(to view: SKView) {
+        
         /* Setup your scene here */
-        let scoreLabel = SKLabelNode(fontNamed:"Chalkduster")
         scoreLabel.text = "Score: 0"
         scoreLabel.fontSize = 24
         scoreLabel.fontColor = SKColor.black
-        scoreLabel.position = CGPoint(x: 100, y: 100)
+        
+//        let xpos = (self.size.width/2)
+//        let ypos = (self.size.height/2)
+        
+        let xpos = 300
+        let ypos = 720
+        
+        print("x: \(xpos) , y: \(ypos)");
+        scoreLabel.position = CGPoint(x: xpos , y: ypos)
         
         self.addChild(scoreLabel)
         
