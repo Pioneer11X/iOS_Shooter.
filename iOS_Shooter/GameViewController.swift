@@ -18,6 +18,11 @@ class GameViewController: UIViewController {
     let showDebugData = true;
     let screenbounds: CGRect = UIScreen.main.bounds
     let scaleMode = SKSceneScaleMode.aspectFill;
+    
+    // MARK: - Initialising the Game Data
+    
+    var gameData: GameData = GameData();
+    
 
     override func viewDidLoad() {
 
@@ -39,16 +44,23 @@ class GameViewController: UIViewController {
         let scene = InstructionsScene(size: screenSize, scaleMode: scaleMode, sceneManager: self);
         skView.presentScene(scene);
     }
+    
+    func loadGameScene(level: Int){
+        let screenSize:CGSize = CGSize(width:screenbounds.width, height: screenbounds.height);
+        let scene = LevelScene( currentLevel: 0, gameData: gameData, size: screenSize,scaleMode: scaleMode, sceneManager: self)
+        skView.presentScene(scene);
+    }
 
     override var shouldAutorotate : Bool {
         return true
     }
 
     override var supportedInterfaceOrientations : UIInterfaceOrientationMask {
-        if UIDevice.current.userInterfaceIdiom == .phone {
-            return .allButUpsideDown
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            return .landscape
         } else {
-            return .all
+            // TODO: - Should we put this here -
+            return .landscape
         }
     }
 
@@ -60,4 +72,27 @@ class GameViewController: UIViewController {
     override var prefersStatusBarHidden : Bool {
         return true
     }
+    
+    func loadGameData(){
+        self.gameData.fontSize = 24;
+        self.gameData.fontColor = UIColor.red;
+        self.gameData.fontName = "Chalkduster";
+        self.gameData.currentLevel = 1;
+        self.gameData.player1 = Player();
+        self.gameData.player2 = Player();
+    }
+    
+ 
+    
+}
+
+class GameData {
+    
+    var fontSize: CGFloat = 24;
+    var fontColor = UIColor.red;
+    var fontName: String = "Chalkduster";
+    var currentLevel = 0;
+    var player1: Player = Player();
+    var player2: Player = Player();
+    
 }

@@ -58,6 +58,7 @@ class HomeScene:SKScene{
             
             if startGameLabel.contains(location){
                 print("Label Pressed");
+                sceneManager.loadGameScene(level: 1);
                 // TODO: - Need to take them to the Game Scene.
             }else if instructionsLabel.contains(location){
                 print("You need Instruction for this game?");
