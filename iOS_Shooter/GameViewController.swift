@@ -10,24 +10,34 @@ import UIKit
 import SpriteKit
 
 class GameViewController: UIViewController {
+    
+    // MARK: - iVars -
+    
+    var gameScene: GameScene?
+    var skView: SKView!
+    let showDebugData = true;
+    let screenbounds: CGRect = UIScreen.main.bounds
+    let scaleMode = SKSceneScaleMode.aspectFill;
 
     override func viewDidLoad() {
-        super.viewDidLoad()
 
-        if let scene = GameScene(fileNamed:"HomeScene") {
-            // Configure the view.
-            let skView = self.view as! SKView
-            skView.showsFPS = true
-            skView.showsNodeCount = true
-            
-            /* Sprite Kit applies additional optimizations to improve rendering performance */
-            skView.ignoresSiblingOrder = true
-            
-            /* Set the scale mode to scale to fit the window */
-            scene.scaleMode = .aspectFill
-            
-            skView.presentScene(scene)
-        }
+        super.viewDidLoad()
+        skView = self.view as! SKView
+        loadHomeScene();
+
+    }
+    
+    // MARK: - Scene Management
+    func loadHomeScene(){
+        let screenSize:CGSize = CGSize(width:screenbounds.width, height: screenbounds.height);
+        let scene = HomeScene(size: screenSize, scaleMode: scaleMode, sceneManager: self);
+        skView.presentScene(scene);
+    }
+    
+    func loadInstructionsScene(){
+        let screenSize:CGSize = CGSize(width:screenbounds.width, height: screenbounds.height);
+        let scene = InstructionsScene(size: screenSize, scaleMode: scaleMode, sceneManager: self);
+        skView.presentScene(scene);
     }
 
     override var shouldAutorotate : Bool {
