@@ -21,6 +21,7 @@ class LevelScene: SKScene {
     var player1LifeLabel: SKLabelNode! ;
     var player2LifeLabel: SKLabelNode! ;
     var gameData: GameData;
+    var groundNode: SKSpriteNode! ;
     
     init(currentLevel: Int, gameData: GameData, size: CGSize, scaleMode: SKSceneScaleMode, sceneManager: GameViewController) {
         
@@ -33,6 +34,7 @@ class LevelScene: SKScene {
         player2LifeLabel = SKLabelNode(fontNamed: gameData.fontName);
         self.gameData = gameData;
         self.currentLevel = currentLevel;
+        groundNode = SKSpriteNode(imageNamed: "ground");
         
         super.init(size:size);
         
@@ -45,10 +47,22 @@ class LevelScene: SKScene {
     }
     
     override func didMove(to view: SKView){
-        self.addChild(player1ScoreLabel);
-        self.addChild(levelLabel);
         
-        initLabel(label: player1ScoreLabel, gameData: gameData, text: "\(gameData.player1.score)", pos: CGPoint(x: self.size.width/4, y: self.size.height - 50 ) );
+        initLabel(label: levelLabel, gameData: gameData, text: "Round: \(currentLevel)", pos: CGPoint(x: self.size.width/2 , y: self.size.height - 50 ) );
+        initLabel(label: player1ScoreLabel, gameData: gameData, text: "Score: \(gameData.player1.score)", pos: CGPoint(x: self.size.width/4, y: self.size.height - 50 ) );
+        initLabel(label: player2ScoreLabel, gameData: gameData, text: "Score: \(gameData.player1.score)", pos: CGPoint(x: 3 * self.size.width/4, y: self.size.height - 50 ) );
+        initLabel(label: player1LifeLabel, gameData: gameData, text: "Lives: \(gameData.player1.lifes)", pos: CGPoint(x: self.size.width/4, y: self.size.height - 100 ) );
+        initLabel(label: player2LifeLabel, gameData: gameData, text: "Lives: \(gameData.player1.lifes)", pos: CGPoint(x: 3 * self.size.width/4, y: self.size.height - 100 ) );
+        
+        groundNode.position = CGPoint(x: self.size.width/2, y: 10 );
+        groundNode.zPosition = 2.0
+        
+        self.addChild(player1ScoreLabel);
+        self.addChild(player2ScoreLabel);
+        self.addChild(player1LifeLabel);
+        self.addChild(player2LifeLabel);
+        self.addChild(levelLabel);
+        self.addChild(groundNode);
         
     }
     
@@ -71,6 +85,7 @@ class LevelScene: SKScene {
         label.fontSize = gameData.fontSize;
         label.fontColor = gameData.fontColor;
         label.position = pos;
+        label.zPosition = 3
     }
     
 }
