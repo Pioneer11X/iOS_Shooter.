@@ -83,7 +83,7 @@ class LevelScene: SKScene {
         run(SKAction.repeatForever(
             SKAction.sequence([
                 SKAction.run(addTanks),
-                SKAction.wait(forDuration: 1.0)
+                SKAction.wait(forDuration: 3.0)
                 ])
         ))
         run(SKAction.repeatForever(
@@ -108,7 +108,7 @@ class LevelScene: SKScene {
         tank.physicsBody?.affectedByGravity = false;
         
 //        let actualDuration = random(min: CGFloat(2.0), max: CGFloat(4.0));
-        let tankMoveDuration = 5.0
+        let tankMoveDuration = 7.0
         
 //        let tankSpawn = CGPoint(x: self.size.width , y: random(min:CGFloat(50), max:CGPoint(100)));
         let tankSpawn = CGPoint(x: self.size.width , y: 70);
@@ -122,6 +122,31 @@ class LevelScene: SKScene {
         
         self.addChild(tank);
         tank.run(SKAction.sequence([actionMove, actionMoveDone]))
+        
+//        while true {
+            callTankProjectile(tank: tank);
+//        }
+        
+        
+        
+        
+    }
+    
+    func callTankProjectile(tank: SKSpriteNode){
+        
+        // MARK: - NPC projectile logic
+        
+        let tankProjectile = SKSpriteNode(imageNamed: "projectile");
+        tankProjectile.xScale = 0.1;
+        tankProjectile.yScale = 0.1;
+        tankProjectile.position = CGPoint(x: tank.position.x - tank.size.width/3, y: 80);
+        self.addChild(tankProjectile);
+        
+        let tankProjectileAction = SKAction.move(to: CGPoint(x:player1Node.position.x,y:80), duration: 3.0)
+        let tankProjectileActionDone = SKAction.removeFromParent();
+        
+        tankProjectile.run(SKAction.sequence([tankProjectileAction,tankProjectileActionDone]));
+        
         
     }
     
