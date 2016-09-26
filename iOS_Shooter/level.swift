@@ -126,12 +126,15 @@ class LevelScene: SKScene {
     }
     
     func addPlanes(){
+        
         let plane = SKSpriteNode(imageNamed: "Spaceship");
         
         let planeMoveDuration = 3.0
-        
-//        let tankSpawn = CGPoint(x: self.size.width , y: random(min:CGFloat(50), max:CGPoint(100)));
         let planeSpawn = CGPoint(x: self.size.width , y: self.size.height/2);
+        
+        plane.xScale = 0.2;
+        plane.yScale = 0.2;
+        plane.zRotation = .pi/2 ;
         plane.position = planeSpawn;
         plane.zPosition = 3.0;
         
@@ -146,11 +149,17 @@ class LevelScene: SKScene {
     func initialisePlayers(){
         
         player1Node = SKSpriteNode(imageNamed: "player1");
-//        player1Node.xScale = 0.1;
-//        player1Node.yScale = 0.1;
-        //player1Node.position = CGPoint(x: self.size.width/4, y: self.size.height/2 );
         player1Node.position = CGPoint(x: self.size.width/6, y: 70);
         player1Node.zPosition = 3.0
+        
+        // TODO: - Physics for the Player -
+        
+        player1Node.physicsBody = SKPhysicsBody(rectangleOf: player1Node.size);
+        player1Node.physicsBody?.isDynamic = true;
+        player1Node.physicsBody?.categoryBitMask = PhysicsCategory.Player;
+        player1Node.physicsBody?.contactTestBitMask = PhysicsCategory.Projectile + PhysicsCategory.Tank;
+        player1Node.physicsBody?.collisionBitMask = PhysicsCategory.None;
+        player1Node.physicsBody?.affectedByGravity = false;
         
         
         player2Node = SKSpriteNode(imageNamed: "player2");
@@ -166,6 +175,23 @@ class LevelScene: SKScene {
         label.fontColor = gameData.fontColor;
         label.position = pos;
         label.zPosition = 3
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        // We need to shoot. So, we start with creating a new projectile.
+        
+        let projectile = SKSpriteNode(imageNamed: "projectile");
+        projectile.position = CGPoint(x: player1Node.position.x + player1Node.size.width/3, y: 80 );
+        projectile.xScale = 0.1;
+        projectile.yScale = 0.1;
+        self.addChild(projectile);
+        
+        let projectileMove = SKAction.move(to: CGPoint(x:self.size.width,y:80), duration: 3.0);
+        let projectileMoveDone = SKAction.removeFromParent();
+        projectile.run(SKAction.sequence([
+            projectileMove,
+            projectileMoveDone
+            ]));
     }
     
 }
