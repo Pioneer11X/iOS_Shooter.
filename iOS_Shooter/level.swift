@@ -23,6 +23,14 @@ class LevelScene: SKScene {
     var gameData: GameData;
     var groundNode: SKSpriteNode! ;
     
+    struct PhysicsCategory {
+        static let None      : UInt32 = 0
+        static let All       : UInt32 = UInt32.max
+        static let Tank   : UInt32 = 0b1
+        static let Projectile: UInt32 = 0b10
+        static let Player: UInt32 = 0b100
+    }
+    
     init(currentLevel: Int, gameData: GameData, size: CGSize, scaleMode: SKSceneScaleMode, sceneManager: GameViewController) {
         
         
@@ -34,7 +42,9 @@ class LevelScene: SKScene {
         player2LifeLabel = SKLabelNode(fontNamed: gameData.fontName);
         self.gameData = gameData;
         self.currentLevel = currentLevel;
+        
         groundNode = SKSpriteNode(imageNamed: "ground");
+        player2Node = SKSpriteNode(imageNamed: "player2");
         
         super.init(size:size);
         
@@ -56,28 +66,98 @@ class LevelScene: SKScene {
         
         groundNode.position = CGPoint(x: self.size.width/2, y: 10 );
         groundNode.zPosition = 2.0
+
+        initialisePlayers();
         
         self.addChild(player1ScoreLabel);
-        self.addChild(player2ScoreLabel);
+        //self.addChild(player2ScoreLabel);
         self.addChild(player1LifeLabel);
-        self.addChild(player2LifeLabel);
+        //self.addChild(player2LifeLabel);
         self.addChild(levelLabel);
         self.addChild(groundNode);
+        self.addChild(player1Node);
+        //self.addChild(player2Node);
+        
+//        addTanks();
+        
+        run(SKAction.repeatForever(
+            SKAction.sequence([
+                SKAction.run(addTanks),
+                SKAction.wait(forDuration: 1.0)
+                ])
+        ))
+        run(SKAction.repeatForever(
+            SKAction.sequence([
+                SKAction.wait(forDuration: 4.0),
+                SKAction.run(addPlanes)
+                ])
+        ))
+        
+    }
+    
+    func addTanks(){
+        let tank = SKSpriteNode(imageNamed: "player2");
+        
+        // TODO: - Add the Physics for Collision here -
+        
+        tank.physicsBody = SKPhysicsBody(rectangleOf: tank.size);
+        tank.physicsBody?.isDynamic = true;
+        tank.physicsBody?.categoryBitMask = PhysicsCategory.Tank;
+        tank.physicsBody?.contactTestBitMask = PhysicsCategory.Projectile + PhysicsCategory.Player;
+        tank.physicsBody?.collisionBitMask = PhysicsCategory.None;
+        tank.physicsBody?.affectedByGravity = false;
+        
+//        let actualDuration = random(min: CGFloat(2.0), max: CGFloat(4.0));
+        let tankMoveDuration = 5.0
+        
+//        let tankSpawn = CGPoint(x: self.size.width , y: random(min:CGFloat(50), max:CGPoint(100)));
+        let tankSpawn = CGPoint(x: self.size.width , y: 70);
+        tank.position = tankSpawn;
+        tank.zPosition = 3.0;
+        
+        let targetPoint = CGPoint(x: -tank.size.width/2, y: tank.position.y);
+        
+        let actionMove = SKAction.move(to: targetPoint, duration: TimeInterval(tankMoveDuration))
+        let actionMoveDone = SKAction.removeFromParent() // This should Ideally be never called. Since either the tank collides with the player and he dies or the tank is destroyed before it can touch the player.
+        
+        self.addChild(tank);
+        tank.run(SKAction.sequence([actionMove, actionMoveDone]))
+        
+    }
+    
+    func addPlanes(){
+        let plane = SKSpriteNode(imageNamed: "Spaceship");
+        
+        let planeMoveDuration = 3.0
+        
+//        let tankSpawn = CGPoint(x: self.size.width , y: random(min:CGFloat(50), max:CGPoint(100)));
+        let planeSpawn = CGPoint(x: self.size.width , y: self.size.height/2);
+        plane.position = planeSpawn;
+        plane.zPosition = 3.0;
+        
+        let actionMove = SKAction.move(to: CGPoint(x: -plane.size.width/2, y: plane.position.y), duration: TimeInterval(planeMoveDuration))
+        let actionMoveDone = SKAction.removeFromParent() // This should Ideally be never called. Since either the tank collides with the player and he dies or the tank is destroyed before it can touch the player.
+        
+        self.addChild(plane);
+        plane.run(SKAction.sequence([actionMove, actionMoveDone]))
         
     }
     
     func initialisePlayers(){
         
         player1Node = SKSpriteNode(imageNamed: "player1");
-        player1Node.xScale = 0.1;
-        player1Node.yScale = 0.1;
-        player1Node.position = CGPoint(x: self.size.width/4, y: self.size.height/2 );
+//        player1Node.xScale = 0.1;
+//        player1Node.yScale = 0.1;
+        //player1Node.position = CGPoint(x: self.size.width/4, y: self.size.height/2 );
+        player1Node.position = CGPoint(x: self.size.width/6, y: 70);
+        player1Node.zPosition = 3.0
         
         
         player2Node = SKSpriteNode(imageNamed: "player2");
-        player2Node.xScale = 0.1;
-        player2Node.yScale = 0.1;
-        player2Node.position = CGPoint(x: 3 * self.size.width/4, y: self.size.height/2 );
+//        player2Node.xScale = 0.1;
+//        player2Node.yScale = 0.1;
+        player2Node.position = CGPoint(x: 5 * self.size.width/6, y: 70 );
+        player2Node.zPosition = 3.0
     }
     
     func initLabel(label: SKLabelNode, gameData: GameData, text: String, pos: CGPoint){
