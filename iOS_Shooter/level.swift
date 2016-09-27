@@ -90,8 +90,6 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         
         super.init(size:size);
         
-        
-        
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -110,6 +108,11 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         
         groundNode.position = CGPoint(x: self.size.width/2, y: 10 );
         groundNode.zPosition = 2.0
+        
+        // background music
+        let backgroundMusic = SKAudioNode(fileNamed: "Super Power Cool Dude")
+        backgroundMusic.autoplayLooped = true
+        addChild(backgroundMusic)
 
         initialisePlayers();
         
@@ -241,14 +244,16 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         
         // MARK: - NPC projectile logic
         
-        let tankProjectile = SKSpriteNode(imageNamed: "projectile");
-        tankProjectile.xScale = 0.1;
-        tankProjectile.yScale = 0.3;
+        //let tankProjectile = SKSpriteNode(imageNamed: "projectile");
+        let tankProjectile = SKEmitterNode(fileNamed: "SmokeTrail")!
+        //tankProjectile.xScale = 0.1;
+        //tankProjectile.yScale = 0.3;
+        tankProjectile.zRotation = CGFloat.pi / 2;
         tankProjectile.position = CGPoint(x: tank.position.x - tank.size.width/3, y: 80);
         self.addChild(tankProjectile);
         
         // TODO: - Add the physics for projectiles.
-        tankProjectile.physicsBody = SKPhysicsBody(rectangleOf: tankProjectile.size);
+        tankProjectile.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 20, height: 20));
         tankProjectile.physicsBody?.isDynamic = true;
         tankProjectile.physicsBody?.categoryBitMask = PhysicsCategory.Projectile;
 //        tankProjectile.physicsBody?.contactTestBitMask = PhysicsCategory.Projectile + PhysicsCategory.Player;
@@ -303,14 +308,20 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         
         // MARK: - NPC projectile logic
         
-        let planeProjectile = SKSpriteNode(imageNamed: "projectile");
-        planeProjectile.xScale = 0.1;
-        planeProjectile.yScale = 0.1;
+        //let planeProjectile = SKSpriteNode(imageNamed: "projectile");
+        let planeProjectile = SKEmitterNode(fileNamed: "SmokeTrail")!
+        //planeProjectile.xScale = 0.1;
+        //planeProjectile.yScale = 0.1;
         planeProjectile.position = CGPoint(x: plane.position.x - plane.size.width/3, y: self.size.height/2);
         self.addChild(planeProjectile);
         
+        let direction = player1Node.position - plane.position;
+        
+        // rotate projectile on shoot
+        planeProjectile.zRotation = CGFloat.pi - atan(direction.x/direction.y)
+        
         // TODO: - Add the physics for projectiles.
-        planeProjectile.physicsBody = SKPhysicsBody(rectangleOf: planeProjectile.size);
+        planeProjectile.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 20, height: 20));
         planeProjectile.physicsBody?.isDynamic = true;
         planeProjectile.physicsBody?.categoryBitMask = PhysicsCategory.Projectile;
 //        planeProjectile.physicsBody?.contactTestBitMask = PhysicsCategory.Projectile + PhysicsCategory.Player;
@@ -369,10 +380,12 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         
         // We need to shoot. So, we start with creating a new projectile.
         
-        let projectile = SKSpriteNode(imageNamed: "projectile");
+        //let projectile = SKSpriteNode(imageNamed: "projectile");
+        let projectile = SKEmitterNode(fileNamed: "SmokeTrail")!
         projectile.position = CGPoint(x: player1Node.position.x + player1Node.size.width/3, y: 80 );
-        projectile.xScale = 0.1;
-        projectile.yScale = 0.3;
+        //projectile.xScale = 0.1;
+        //projectile.yScale = 0.3;
+        
         self.addChild(projectile);
         
         var offset = (touchLocation - projectile.position)
@@ -382,8 +395,11 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         let direction = offset.normalized();
         let projectileDest = direction * 2000 + projectile.position;
         
+        // rotate projectile on shoot
+        projectile.zRotation = 0 - atan(direction.x/direction.y)
+        
         // MARK: - Physics for the projectile shot by the player.
-        projectile.physicsBody = SKPhysicsBody(rectangleOf: projectile.size);
+        projectile.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 20,height: 20));
         projectile.physicsBody?.isDynamic = true;
         projectile.physicsBody?.categoryBitMask = PhysicsCategory.PlayerProjectile;
         projectile.physicsBody?.contactTestBitMask = PhysicsCategory.Projectile + PhysicsCategory.Tank;
