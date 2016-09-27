@@ -36,12 +36,12 @@ extension CGPoint {
 
 struct LevelData {
     var currentLevel: Int;
-    var tankTime: Int;
-    var planeTime: Int;
-    var tankProjectileTime: Int;
-    var planeProjectileTime: Int;
-    var tankDelayTime: Int;
-    var planeDelayTime: Int;
+    var tankTime: Double;
+    var planeTime: Double;
+    var tankProjectileTime: Double;
+    var planeProjectileTime: Double;
+    var tankDelayTime: Double;
+    var planeDelayTime: Double;
 }
 
 class LevelScene: SKScene, SKPhysicsContactDelegate {
@@ -125,12 +125,12 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         run(SKAction.repeatForever(
             SKAction.sequence([
                 SKAction.run(addTanks),
-                SKAction.wait(forDuration: 3.0)
+                SKAction.wait(forDuration: levelData.tankDelayTime)
                 ])
         ))
         run(SKAction.repeatForever(
             SKAction.sequence([
-                SKAction.wait(forDuration: 4.0),
+                SKAction.wait(forDuration: levelData.planeDelayTime),
                 SKAction.run(addPlanes)
                 ])
         ))
@@ -205,7 +205,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         tank.physicsBody?.affectedByGravity = false;
         
 //        let actualDuration = random(min: CGFloat(2.0), max: CGFloat(4.0));
-        let tankMoveDuration = 7.0
+        let tankMoveDuration = levelData.tankTime;
         
 //        let tankSpawn = CGPoint(x: self.size.width , y: random(min:CGFloat(50), max:CGPoint(100)));
         let tankSpawn = CGPoint(x: self.size.width , y: 70);
@@ -247,7 +247,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         tankProjectile.physicsBody?.collisionBitMask = PhysicsCategory.None;
         tankProjectile.physicsBody?.affectedByGravity = false;
         
-        let tankProjectileAction = SKAction.move(to: CGPoint(x:player1Node.position.x,y:80), duration: 3.0)
+        let tankProjectileAction = SKAction.move(to: CGPoint(x:player1Node.position.x,y:80), duration: levelData.tankProjectileTime)
         let tankProjectileActionDone = SKAction.removeFromParent();
         
         tankProjectile.run(SKAction.sequence([tankProjectileAction,tankProjectileActionDone]));
@@ -259,7 +259,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         
         let plane = SKSpriteNode(imageNamed: "Spaceship");
         
-        let planeMoveDuration = 3.0
+        let planeMoveDuration = levelData.planeTime;
         let planeSpawn = CGPoint(x: self.size.width , y: self.size.height/2);
         
         plane.xScale = 0.2;
@@ -309,7 +309,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         planeProjectile.physicsBody?.collisionBitMask = PhysicsCategory.None;
         planeProjectile.physicsBody?.affectedByGravity = false;
         
-        let planeProjectileAction = SKAction.move(to: CGPoint(x:player1Node.position.x,y:80), duration: 2.0)
+        let planeProjectileAction = SKAction.move(to: CGPoint(x:player1Node.position.x,y:80), duration: levelData.planeProjectileTime)
         let planeProjectileActionDone = SKAction.removeFromParent();
         
         planeProjectile.run(SKAction.sequence([planeProjectileAction,planeProjectileActionDone]));
