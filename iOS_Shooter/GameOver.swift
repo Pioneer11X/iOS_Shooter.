@@ -41,7 +41,7 @@ class GameOverScene: SKScene{
         backgroundColor = UIColor.yellow;
         initLabels(labelName: gameOverLabel, text: "Game Over", pos: CGPoint(x: self.size.width/2,y: 4 * self.size.height/5));
         initLabels(labelName: scoreLabel, text: "Score: \(sceneManager.gameData.player1.score)", pos: CGPoint(x: self.size.width/2,y: 3 * self.size.height/5));
-        initLabels(labelName: levelsLabel, text: "You reached: \(sceneManager.gameData.currentLevel)", pos: CGPoint(x: self.size.width/2,y: 2 * self.size.height/5));
+        initLabels(labelName: levelsLabel, text: "You reached Level \(sceneManager.gameData.currentLevel)", pos: CGPoint(x: self.size.width/2,y: 2 * self.size.height/5));
         initLabels(labelName: playAgainLabel, text: "Play Again", pos: CGPoint(x: self.size.width/2,y: 1 * self.size.height/5));
     }
     
