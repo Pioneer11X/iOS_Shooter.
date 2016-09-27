@@ -59,6 +59,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
     var player2LifeLabel: SKLabelNode! ;
     var gameData: GameData;
     var groundNode: SKSpriteNode! ;
+    var sceneManager: GameViewController;
     
     struct PhysicsCategory {
         static let None      : UInt32 = 0
@@ -82,6 +83,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         self.gameData = gameData;
         self.currentLevel = levelData.currentLevel;
         self.levelData = levelData;
+        self.sceneManager = sceneManager;
         
         groundNode = SKSpriteNode(imageNamed: "ground");
         player2Node = SKSpriteNode(imageNamed: "player2");
@@ -172,6 +174,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
             // You collided with another Tank. You die.
             self.gameData.player1.lifes = 0;
             updateLabels();
+            self.sceneManager.loadGameOverScene();
             // TODO: - Call the End game Scene.
             break;
         case 20:
@@ -389,6 +392,9 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func updateLabels(){
+        if self.gameData.player1.lifes < 1 {
+            self.sceneManager.loadGameOverScene();
+        }
         player1LifeLabel.text = "Lives: \(self.gameData.player1.lifes)";
         player1ScoreLabel.text = "Score: \(self.gameData.player1.score)";
     }
