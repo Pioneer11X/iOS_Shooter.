@@ -59,6 +59,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
     var player2LifeLabel: SKLabelNode! ;
     var gameData: GameData;
     var groundNode: SKSpriteNode! ;
+    var sceneManager: GameViewController;
     
     struct PhysicsCategory {
         static let None      : UInt32 = 0
@@ -82,6 +83,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         self.gameData = gameData;
         self.currentLevel = levelData.currentLevel;
         self.levelData = levelData;
+        self.sceneManager = sceneManager;
         
         groundNode = SKSpriteNode(imageNamed: "ground");
         player2Node = SKSpriteNode(imageNamed: "player2");
@@ -179,6 +181,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
             self.gameData.player1.lifes = 0;
             run(SKAction.playSoundFileNamed("Hurt.wav", waitForCompletion: false))
             updateLabels();
+            self.sceneManager.loadGameOverScene();
             // TODO: - Call the End game Scene.
             break;
         case 20:
@@ -413,6 +416,50 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func updateLabels(){
+        self.gameData.currentLevel = currentLevel;
+        if self.gameData.player1.lifes < 1 {
+            self.sceneManager.loadGameOverScene();
+        }
+        if self.gameData.player1.score > ( 25 * currentLevel ) {
+            // we move on to level 2
+            
+            let nextLevel = currentLevel + 1;
+            var nextTankTime = levelData.tankTime - 1;
+            var nextPlaneDelayTime = levelData.planeDelayTime - 1;
+            var nextPlaneProjectileTime = levelData.planeProjectileTime - 1;
+            var nextPlaneTime = levelData.planeTime - 1;
+            var nextTankDelayTime = levelData.tankDelayTime - 1;
+            var nextTankProjectileTime = levelData.tankProjectileTime - 1;
+            
+            guard nextTankTime > 0 else {
+                nextTankTime = 1
+                return
+            }
+            guard nextPlaneDelayTime > 0 else {
+                nextPlaneDelayTime = 1
+                return
+            }
+            guard nextPlaneProjectileTime > 0 else {
+                nextPlaneProjectileTime = 1
+                return
+            }
+            guard nextPlaneTime > 0 else {
+                nextPlaneTime = 1
+                return
+            }
+            guard nextTankDelayTime > 0 else {
+                nextTankDelayTime = 1
+                return
+            }
+            guard nextTankProjectileTime > 0 else {
+                nextTankProjectileTime = 1
+                return
+            }
+            
+            let nextLevelData: LevelData = LevelData(currentLevel: nextLevel, tankTime: nextTankTime, planeTime: nextPlaneTime, tankProjectileTime: nextTankProjectileTime, planeProjectileTime: nextPlaneProjectileTime, tankDelayTime: nextTankDelayTime, planeDelayTime: nextPlaneDelayTime );
+            
+            sceneManager.loadGameScene(level: nextLevelData);
+        }
         player1LifeLabel.text = "Lives: \(self.gameData.player1.lifes)";
         player1ScoreLabel.text = "Score: \(self.gameData.player1.score)";
     }

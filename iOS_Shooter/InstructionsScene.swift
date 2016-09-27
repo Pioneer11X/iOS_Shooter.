@@ -28,12 +28,13 @@ class InstructionsScene: SKScene{
     override func didMove(to view: SKView) {
         
         backgroundColor = UIColor.yellow;
-        initLabels(labelName: goBackLabel, text: "Back", pos: CGPoint( x: self.size.width/2, y: self.size.height/4 ));
+        initLabels(labelName: isntructionsLabel, text: "Tap to shoot.\n Don't Die.\n", pos: CGPoint( x: self.size.width/2, y: self.size.height/4), fontSize: 36 );
+        initLabels(labelName: goBackLabel, text: "Back", pos: CGPoint( x: self.size.width/2, y: 3 * self.size.height/4 ) , fontSize: 52);
         
     }
     
     // TODO: - We can maybe share this function among all the scene files. We are currently repeating this in Instructions and Home screen.
-    private func initLabels(labelName: SKLabelNode, text:String, pos: CGPoint){
+    private func initLabels(labelName: SKLabelNode, text:String, pos: CGPoint, fontSize: CGFloat ){
         labelName.text = text;
         labelName.fontSize = 52;
         labelName.fontColor = SKColor.red;

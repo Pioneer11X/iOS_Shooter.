@@ -50,6 +50,12 @@ class GameViewController: UIViewController {
         let scene = LevelScene( levelData: level, gameData: gameData, size: screenSize,scaleMode: scaleMode, sceneManager: self)
         skView.presentScene(scene);
     }
+    
+    func loadGameOverScene(){
+        let screenSize:CGSize = CGSize(width:screenbounds.width, height: screenbounds.height);
+        let scene = GameOverScene(size: screenSize, scaleMode: scaleMode, sceneManager: self);
+        skView.presentScene(scene);
+    }
 
     override var shouldAutorotate : Bool {
         return true
