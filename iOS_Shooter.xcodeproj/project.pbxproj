@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1983126D1D9A0A7A00346871 /* Explosion1.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1983126A1D9A0A7A00346871 /* Explosion1.wav */; };
+		1983126E1D9A0A7A00346871 /* Explosion2.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1983126B1D9A0A7A00346871 /* Explosion2.wav */; };
+		1983126F1D9A0A7A00346871 /* Hurt.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1983126C1D9A0A7A00346871 /* Hurt.wav */; };
+		198312711D9A0BA700346871 /* Explosion3.wav in Resources */ = {isa = PBXBuildFile; fileRef = 198312701D9A0BA700346871 /* Explosion3.wav */; };
 		19CEA4301D8E670E0098620E /* LaserParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 19CEA42E1D8E670E0098620E /* LaserParticle.sks */; };
 		19CEA4311D8E670E0098620E /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 19CEA42F1D8E670E0098620E /* spark.png */; };
 		A002A3D81D96BF9000BC56E3 /* HomeScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = A002A3D71D96BF9000BC56E3 /* HomeScene.swift */; };
@@ -16,6 +20,7 @@
 		A03E705E1D885790006C50E9 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03E705D1D885790006C50E9 /* GameViewController.swift */; };
 		A03E70611D885790006C50E9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A03E705F1D885790006C50E9 /* Main.storyboard */; };
 		A03E70661D885790006C50E9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A03E70641D885790006C50E9 /* LaunchScreen.storyboard */; };
+		A089F0121D9A0AA3002C6C16 /* GameOver.swift in Sources */ = {isa = PBXBuildFile; fileRef = A089F0111D9A0AA3002C6C16 /* GameOver.swift */; };
 		A0AAD5E01D97199A001B638D /* InstructionsScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0AAD5DF1D97199A001B638D /* InstructionsScene.swift */; };
 		A0AAD5E21D975E99001B638D /* level.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0AAD5E11D975E99001B638D /* level.swift */; };
 		A0AAD5E41D9767AF001B638D /* player.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0AAD5E31D9767AF001B638D /* player.swift */; };
@@ -23,6 +28,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1983126A1D9A0A7A00346871 /* Explosion1.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = Explosion1.wav; path = Assets.xcassets/Explosion1.wav; sourceTree = "<group>"; };
+		1983126B1D9A0A7A00346871 /* Explosion2.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = Explosion2.wav; path = Assets.xcassets/Explosion2.wav; sourceTree = "<group>"; };
+		1983126C1D9A0A7A00346871 /* Hurt.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = Hurt.wav; path = Assets.xcassets/Hurt.wav; sourceTree = "<group>"; };
+		198312701D9A0BA700346871 /* Explosion3.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = Explosion3.wav; path = Assets.xcassets/Explosion3.wav; sourceTree = "<group>"; };
 		19CEA42E1D8E670E0098620E /* LaserParticle.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = LaserParticle.sks; sourceTree = "<group>"; };
 		19CEA42F1D8E670E0098620E /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spark.png; sourceTree = "<group>"; };
 		A002A3D71D96BF9000BC56E3 /* HomeScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeScene.swift; sourceTree = "<group>"; };
@@ -34,6 +43,7 @@
 		A03E70601D885790006C50E9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		A03E70651D885790006C50E9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A03E70671D885790006C50E9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A089F0111D9A0AA3002C6C16 /* GameOver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameOver.swift; sourceTree = "<group>"; };
 		A0AAD5DF1D97199A001B638D /* InstructionsScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstructionsScene.swift; sourceTree = "<group>"; };
 		A0AAD5E11D975E99001B638D /* level.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = level.swift; sourceTree = "<group>"; };
 		A0AAD5E31D9767AF001B638D /* player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = player.swift; sourceTree = "<group>"; };
@@ -56,6 +66,7 @@
 			children = (
 				A03E705B1D885790006C50E9 /* GameScene.swift */,
 				A002A3D71D96BF9000BC56E3 /* HomeScene.swift */,
+				A089F0111D9A0AA3002C6C16 /* GameOver.swift */,
 				A0AAD5DF1D97199A001B638D /* InstructionsScene.swift */,
 				A0AAD5E11D975E99001B638D /* level.swift */,
 			);
@@ -84,6 +95,10 @@
 			isa = PBXGroup;
 			children = (
 				A0AAD5E71D985F2C001B638D /* Assets.xcassets */,
+				198312701D9A0BA700346871 /* Explosion3.wav */,
+				1983126A1D9A0A7A00346871 /* Explosion1.wav */,
+				1983126B1D9A0A7A00346871 /* Explosion2.wav */,
+				1983126C1D9A0A7A00346871 /* Hurt.wav */,
 				A002A3D61D96BF6A00BC56E3 /* Scenes */,
 				A03E70571D885790006C50E9 /* AppDelegate.swift */,
 				A03E70591D885790006C50E9 /* GameScene.sks */,
@@ -160,8 +175,12 @@
 				19CEA4311D8E670E0098620E /* spark.png in Resources */,
 				A03E70661D885790006C50E9 /* LaunchScreen.storyboard in Resources */,
 				A03E70611D885790006C50E9 /* Main.storyboard in Resources */,
+				198312711D9A0BA700346871 /* Explosion3.wav in Resources */,
+				1983126F1D9A0A7A00346871 /* Hurt.wav in Resources */,
 				A0AAD5E81D985F2C001B638D /* Assets.xcassets in Resources */,
+				1983126E1D9A0A7A00346871 /* Explosion2.wav in Resources */,
 				19CEA4301D8E670E0098620E /* LaserParticle.sks in Resources */,
+				1983126D1D9A0A7A00346871 /* Explosion1.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -179,6 +198,7 @@
 				A03E705E1D885790006C50E9 /* GameViewController.swift in Sources */,
 				A0AAD5E21D975E99001B638D /* level.swift in Sources */,
 				A03E70581D885790006C50E9 /* AppDelegate.swift in Sources */,
+				A089F0121D9A0AA3002C6C16 /* GameOver.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
