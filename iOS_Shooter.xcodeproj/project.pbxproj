@@ -11,6 +11,8 @@
 		1983126E1D9A0A7A00346871 /* Explosion2.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1983126B1D9A0A7A00346871 /* Explosion2.wav */; };
 		1983126F1D9A0A7A00346871 /* Hurt.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1983126C1D9A0A7A00346871 /* Hurt.wav */; };
 		198312711D9A0BA700346871 /* Explosion3.wav in Resources */ = {isa = PBXBuildFile; fileRef = 198312701D9A0BA700346871 /* Explosion3.wav */; };
+		1983127B1D9A1D8400346871 /* tank_by_florianrenner.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1983127A1D9A1D8400346871 /* tank_by_florianrenner.jpg */; };
+		1983127D1D9A1FA900346871 /* SmokeTrail.sks in Resources */ = {isa = PBXBuildFile; fileRef = 1983127C1D9A1FA900346871 /* SmokeTrail.sks */; };
 		19CEA4311D8E670E0098620E /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 19CEA42F1D8E670E0098620E /* spark.png */; };
 		A002A3D81D96BF9000BC56E3 /* HomeScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = A002A3D71D96BF9000BC56E3 /* HomeScene.swift */; };
 		A03E70581D885790006C50E9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03E70571D885790006C50E9 /* AppDelegate.swift */; };
@@ -31,7 +33,9 @@
 		1983126B1D9A0A7A00346871 /* Explosion2.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = Explosion2.wav; path = Assets.xcassets/Explosion2.wav; sourceTree = "<group>"; };
 		1983126C1D9A0A7A00346871 /* Hurt.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = Hurt.wav; path = Assets.xcassets/Hurt.wav; sourceTree = "<group>"; };
 		198312701D9A0BA700346871 /* Explosion3.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = Explosion3.wav; path = Assets.xcassets/Explosion3.wav; sourceTree = "<group>"; };
-		19CEA42F1D8E670E0098620E /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spark.png; sourceTree = "<group>"; };
+		1983127A1D9A1D8400346871 /* tank_by_florianrenner.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = tank_by_florianrenner.jpg; sourceTree = "<group>"; };
+		1983127C1D9A1FA900346871 /* SmokeTrail.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = SmokeTrail.sks; sourceTree = "<group>"; };
+		19CEA42F1D8E670E0098620E /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = spark.png; path = ../spark.png; sourceTree = "<group>"; };
 		A002A3D71D96BF9000BC56E3 /* HomeScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeScene.swift; sourceTree = "<group>"; };
 		A03E70541D885790006C50E9 /* iOS_Shooter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iOS_Shooter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A03E70571D885790006C50E9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -74,7 +78,6 @@
 		A03E704B1D885790006C50E9 = {
 			isa = PBXGroup;
 			children = (
-				19CEA42F1D8E670E0098620E /* spark.png */,
 				A03E70561D885790006C50E9 /* iOS_Shooter */,
 				A03E70551D885790006C50E9 /* Products */,
 			);
@@ -91,11 +94,14 @@
 		A03E70561D885790006C50E9 /* iOS_Shooter */ = {
 			isa = PBXGroup;
 			children = (
+				1983127C1D9A1FA900346871 /* SmokeTrail.sks */,
+				1983127A1D9A1D8400346871 /* tank_by_florianrenner.jpg */,
 				A0AAD5E71D985F2C001B638D /* Assets.xcassets */,
 				198312701D9A0BA700346871 /* Explosion3.wav */,
 				1983126A1D9A0A7A00346871 /* Explosion1.wav */,
 				1983126B1D9A0A7A00346871 /* Explosion2.wav */,
 				1983126C1D9A0A7A00346871 /* Hurt.wav */,
+				19CEA42F1D8E670E0098620E /* spark.png */,
 				A002A3D61D96BF6A00BC56E3 /* Scenes */,
 				A03E70571D885790006C50E9 /* AppDelegate.swift */,
 				A03E70591D885790006C50E9 /* GameScene.sks */,
@@ -168,12 +174,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1983127D1D9A1FA900346871 /* SmokeTrail.sks in Resources */,
 				A03E705A1D885790006C50E9 /* GameScene.sks in Resources */,
 				19CEA4311D8E670E0098620E /* spark.png in Resources */,
 				A03E70661D885790006C50E9 /* LaunchScreen.storyboard in Resources */,
 				A03E70611D885790006C50E9 /* Main.storyboard in Resources */,
 				198312711D9A0BA700346871 /* Explosion3.wav in Resources */,
 				1983126F1D9A0A7A00346871 /* Hurt.wav in Resources */,
+				1983127B1D9A1D8400346871 /* tank_by_florianrenner.jpg in Resources */,
 				A0AAD5E81D985F2C001B638D /* Assets.xcassets in Resources */,
 				1983126E1D9A0A7A00346871 /* Explosion2.wav in Resources */,
 				1983126D1D9A0A7A00346871 /* Explosion1.wav in Resources */,
