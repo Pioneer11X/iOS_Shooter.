@@ -45,9 +45,9 @@ class GameViewController: UIViewController {
         skView.presentScene(scene);
     }
     
-    func loadGameScene(level: Int){
+    func loadGameScene(level: LevelData){
         let screenSize:CGSize = CGSize(width:screenbounds.width, height: screenbounds.height);
-        let scene = LevelScene( currentLevel: 0, gameData: gameData, size: screenSize,scaleMode: scaleMode, sceneManager: self)
+        let scene = LevelScene( levelData: level, gameData: gameData, size: screenSize,scaleMode: scaleMode, sceneManager: self)
         skView.presentScene(scene);
     }
 

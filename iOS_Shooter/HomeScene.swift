@@ -58,7 +58,14 @@ class HomeScene:SKScene{
             
             if startGameLabel.contains(location){
                 print("Label Pressed");
-                sceneManager.loadGameScene(level: 1);
+                var levelData: LevelData = LevelData(currentLevel: 1, tankTime: 7.0, planeTime: 3.0, tankProjectileTime: 3.0, planeProjectileTime: 2.0, tankDelayTime: 3.0, planeDelayTime: 4.0 );
+//                levelData.currentLevel = 1;
+//                levelData.planeDelayTime = 4.0;
+//                levelData.planeProjectileTime = 2.0;
+//                levelData.tankDelayTime = 3.0;
+//                levelData.tankProjectileTime = 3.0;
+//                levelData.tankTime = 7.0;
+                sceneManager.loadGameScene(level: levelData);
                 // TODO: - Need to take them to the Game Scene.
             }else if instructionsLabel.contains(location){
                 print("You need Instruction for this game?");
