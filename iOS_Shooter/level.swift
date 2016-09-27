@@ -157,20 +157,24 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
                 self.gameData.player1.lifes += 1;
             }
             updateLabels();
+            run(SKAction.playSoundFileNamed("Explosion1.wav", waitForCompletion: false))
             break;
         case 6:
             // You shot down a projectile coming towards you.
             contact.bodyA.node?.removeFromParent();
             contact.bodyB.node?.removeFromParent();
+            run(SKAction.playSoundFileNamed("Explosion3.wav", waitForCompletion: false))
             break;
         case 10:
             // You were shot.
             self.gameData.player1.lifes += -1;
             updateLabels();
+            run(SKAction.playSoundFileNamed("Hurt.wav", waitForCompletion: false))
             break;
         case 9:
             // You collided with another Tank. You die.
             self.gameData.player1.lifes = 0;
+            run(SKAction.playSoundFileNamed("Hurt.wav", waitForCompletion: false))
             updateLabels();
             // TODO: - Call the End game Scene.
             break;
@@ -180,6 +184,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
             contact.bodyB.node?.removeFromParent();
             self.gameData.player1.score += 2;
             updateLabels();
+            run(SKAction.playSoundFileNamed("Explosion1.wav", waitForCompletion: false))
             break;
         default:
             print(contactMask)
@@ -355,6 +360,9 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
             return
         }
         let touchLocation = touch.location(in: self)
+        
+        // play shoot sound
+        run(SKAction.playSoundFileNamed("Explosion2.wav", waitForCompletion: false))
         
         // We need to shoot. So, we start with creating a new projectile.
         
