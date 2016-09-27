@@ -8,11 +8,48 @@
 
 import SpriteKit;
 
-class LevelScene: SKScene {
+func + (left: CGPoint, right: CGPoint) -> CGPoint {
+    return CGPoint(x: left.x + right.x, y: left.y + right.y)
+}
+
+func - (left: CGPoint, right: CGPoint) -> CGPoint {
+    return CGPoint(x: left.x - right.x, y: left.y - right.y)
+}
+
+func * (point: CGPoint, scalar: CGFloat) -> CGPoint {
+    return CGPoint(x: point.x * scalar, y: point.y * scalar)
+}
+
+func / (point: CGPoint, scalar: CGFloat) -> CGPoint {
+    return CGPoint(x: point.x / scalar, y: point.y / scalar)
+}
+
+extension CGPoint {
+    func length() -> CGFloat {
+        return sqrt(x*x + y*y)
+    }
+    
+    func normalized() -> CGPoint {
+        return self / length()
+    }
+}
+
+struct LevelData {
+    var currentLevel: Int;
+    var tankTime: Int;
+    var planeTime: Int;
+    var tankProjectileTime: Int;
+    var planeProjectileTime: Int;
+    var tankDelayTime: Int;
+    var planeDelayTime: Int;
+}
+
+class LevelScene: SKScene, SKPhysicsContactDelegate {
     
     // MARK: - iVars for Levels
     
     var currentLevel: Int;
+    var levelData: LevelData;
     var player1Node : SKSpriteNode! ;
     var player2Node : SKSpriteNode! ;
     var player1ScoreLabel: SKLabelNode! ;
@@ -28,10 +65,12 @@ class LevelScene: SKScene {
         static let All       : UInt32 = UInt32.max
         static let Tank   : UInt32 = 0b1
         static let Projectile: UInt32 = 0b10
-        static let Player: UInt32 = 0b100
+        static let PlayerProjectile: UInt32 = 0b100;
+        static let Player: UInt32 = 0b1000;
+        static let Plane: UInt32 = 0b10000;
     }
     
-    init(currentLevel: Int, gameData: GameData, size: CGSize, scaleMode: SKSceneScaleMode, sceneManager: GameViewController) {
+    init(levelData: LevelData, gameData: GameData, size: CGSize, scaleMode: SKSceneScaleMode, sceneManager: GameViewController) {
         
         
         // MARK: - Labels Initialisation -
@@ -41,7 +80,8 @@ class LevelScene: SKScene {
         player1LifeLabel = SKLabelNode(fontNamed: gameData.fontName);
         player2LifeLabel = SKLabelNode(fontNamed: gameData.fontName);
         self.gameData = gameData;
-        self.currentLevel = currentLevel;
+        self.currentLevel = levelData.currentLevel;
+        self.levelData = levelData;
         
         groundNode = SKSpriteNode(imageNamed: "ground");
         player2Node = SKSpriteNode(imageNamed: "player2");
@@ -57,6 +97,8 @@ class LevelScene: SKScene {
     }
     
     override func didMove(to view: SKView){
+        
+        self.physicsWorld.contactDelegate = self;
         
         initLabel(label: levelLabel, gameData: gameData, text: "Round: \(currentLevel)", pos: CGPoint(x: self.size.width/2 , y: self.size.height - 50 ) );
         initLabel(label: player1ScoreLabel, gameData: gameData, text: "Score: \(gameData.player1.score)", pos: CGPoint(x: self.size.width/4, y: self.size.height - 50 ) );
@@ -95,7 +137,62 @@ class LevelScene: SKScene {
         
     }
     
+    func didBegin(_ contact: SKPhysicsContact) {
+        let contactMask = contact.bodyA.categoryBitMask + contact.bodyB.categoryBitMask;
+//        print(contact.bodyA.categoryBitMask);
+//        print(" ");
+//        print(contact.bodyB.categoryBitMask);
+//        print(contactMask);
+        switch contactMask {
+        case 3: break
+            // Do nothing. The tank/plane projectile hit with the tank.
+        case 5:
+            // You shot a Tank.
+            // Remove the Tank, Remove the projectile, add the score. Add a life if score % 5 == 0.
+            contact.bodyA.node?.removeFromParent();
+            contact.bodyB.node?.removeFromParent();
+            self.gameData.player1.score += 1;
+            self.gameData.player1.hits += 1;
+            if self.gameData.player1.hits % 5 == 0{
+                self.gameData.player1.lifes += 1;
+            }
+            updateLabels();
+            break;
+        case 6:
+            // You shot down a projectile coming towards you.
+            contact.bodyA.node?.removeFromParent();
+            contact.bodyB.node?.removeFromParent();
+            break;
+        case 10:
+            // You were shot.
+            self.gameData.player1.lifes += -1;
+            updateLabels();
+            break;
+        case 9:
+            // You collided with another Tank. You die.
+            self.gameData.player1.lifes = 0;
+            updateLabels();
+            // TODO: - Call the End game Scene.
+            break;
+        case 20:
+            // You shot the Plane.
+            contact.bodyA.node?.removeFromParent();
+            contact.bodyB.node?.removeFromParent();
+            self.gameData.player1.score += 2;
+            updateLabels();
+            break;
+        default:
+            print(contactMask)
+                    print(contact.bodyA.categoryBitMask);
+                    print(" ");
+                    print(contact.bodyB.categoryBitMask);
+        }
+        
+        
+    }
+    
     func addTanks(){
+        
         let tank = SKSpriteNode(imageNamed: "player2");
         
         // TODO: - Add the Physics for Collision here -
@@ -138,9 +235,17 @@ class LevelScene: SKScene {
         
         let tankProjectile = SKSpriteNode(imageNamed: "projectile");
         tankProjectile.xScale = 0.1;
-        tankProjectile.yScale = 0.1;
+        tankProjectile.yScale = 0.3;
         tankProjectile.position = CGPoint(x: tank.position.x - tank.size.width/3, y: 80);
         self.addChild(tankProjectile);
+        
+        // TODO: - Add the physics for projectiles.
+        tankProjectile.physicsBody = SKPhysicsBody(rectangleOf: tankProjectile.size);
+        tankProjectile.physicsBody?.isDynamic = true;
+        tankProjectile.physicsBody?.categoryBitMask = PhysicsCategory.Projectile;
+//        tankProjectile.physicsBody?.contactTestBitMask = PhysicsCategory.Projectile + PhysicsCategory.Player;
+        tankProjectile.physicsBody?.collisionBitMask = PhysicsCategory.None;
+        tankProjectile.physicsBody?.affectedByGravity = false;
         
         let tankProjectileAction = SKAction.move(to: CGPoint(x:player1Node.position.x,y:80), duration: 3.0)
         let tankProjectileActionDone = SKAction.removeFromParent();
@@ -163,11 +268,52 @@ class LevelScene: SKScene {
         plane.position = planeSpawn;
         plane.zPosition = 3.0;
         
+        // MARK: - Plane Physics -
+        plane.physicsBody = SKPhysicsBody(rectangleOf: plane.size);
+        plane.physicsBody?.isDynamic = true;
+        plane.physicsBody?.categoryBitMask = PhysicsCategory.Plane;
+        plane.physicsBody?.contactTestBitMask = PhysicsCategory.PlayerProjectile;
+        plane.physicsBody?.collisionBitMask = PhysicsCategory.None;
+        plane.physicsBody?.affectedByGravity = false;
+        
         let actionMove = SKAction.move(to: CGPoint(x: -plane.size.width/2, y: plane.position.y), duration: TimeInterval(planeMoveDuration))
         let actionMoveDone = SKAction.removeFromParent() // This should Ideally be never called. Since either the tank collides with the player and he dies or the tank is destroyed before it can touch the player.
         
         self.addChild(plane);
         plane.run(SKAction.sequence([actionMove, actionMoveDone]))
+        
+        // Figure out how to initiate a projectile from the plane when the plane actually gets to the middle of the screen dynamically instead of when it spawns.
+        
+//        while ( plane.position == CGPoint(x: player1Node.position.x, y: self.size.height/2) ){
+//            print("@@@@@@@@@");
+//        }
+        callPlaneProjectile(plane: plane)
+        
+    }
+    
+    func callPlaneProjectile(plane: SKSpriteNode){
+        
+        // MARK: - NPC projectile logic
+        
+        let planeProjectile = SKSpriteNode(imageNamed: "projectile");
+        planeProjectile.xScale = 0.1;
+        planeProjectile.yScale = 0.1;
+        planeProjectile.position = CGPoint(x: plane.position.x - plane.size.width/3, y: self.size.height/2);
+        self.addChild(planeProjectile);
+        
+        // TODO: - Add the physics for projectiles.
+        planeProjectile.physicsBody = SKPhysicsBody(rectangleOf: planeProjectile.size);
+        planeProjectile.physicsBody?.isDynamic = true;
+        planeProjectile.physicsBody?.categoryBitMask = PhysicsCategory.Projectile;
+//        planeProjectile.physicsBody?.contactTestBitMask = PhysicsCategory.Projectile + PhysicsCategory.Player;
+        planeProjectile.physicsBody?.collisionBitMask = PhysicsCategory.None;
+        planeProjectile.physicsBody?.affectedByGravity = false;
+        
+        let planeProjectileAction = SKAction.move(to: CGPoint(x:player1Node.position.x,y:80), duration: 2.0)
+        let planeProjectileActionDone = SKAction.removeFromParent();
+        
+        planeProjectile.run(SKAction.sequence([planeProjectileAction,planeProjectileActionDone]));
+        
         
     }
     
@@ -203,15 +349,38 @@ class LevelScene: SKScene {
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+        
+        guard let touch = touches.first else {
+            return
+        }
+        let touchLocation = touch.location(in: self)
+        
         // We need to shoot. So, we start with creating a new projectile.
         
         let projectile = SKSpriteNode(imageNamed: "projectile");
         projectile.position = CGPoint(x: player1Node.position.x + player1Node.size.width/3, y: 80 );
         projectile.xScale = 0.1;
-        projectile.yScale = 0.1;
+        projectile.yScale = 0.3;
         self.addChild(projectile);
         
-        let projectileMove = SKAction.move(to: CGPoint(x:self.size.width,y:80), duration: 3.0);
+        var offset = (touchLocation - projectile.position)
+        if ( offset.y < 0 ){
+            offset.y = 0;
+        }
+        let direction = offset.normalized();
+        let projectileDest = direction * 2000 + projectile.position;
+        
+        // MARK: - Physics for the projectile shot by the player.
+        projectile.physicsBody = SKPhysicsBody(rectangleOf: projectile.size);
+        projectile.physicsBody?.isDynamic = true;
+        projectile.physicsBody?.categoryBitMask = PhysicsCategory.PlayerProjectile;
+        projectile.physicsBody?.contactTestBitMask = PhysicsCategory.Projectile + PhysicsCategory.Tank;
+        projectile.physicsBody?.collisionBitMask = PhysicsCategory.None;
+        projectile.physicsBody?.affectedByGravity = false;
+        
+//        let projectileMove = SKAction.move(to: CGPoint(x:self.size.width,y:80), duration: 3.0);
+        let projectileMove = SKAction.move(to: projectileDest, duration: 3.0);
         let projectileMoveDone = SKAction.removeFromParent();
         projectile.run(SKAction.sequence([
             projectileMove,
@@ -219,4 +388,8 @@ class LevelScene: SKScene {
             ]));
     }
     
+    func updateLabels(){
+        player1LifeLabel.text = "Lives: \(self.gameData.player1.lifes)";
+        player1ScoreLabel.text = "Score: \(self.gameData.player1.score)";
+    }
 }
