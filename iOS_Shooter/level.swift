@@ -431,30 +431,40 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
             var nextTankDelayTime = levelData.tankDelayTime - 1;
             var nextTankProjectileTime = levelData.tankProjectileTime - 1;
             
-            guard nextTankTime > 0 else {
-                nextTankTime = 1
-                return
-            }
-            guard nextPlaneDelayTime > 0 else {
-                nextPlaneDelayTime = 1
-                return
-            }
-            guard nextPlaneProjectileTime > 0 else {
-                nextPlaneProjectileTime = 1
-                return
-            }
-            guard nextPlaneTime > 0 else {
-                nextPlaneTime = 1
-                return
-            }
-            guard nextTankDelayTime > 0 else {
-                nextTankDelayTime = 1
-                return
-            }
-            guard nextTankProjectileTime > 0 else {
-                nextTankProjectileTime = 1
-                return
-            }
+//            guard nextTankTime > 0 else {
+//                nextTankTime = 1
+//                return
+//            }
+//            guard nextPlaneDelayTime > 0 else {
+//                nextPlaneDelayTime = 1
+//                return
+//            }
+//            guard nextPlaneProjectileTime > 0 else {
+//                nextPlaneProjectileTime = 1
+//                return
+//            }
+//            guard nextPlaneTime > 0 else {
+//                nextPlaneTime = 1
+//                return
+//            }
+//            guard nextTankDelayTime > 0 else {
+//                nextTankDelayTime = 1
+//                return
+//            }
+//            guard nextTankProjectileTime > 0 else {
+//                nextTankProjectileTime = 1
+//                return
+//            }
+            
+            // We will have to return from the function if we use guard. So we use if.
+            
+            check(value: &nextTankTime);
+            check(value: &nextPlaneDelayTime);
+            check(value: &nextTankDelayTime);
+            check(value: &nextPlaneTime);
+            check(value: &nextPlaneProjectileTime);
+            check(value: &nextTankProjectileTime);
+            
             
             let nextLevelData: LevelData = LevelData(currentLevel: nextLevel, tankTime: nextTankTime, planeTime: nextPlaneTime, tankProjectileTime: nextTankProjectileTime, planeProjectileTime: nextPlaneProjectileTime, tankDelayTime: nextTankDelayTime, planeDelayTime: nextPlaneDelayTime );
             
@@ -462,5 +472,16 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         }
         player1LifeLabel.text = "Lives: \(self.gameData.player1.lifes)";
         player1ScoreLabel.text = "Score: \(self.gameData.player1.score)";
+    }
+    
+    func check( value: inout Double){
+        if value <= 1 {
+            if value > 0 {
+            value = value/2;
+            }
+            else{
+                value = 1;
+            }
+        }
     }
 }

@@ -63,7 +63,7 @@ class HomeScene:SKScene{
                 sceneManager.loadGameScene(level: levelData);
                 // TODO: - Need to take them to the Game Scene.
             }else if instructionsLabel.contains(location){
-                print("You need Instruction for this game?");
+                print("You need Instructions for this game?");
                 //sceneManager.
                 sceneManager.loadInstructionsScene();
             }
