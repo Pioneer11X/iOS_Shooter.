@@ -426,6 +426,13 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         
     }
     
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard let touch = touches.first else {
+            return
+        }
+        touchLocation = touch.location(in: self)
+    }
+    
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         touchLocation = nil;
         isTouching = false;
