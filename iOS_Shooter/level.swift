@@ -60,6 +60,10 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
     var gameData: GameData;
     var groundNode: SKSpriteNode! ;
     var sceneManager: GameViewController;
+    var topBulletCollector: SKSpriteNode!;
+    var btmBulletCollector: SKSpriteNode!;
+    var isTouching: Bool;
+    var touchLocation: CGPoint?;
     
     struct PhysicsCategory {
         static let None      : UInt32 = 0
@@ -69,6 +73,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         static let PlayerProjectile: UInt32 = 0b100;
         static let Player: UInt32 = 0b1000;
         static let Plane: UInt32 = 0b10000;
+        static let BulletCollector: UInt32 = 0b100000;
     }
     
     init(levelData: LevelData, gameData: GameData, size: CGSize, scaleMode: SKSceneScaleMode, sceneManager: GameViewController) {
@@ -88,7 +93,14 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         groundNode = SKSpriteNode(imageNamed: "ground");
         player2Node = SKSpriteNode(imageNamed: "player2");
         
+        btmBulletCollector = SKSpriteNode(imageNamed: "projectile");
+        topBulletCollector = SKSpriteNode(imageNamed: "projectile");
+        
+        isTouching = false;
+        touchLocation = nil;
+        
         super.init(size:size);
+        
         
     }
     
@@ -108,6 +120,29 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         
         groundNode.position = CGPoint(x: self.size.width/2, y: 10 );
         groundNode.zPosition = 2.0
+        
+        topBulletCollector.position = CGPoint(x: 0, y: self.size.height);
+        btmBulletCollector.position = CGPoint(x: self.size.width, y: 0);
+        topBulletCollector.xScale = 5;
+        btmBulletCollector.zRotation = .pi/2;
+        btmBulletCollector.xScale = 5;
+        
+        topBulletCollector.physicsBody = SKPhysicsBody(rectangleOf: topBulletCollector.size);
+        topBulletCollector.physicsBody?.isDynamic = true;
+        topBulletCollector.physicsBody?.categoryBitMask = PhysicsCategory.BulletCollector;
+        topBulletCollector.physicsBody?.contactTestBitMask = PhysicsCategory.Projectile + PhysicsCategory.PlayerProjectile;
+        topBulletCollector.physicsBody?.collisionBitMask = PhysicsCategory.None;
+        topBulletCollector.physicsBody?.affectedByGravity = false;
+        
+        btmBulletCollector.physicsBody = SKPhysicsBody(rectangleOf: btmBulletCollector.size);
+        btmBulletCollector.physicsBody?.isDynamic = true;
+        btmBulletCollector.physicsBody?.categoryBitMask = PhysicsCategory.BulletCollector;
+        btmBulletCollector.physicsBody?.contactTestBitMask = PhysicsCategory.Projectile + PhysicsCategory.PlayerProjectile;
+        btmBulletCollector.physicsBody?.collisionBitMask = PhysicsCategory.None;
+        btmBulletCollector.physicsBody?.affectedByGravity = false;
+        
+        self.addChild(topBulletCollector);
+        self.addChild(btmBulletCollector);
         
         // background music
         let backgroundMusic = SKAudioNode(fileNamed: "Super Power Cool Dude")
@@ -192,6 +227,10 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
             updateLabels();
             run(SKAction.playSoundFileNamed("Explosion1.wav", waitForCompletion: false))
             break;
+        case 36:
+            // The projectile collided with the Collector.
+            contact.bodyB.node?.removeFromParent();
+            break;
         default:
             print(contactMask)
                     print(contact.bodyA.categoryBitMask);
@@ -215,7 +254,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         tank.physicsBody?.collisionBitMask = PhysicsCategory.None;
         tank.physicsBody?.affectedByGravity = false;
         
-//        let actualDuration = random(min: CGFloat(2.0), max: CGFloat(4.0));
+        //let actualDuration = random(min: CGFloat(2.0), max: CGFloat(4.0));
         let tankMoveDuration = levelData.tankTime;
         
 //        let tankSpawn = CGPoint(x: self.size.width , y: random(min:CGFloat(50), max:CGPoint(100)));
@@ -367,18 +406,42 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         label.zPosition = 3
     }
     
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
+    var shootNSTimer = Timer();
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
         guard let touch = touches.first else {
             return
         }
-        let touchLocation = touch.location(in: self)
+        touchLocation = touch.location(in: self)
         
         // play shoot sound
         run(SKAction.playSoundFileNamed("Explosion2.wav", waitForCompletion: false))
         
+        //        shootProjectile(touchLocation: touchLocation);
+        
+        // We need to shoot continously. We need to start creating a lot of projectiles. So, we need a function that creates a projectil and call that infinitely.
+        isTouching = true;
+        shootNSTimer = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(LevelScene.shootProjectile), userInfo: nil, repeats: true)
+        
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        touchLocation = nil;
+        isTouching = false;
+        shootNSTimer.invalidate();
+    }
+
+    
+    func shootProjectile(){
+        
+        guard touchLocation != nil else {
+            print("Called shootProjectile with no valid position.");
+            return;
+        }
+        
         // We need to shoot. So, we start with creating a new projectile.
+        print("Projectile Launched");
         
         //let projectile = SKSpriteNode(imageNamed: "projectile");
         let projectile = SKEmitterNode(fileNamed: "SmokeTrail")!
@@ -388,7 +451,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         
         self.addChild(projectile);
         
-        var offset = (touchLocation - projectile.position)
+        var offset = (touchLocation! - projectile.position)
         if ( offset.y < 0 ){
             offset.y = 0;
         }
@@ -406,13 +469,37 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         projectile.physicsBody?.collisionBitMask = PhysicsCategory.None;
         projectile.physicsBody?.affectedByGravity = false;
         
-//        let projectileMove = SKAction.move(to: CGPoint(x:self.size.width,y:80), duration: 3.0);
+        //        let projectileMove = SKAction.move(to: CGPoint(x:self.size.width,y:80), duration: 3.0);
         let projectileMove = SKAction.move(to: projectileDest, duration: 3.0);
         let projectileMoveDone = SKAction.removeFromParent();
-        projectile.run(SKAction.sequence([
-            projectileMove,
-            projectileMoveDone
-            ]));
+        //        projectile.run(
+        //            SKAction.repeatForever(
+        //                SKAction.sequence(
+        //                    [
+        //                    SKAction.sequence(
+        //                        [
+        //                        projectileMove,
+        //                        projectileMoveDone,
+        //                        ]
+        //                    ),
+        //                    // TODO: -- The control never reaches this point since, the bullet never ends.
+        //                    SKAction.wait(forDuration: 2)
+        //                    ]
+        //                )
+        //            )
+        //        );
+        projectile.run(
+            SKAction.repeatForever(
+                SKAction.sequence(
+                    [
+                        projectileMove,
+                        SKAction.wait(forDuration: 2)
+                        //                        ,
+                        //                        projectileMoveDone,
+                    ]
+                )
+            )
+        );
     }
     
     func updateLabels(){
