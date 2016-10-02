@@ -7,6 +7,7 @@
 //
 
 import SpriteKit;
+import Foundation;
 
 func + (left: CGPoint, right: CGPoint) -> CGPoint {
     return CGPoint(x: left.x + right.x, y: left.y + right.y)
@@ -310,7 +311,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         let plane = SKSpriteNode(imageNamed: "Spaceship");
         
         let planeMoveDuration = levelData.planeTime;
-        let planeSpawn = CGPoint(x: self.size.width , y: self.size.height/2);
+        let planeSpawn = CGPoint(x: self.size.width , y: self.size.height/2 + CGFloat(arc4random_uniform(UInt32(self.size.height/2)) ) );
         
         plane.xScale = 0.2;
         plane.yScale = 0.2;
@@ -349,7 +350,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         let planeProjectile = SKEmitterNode(fileNamed: "SmokeTrail")!
         //planeProjectile.xScale = 0.1;
         //planeProjectile.yScale = 0.1;
-        planeProjectile.position = CGPoint(x: plane.position.x - plane.size.width/3, y: self.size.height/2);
+        planeProjectile.position = CGPoint(x: plane.position.x - plane.size.width/3, y: plane.position.y);
         planeProjectile.targetNode = self;
         self.addChild(planeProjectile);
         
