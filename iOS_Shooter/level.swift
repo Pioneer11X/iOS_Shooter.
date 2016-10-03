@@ -230,12 +230,29 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
             break;
         case 20:
             // You shot the balloon.
+            // balloon ref
+            var balloon:SKSpriteNode
+            if let b:SKSpriteNode = (contact.bodyA.node as? SKSpriteNode) {
+                balloon = b;
+            } else {
+                balloon = (contact.bodyB.node as? SKSpriteNode)!;
+            }
             // boom
             let explosionEffect = SKEmitterNode.init(fileNamed: "Pop");
             explosionEffect?.position = (contact.bodyA.node?.position)!;
             explosionEffect?.targetNode = self;
             self.addChild(explosionEffect!);
-            explosionEffect?.run(SKAction.sequence([SKAction.wait(forDuration: 1),SKAction.removeFromParent()]))
+            explosionEffect?.run(SKAction.sequence([SKAction.wait(forDuration: 1),SKAction.removeFromParent()]));
+            // confetti
+            let confetti = SKEmitterNode.init(fileNamed: "Confetti");
+            confetti?.position = (balloon?.position)!;
+            // get new color
+            confetti?.particleColorSequence = nil;
+            confetti?.particleColorBlendFactor = 1.0;
+            confetti?.particleColor = balloon.color;
+            confetti?.targetNode = self;
+            self.addChild(confetti!);
+            confetti?.run(SKAction.sequence([SKAction.wait(forDuration: 2),SKAction.removeFromParent()]));
             // remove
             contact.bodyA.node?.removeFromParent();
             contact.bodyB.node?.removeFromParent();
