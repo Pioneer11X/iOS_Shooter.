@@ -500,6 +500,9 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         if ( offset.y < 0 ){
             offset.y = 0;
         }
+        if ( offset.x < 0 ){
+            offset.x = 0;
+        }
         let direction = offset.normalized();
         let projectileDest = direction * 2000 + projectile.position;
         
