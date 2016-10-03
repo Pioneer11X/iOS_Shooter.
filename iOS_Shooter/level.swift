@@ -142,6 +142,9 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         btmBulletCollector.physicsBody?.collisionBitMask = PhysicsCategory.None;
         btmBulletCollector.physicsBody?.affectedByGravity = false;
         
+        topBulletCollector.zPosition = -1.0;
+        btmBulletCollector.zPosition = -1.0;
+        
         self.addChild(topBulletCollector);
         self.addChild(btmBulletCollector);
         
@@ -246,6 +249,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
             // confetti
             let confetti = SKEmitterNode.init(fileNamed: "Confetti");
             confetti?.position = balloon.position;
+
             // get new color
             confetti?.particleColorSequence = nil;
             confetti?.particleColorBlendFactor = 1.0;
@@ -499,6 +503,9 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         var offset = (touchLocation! - projectile.position)
         if ( offset.y < 0 ){
             offset.y = 0;
+        }
+        if ( offset.x < 0 ){
+            offset.x = 0;
         }
         let direction = offset.normalized();
         let projectileDest = direction * 2000 + projectile.position;
