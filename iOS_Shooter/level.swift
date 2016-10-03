@@ -202,6 +202,14 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
             break;
         case 6:
             // You shot down a projectile coming towards you.
+            // boom
+            let explosionEffect = SKEmitterNode.init(fileNamed: "Pop");
+            explosionEffect?.position = (contact.bodyA.node?.position)!;
+            explosionEffect?.targetNode = self;
+            explosionEffect?.particleSize = CGSize.init(width: 20, height: 20);
+            self.addChild(explosionEffect!);
+            explosionEffect?.run(SKAction.sequence([SKAction.wait(forDuration: 1),SKAction.removeFromParent()]))
+            // remove
             contact.bodyA.node?.removeFromParent();
             contact.bodyB.node?.removeFromParent();
             run(SKAction.playSoundFileNamed("Explosion3.wav", waitForCompletion: false))
@@ -214,7 +222,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
             break;
         case 9:
             // You collided with another Tank. You die.
-            self.gameData.player1.lifes = 0;
+            self.gameData.player1.lifes -= 1;
             run(SKAction.playSoundFileNamed("Hurt.wav", waitForCompletion: false))
             updateLabels();
             self.sceneManager.loadGameOverScene();
@@ -222,11 +230,19 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
             break;
         case 20:
             // You shot the balloon.
+            // boom
+            let explosionEffect = SKEmitterNode.init(fileNamed: "Pop");
+            explosionEffect?.position = (contact.bodyA.node?.position)!;
+            explosionEffect?.targetNode = self;
+            self.addChild(explosionEffect!);
+            explosionEffect?.run(SKAction.sequence([SKAction.wait(forDuration: 1),SKAction.removeFromParent()]))
+            // remove
             contact.bodyA.node?.removeFromParent();
             contact.bodyB.node?.removeFromParent();
             self.gameData.player1.score += 2;
             updateLabels();
             run(SKAction.playSoundFileNamed("Explosion1.wav", waitForCompletion: false))
+            
             break;
         case 36:
             // The projectile collided with the Collector.
@@ -291,7 +307,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         self.addChild(tankProjectile);
         
         // TODO: - Add the physics for projectiles.
-        tankProjectile.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 10, height: 10));
+        tankProjectile.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 20, height: 20));
         tankProjectile.physicsBody?.isDynamic = true;
         tankProjectile.physicsBody?.categoryBitMask = PhysicsCategory.Projectile;
 //        tankProjectile.physicsBody?.contactTestBitMask = PhysicsCategory.Projectile + PhysicsCategory.Player;
@@ -340,8 +356,10 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
 //        while ( balloon.position == CGPoint(x: player1Node.position.x, y: self.size.height/2) ){
 //            print("@@@@@@@@@");
 //        }
-        callballoonProjectile(balloon: balloon)
         
+        if randomBetween(min: 0, max: 3) > 1 {
+            callballoonProjectile(balloon: balloon)
+        }
     }
     
     func callballoonProjectile(balloon: SKSpriteNode){
@@ -362,7 +380,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         //balloonProjectile.zRotation = CGFloat.pi - atan(direction.x/direction.y)
         
         // TODO: - Add the physics for projectiles.
-        balloonProjectile.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 10, height: 10));
+        balloonProjectile.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 20, height: 20));
         balloonProjectile.physicsBody?.isDynamic = true;
         balloonProjectile.physicsBody?.categoryBitMask = PhysicsCategory.Projectile;
 //        balloonProjectile.physicsBody?.contactTestBitMask = PhysicsCategory.Projectile + PhysicsCategory.Player;
@@ -424,7 +442,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         
         // We need to shoot continously. We need to start creating a lot of projectiles. So, we need a function that creates a projectil and call that infinitely.
         isTouching = true;
-        shootNSTimer = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(LevelScene.shootProjectile), userInfo: nil, repeats: true)
+        shootNSTimer = Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(LevelScene.shootProjectile), userInfo: nil, repeats: true)
         
     }
     
@@ -472,7 +490,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         projectile.zRotation = 0 - atan(direction.x/direction.y)
         
         // MARK: - Physics for the projectile shot by the player.
-        projectile.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 10,height: 10));
+        projectile.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 20,height: 20));
         projectile.physicsBody?.isDynamic = true;
         projectile.physicsBody?.categoryBitMask = PhysicsCategory.PlayerProjectile;
         projectile.physicsBody?.contactTestBitMask = PhysicsCategory.Projectile + PhysicsCategory.Tank;
@@ -503,9 +521,8 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
                 SKAction.sequence(
                     [
                         projectileMove,
-                        SKAction.wait(forDuration: 2)
-                        //                        ,
-                        //                        projectileMoveDone,
+                        SKAction.wait(forDuration: 2),
+                        projectileMoveDone,
                     ]
                 )
             )
@@ -523,8 +540,8 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
             let nextLevel = currentLevel + 1;
             var nextTankTime = levelData.tankTime - 1;
             var nextballoonDelayTime = levelData.balloonDelayTime - 1;
-            var nextballoonProjectileTime = levelData.balloonProjectileTime - 1;
-            var nextballoonTime = levelData.balloonTime - 1;
+            var nextballoonProjectileTime = levelData.balloonProjectileTime - 0.1;
+            var nextballoonTime = levelData.balloonTime - 0.1;
             var nextTankDelayTime = levelData.tankDelayTime - 1;
             var nextTankProjectileTime = levelData.tankProjectileTime - 1;
             

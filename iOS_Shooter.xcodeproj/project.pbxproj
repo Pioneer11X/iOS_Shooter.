@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		190FC40F1DA1F90C006D311B /* white_balloon.png in Resources */ = {isa = PBXBuildFile; fileRef = 190FC40E1DA1F90C006D311B /* white_balloon.png */; };
+		190FC4121DA201E7006D311B /* Pop.sks in Resources */ = {isa = PBXBuildFile; fileRef = 190FC4101DA201E7006D311B /* Pop.sks */; };
+		190FC4131DA201E7006D311B /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 190FC4111DA201E7006D311B /* spark.png */; };
 		1983126D1D9A0A7A00346871 /* Explosion1.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1983126A1D9A0A7A00346871 /* Explosion1.wav */; };
 		1983126E1D9A0A7A00346871 /* Explosion2.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1983126B1D9A0A7A00346871 /* Explosion2.wav */; };
 		1983126F1D9A0A7A00346871 /* Hurt.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1983126C1D9A0A7A00346871 /* Hurt.wav */; };
@@ -32,6 +34,8 @@
 
 /* Begin PBXFileReference section */
 		190FC40E1DA1F90C006D311B /* white_balloon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = white_balloon.png; path = Assets.xcassets/Assets.xcassets/white_balloon.png; sourceTree = "<group>"; };
+		190FC4101DA201E7006D311B /* Pop.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Pop.sks; sourceTree = "<group>"; };
+		190FC4111DA201E7006D311B /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spark.png; sourceTree = "<group>"; };
 		1983126A1D9A0A7A00346871 /* Explosion1.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = Explosion1.wav; path = Assets.xcassets/Explosion1.wav; sourceTree = "<group>"; };
 		1983126B1D9A0A7A00346871 /* Explosion2.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = Explosion2.wav; path = Assets.xcassets/Explosion2.wav; sourceTree = "<group>"; };
 		1983126C1D9A0A7A00346871 /* Hurt.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = Hurt.wav; path = Assets.xcassets/Hurt.wav; sourceTree = "<group>"; };
@@ -100,6 +104,7 @@
 			children = (
 				1983127E1D9A20A700346871 /* Super Power Cool Dude.mp3 */,
 				1983127C1D9A1FA900346871 /* SmokeTrail.sks */,
+				190FC4101DA201E7006D311B /* Pop.sks */,
 				1983127A1D9A1D8400346871 /* tank_by_florianrenner.jpg */,
 				A0AAD5E71D985F2C001B638D /* Assets.xcassets */,
 				190FC40E1DA1F90C006D311B /* white_balloon.png */,
@@ -116,6 +121,7 @@
 				A03E70641D885790006C50E9 /* LaunchScreen.storyboard */,
 				A03E70671D885790006C50E9 /* Info.plist */,
 				A0AAD5E31D9767AF001B638D /* player.swift */,
+				190FC4111DA201E7006D311B /* spark.png */,
 			);
 			path = iOS_Shooter;
 			sourceTree = "<group>";
@@ -187,8 +193,10 @@
 				A03E70611D885790006C50E9 /* Main.storyboard in Resources */,
 				198312711D9A0BA700346871 /* Explosion3.wav in Resources */,
 				1983127F1D9A20A700346871 /* Super Power Cool Dude.mp3 in Resources */,
+				190FC4121DA201E7006D311B /* Pop.sks in Resources */,
 				1983126F1D9A0A7A00346871 /* Hurt.wav in Resources */,
 				1983127B1D9A1D8400346871 /* tank_by_florianrenner.jpg in Resources */,
+				190FC4131DA201E7006D311B /* spark.png in Resources */,
 				A0AAD5E81D985F2C001B638D /* Assets.xcassets in Resources */,
 				1983126E1D9A0A7A00346871 /* Explosion2.wav in Resources */,
 				1983126D1D9A0A7A00346871 /* Explosion1.wav in Resources */,
