@@ -239,13 +239,13 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
             }
             // boom
             let explosionEffect = SKEmitterNode.init(fileNamed: "Pop");
-            explosionEffect?.position = (contact.bodyA.node?.position)!;
+            explosionEffect?.position = balloon.position;
             explosionEffect?.targetNode = self;
             self.addChild(explosionEffect!);
             explosionEffect?.run(SKAction.sequence([SKAction.wait(forDuration: 1),SKAction.removeFromParent()]));
             // confetti
             let confetti = SKEmitterNode.init(fileNamed: "Confetti");
-            confetti?.position = (balloon?.position)!;
+            confetti?.position = balloon.position;
             // get new color
             confetti?.particleColorSequence = nil;
             confetti?.particleColorBlendFactor = 1.0;
@@ -504,7 +504,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         let projectileDest = direction * 2000 + projectile.position;
         
         // rotate projectile on shoot
-        projectile.zRotation = 0 - atan(direction.x/direction.y)
+        //projectile.zRotation = 0 - atan(direction.x/direction.y)
         
         // MARK: - Physics for the projectile shot by the player.
         projectile.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 20,height: 20));
@@ -544,6 +544,39 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
                 )
             )
         );
+    }
+    
+    func makeExplosionProjectile(direction:CGPoint) {
+        let projectile = SKEmitterNode(fileNamed: "SmokeTrail")!
+        projectile.position = CGPoint(x: player1Node.position.x + player1Node.size.width/3, y: 80 );
+        projectile.targetNode = self;
+        self.addChild(projectile);
+        let projectileDest = direction * 2000 + projectile.position;
+        
+        // MARK: - Physics for the projectile shot by the player.
+        projectile.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 20,height: 20));
+        projectile.physicsBody?.isDynamic = true;
+        projectile.physicsBody?.categoryBitMask = PhysicsCategory.PlayerProjectile;
+        projectile.physicsBody?.contactTestBitMask = PhysicsCategory.Projectile + PhysicsCategory.Tank;
+        projectile.physicsBody?.collisionBitMask = PhysicsCategory.None;
+        projectile.physicsBody?.affectedByGravity = false;
+        
+        //        let projectileMove = SKAction.move(to: CGPoint(x:self.size.width,y:80), duration: 3.0);
+        let projectileMove = SKAction.move(to: projectileDest, duration: 3.0);
+        let projectileMoveDone = SKAction.removeFromParent();
+
+        projectile.run(
+            SKAction.repeatForever(
+                SKAction.sequence(
+                    [
+                        projectileMove,
+                        SKAction.wait(forDuration: 2),
+                        projectileMoveDone,
+                        ]
+                )
+            )
+        );
+
     }
     
     func updateLabels(){
