@@ -142,6 +142,9 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         btmBulletCollector.physicsBody?.collisionBitMask = PhysicsCategory.None;
         btmBulletCollector.physicsBody?.affectedByGravity = false;
         
+        topBulletCollector.zPosition = -1.0;
+        btmBulletCollector.zPosition = -1.0;
+        
         self.addChild(topBulletCollector);
         self.addChild(btmBulletCollector);
         
