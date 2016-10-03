@@ -245,7 +245,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
             explosionEffect?.run(SKAction.sequence([SKAction.wait(forDuration: 1),SKAction.removeFromParent()]));
             // confetti
             let confetti = SKEmitterNode.init(fileNamed: "Confetti");
-            confetti?.position = (balloon?.position)!;
+            confetti?.position = (balloon.position);
             // get new color
             confetti?.particleColorSequence = nil;
             confetti?.particleColorBlendFactor = 1.0;
