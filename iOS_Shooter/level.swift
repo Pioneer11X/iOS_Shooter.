@@ -38,11 +38,11 @@ extension CGPoint {
 struct LevelData {
     var currentLevel: Int;
     var tankTime: Double;
-    var planeTime: Double;
+    var balloonTime: Double;
     var tankProjectileTime: Double;
-    var planeProjectileTime: Double;
+    var balloonProjectileTime: Double;
     var tankDelayTime: Double;
-    var planeDelayTime: Double;
+    var balloonDelayTime: Double;
 }
 
 class LevelScene: SKScene, SKPhysicsContactDelegate {
@@ -73,7 +73,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         static let Projectile: UInt32 = 0b10
         static let PlayerProjectile: UInt32 = 0b100;
         static let Player: UInt32 = 0b1000;
-        static let Plane: UInt32 = 0b10000;
+        static let balloon: UInt32 = 0b10000;
         static let BulletCollector: UInt32 = 0b100000;
     }
     
@@ -163,16 +163,16 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         
 //        addTanks();
         
-        run(SKAction.repeatForever(
+        /*run(SKAction.repeatForever(
             SKAction.sequence([
                 SKAction.run(addTanks),
                 SKAction.wait(forDuration: levelData.tankDelayTime)
                 ])
-        ))
+        ))*/
         run(SKAction.repeatForever(
             SKAction.sequence([
-                SKAction.wait(forDuration: levelData.planeDelayTime),
-                SKAction.run(addPlanes)
+                SKAction.wait(forDuration: levelData.balloonDelayTime),
+                SKAction.run(addballoons)
                 ])
         ))
         
@@ -186,7 +186,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
 //        print(contactMask);
         switch contactMask {
         case 3: break
-            // Do nothing. The tank/plane projectile hit with the tank.
+            // Do nothing. The tank/balloon projectile hit with the tank.
         case 5:
             // You shot a Tank.
             // Remove the Tank, Remove the projectile, add the score. Add a life if score % 5 == 0.
@@ -221,7 +221,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
             // TODO: - Call the End game Scene.
             break;
         case 20:
-            // You shot the Plane.
+            // You shot the balloon.
             contact.bodyA.node?.removeFromParent();
             contact.bodyB.node?.removeFromParent();
             self.gameData.player1.score += 2;
@@ -306,71 +306,73 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         
     }
     
-    func addPlanes(){
+    func addballoons(){
         
-        let plane = SKSpriteNode(imageNamed: "Spaceship");
+        let balloon = SKSpriteNode(imageNamed: "white_balloon");
         
-        let planeMoveDuration = levelData.planeTime;
-        let planeSpawn = CGPoint(x: self.size.width , y: self.size.height/2 + CGFloat(arc4random_uniform(UInt32(self.size.height/2)) ) );
+        let balloonMoveDuration = levelData.balloonTime;
+        let balloonSpawn = CGPoint(x: self.size.width , y: self.size.height/2 + CGFloat(arc4random_uniform(UInt32(self.size.height/2)) ) );
         
-        plane.xScale = 0.2;
-        plane.yScale = 0.2;
-        plane.zRotation = .pi/2 ;
-        plane.position = planeSpawn;
-        plane.zPosition = 3.0;
+        balloon.xScale = 1;
+        balloon.yScale = 1;
+        //balloon.zRotation = .pi/4 ;
+        balloon.position = balloonSpawn;
+        balloon.zPosition = 3.0;
+        balloon.color = UIColor.init(colorLiteralRed: (0.0..<1.0).random(), green: (0.0..<1.0).random(), blue: (0.0..<1.0).random(), alpha: Float(1));
+        balloon.colorBlendFactor = 0.7;
         
-        // MARK: - Plane Physics -
-        plane.physicsBody = SKPhysicsBody(rectangleOf: plane.size);
-        plane.physicsBody?.isDynamic = true;
-        plane.physicsBody?.categoryBitMask = PhysicsCategory.Plane;
-        plane.physicsBody?.contactTestBitMask = PhysicsCategory.PlayerProjectile;
-        plane.physicsBody?.collisionBitMask = PhysicsCategory.None;
-        plane.physicsBody?.affectedByGravity = false;
+        // MARK: - balloon Physics -
+        balloon.physicsBody = SKPhysicsBody(rectangleOf: balloon.size);
+        balloon.physicsBody?.isDynamic = true;
+        balloon.physicsBody?.categoryBitMask = PhysicsCategory.balloon;
+        balloon.physicsBody?.contactTestBitMask = PhysicsCategory.PlayerProjectile;
+        balloon.physicsBody?.collisionBitMask = PhysicsCategory.None;
+        balloon.physicsBody?.affectedByGravity = false;
         
-        let actionMove = SKAction.move(to: CGPoint(x: -plane.size.width/2, y: plane.position.y), duration: TimeInterval(planeMoveDuration))
+        let actionMove = SKAction.move(to: CGPoint(x: -balloon.size.width/2, y: balloon.position.y), duration: TimeInterval(balloonMoveDuration))
         let actionMoveDone = SKAction.removeFromParent() // This should Ideally be never called. Since either the tank collides with the player and he dies or the tank is destroyed before it can touch the player.
         
-        self.addChild(plane);
-        plane.run(SKAction.sequence([actionMove, actionMoveDone]))
+        self.addChild(balloon);
+        balloon.run(SKAction.sequence([actionMove, actionMoveDone]))
         
-        // Figure out how to initiate a projectile from the plane when the plane actually gets to the middle of the screen dynamically instead of when it spawns.
+        // Figure out how to initiate a projectile from the balloon when the balloon actually gets to the middle of the screen dynamically instead of when it spawns.
         
-//        while ( plane.position == CGPoint(x: player1Node.position.x, y: self.size.height/2) ){
+//        while ( balloon.position == CGPoint(x: player1Node.position.x, y: self.size.height/2) ){
 //            print("@@@@@@@@@");
 //        }
-        callPlaneProjectile(plane: plane)
+        callballoonProjectile(balloon: balloon)
         
     }
     
-    func callPlaneProjectile(plane: SKSpriteNode){
+    func callballoonProjectile(balloon: SKSpriteNode){
         
         // MARK: - NPC projectile logic
         
-        //let planeProjectile = SKSpriteNode(imageNamed: "projectile");
-        let planeProjectile = SKEmitterNode(fileNamed: "SmokeTrail")!
-        //planeProjectile.xScale = 0.1;
-        //planeProjectile.yScale = 0.1;
-        planeProjectile.position = CGPoint(x: plane.position.x - plane.size.width/3, y: plane.position.y);
-        planeProjectile.targetNode = self;
-        self.addChild(planeProjectile);
+        //let balloonProjectile = SKSpriteNode(imageNamed: "projectile");
+        let balloonProjectile = SKEmitterNode(fileNamed: "SmokeTrail")!
+        //balloonProjectile.xScale = 0.1;
+        //balloonProjectile.yScale = 0.1;
+        balloonProjectile.position = CGPoint(x: balloon.position.x - balloon.size.width/3, y: balloon.position.y);
+        balloonProjectile.targetNode = self;
+        self.addChild(balloonProjectile);
         
-        //let direction = player1Node.position - plane.position;
+        //let direction = player1Node.position - balloon.position;
         
         // rotate projectile on shoot
-        //planeProjectile.zRotation = CGFloat.pi - atan(direction.x/direction.y)
+        //balloonProjectile.zRotation = CGFloat.pi - atan(direction.x/direction.y)
         
         // TODO: - Add the physics for projectiles.
-        planeProjectile.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 10, height: 10));
-        planeProjectile.physicsBody?.isDynamic = true;
-        planeProjectile.physicsBody?.categoryBitMask = PhysicsCategory.Projectile;
-//        planeProjectile.physicsBody?.contactTestBitMask = PhysicsCategory.Projectile + PhysicsCategory.Player;
-        planeProjectile.physicsBody?.collisionBitMask = PhysicsCategory.None;
-        planeProjectile.physicsBody?.affectedByGravity = false;
+        balloonProjectile.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 10, height: 10));
+        balloonProjectile.physicsBody?.isDynamic = true;
+        balloonProjectile.physicsBody?.categoryBitMask = PhysicsCategory.Projectile;
+//        balloonProjectile.physicsBody?.contactTestBitMask = PhysicsCategory.Projectile + PhysicsCategory.Player;
+        balloonProjectile.physicsBody?.collisionBitMask = PhysicsCategory.None;
+        balloonProjectile.physicsBody?.affectedByGravity = false;
         
-        let planeProjectileAction = SKAction.move(to: CGPoint(x:player1Node.position.x,y:80), duration: levelData.planeProjectileTime)
-        let planeProjectileActionDone = SKAction.removeFromParent();
+        let balloonProjectileAction = SKAction.move(to: CGPoint(x:player1Node.position.x,y:80), duration: levelData.balloonProjectileTime)
+        let balloonProjectileActionDone = SKAction.removeFromParent();
         
-        planeProjectile.run(SKAction.sequence([planeProjectileAction,planeProjectileActionDone]));
+        balloonProjectile.run(SKAction.sequence([balloonProjectileAction,balloonProjectileActionDone]));
         
         
     }
@@ -520,9 +522,9 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
             
             let nextLevel = currentLevel + 1;
             var nextTankTime = levelData.tankTime - 1;
-            var nextPlaneDelayTime = levelData.planeDelayTime - 1;
-            var nextPlaneProjectileTime = levelData.planeProjectileTime - 1;
-            var nextPlaneTime = levelData.planeTime - 1;
+            var nextballoonDelayTime = levelData.balloonDelayTime - 1;
+            var nextballoonProjectileTime = levelData.balloonProjectileTime - 1;
+            var nextballoonTime = levelData.balloonTime - 1;
             var nextTankDelayTime = levelData.tankDelayTime - 1;
             var nextTankProjectileTime = levelData.tankProjectileTime - 1;
             
@@ -530,16 +532,16 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
 //                nextTankTime = 1
 //                return
 //            }
-//            guard nextPlaneDelayTime > 0 else {
-//                nextPlaneDelayTime = 1
+//            guard nextballoonDelayTime > 0 else {
+//                nextballoonDelayTime = 1
 //                return
 //            }
-//            guard nextPlaneProjectileTime > 0 else {
-//                nextPlaneProjectileTime = 1
+//            guard nextballoonProjectileTime > 0 else {
+//                nextballoonProjectileTime = 1
 //                return
 //            }
-//            guard nextPlaneTime > 0 else {
-//                nextPlaneTime = 1
+//            guard nextballoonTime > 0 else {
+//                nextballoonTime = 1
 //                return
 //            }
 //            guard nextTankDelayTime > 0 else {
@@ -554,14 +556,14 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
             // We will have to return from the function if we use guard. So we use if.
             
             check(value: &nextTankTime);
-            check(value: &nextPlaneDelayTime);
+            check(value: &nextballoonDelayTime);
             check(value: &nextTankDelayTime);
-            check(value: &nextPlaneTime);
-            check(value: &nextPlaneProjectileTime);
+            check(value: &nextballoonTime);
+            check(value: &nextballoonProjectileTime);
             check(value: &nextTankProjectileTime);
             
             
-            let nextLevelData: LevelData = LevelData(currentLevel: nextLevel, tankTime: nextTankTime, planeTime: nextPlaneTime, tankProjectileTime: nextTankProjectileTime, planeProjectileTime: nextPlaneProjectileTime, tankDelayTime: nextTankDelayTime, planeDelayTime: nextPlaneDelayTime );
+            let nextLevelData: LevelData = LevelData(currentLevel: nextLevel, tankTime: nextTankTime, balloonTime: nextballoonTime, tankProjectileTime: nextTankProjectileTime, balloonProjectileTime: nextballoonProjectileTime, tankDelayTime: nextTankDelayTime, balloonDelayTime: nextballoonDelayTime );
             
             sceneManager.loadGameScene(level: nextLevelData);
         }
@@ -578,5 +580,18 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
                 value = 1;
             }
         }
+    }
+    
+    func randomBetween(min: Int, max: Int)->Int {
+        return Int(UInt32(min) + arc4random_uniform(UInt32(max)));
+    }
+}
+
+// http://stackoverflow.com/questions/25050309/swift-random-float-between-0-and-1
+extension Range {
+    public func random() -> Bound {
+        let range = (self.lowerBound as! Float) - (self.upperBound as! Float)
+        let randomValue = (Float(arc4random_uniform(UINT32_MAX)) / Float(UINT32_MAX)) * range + (self.upperBound as! Float)
+        return randomValue as! Bound
     }
 }
