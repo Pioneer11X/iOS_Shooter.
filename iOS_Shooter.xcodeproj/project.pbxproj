@@ -13,6 +13,8 @@
 		190FC4171DA21207006D311B /* bokeh.png in Resources */ = {isa = PBXBuildFile; fileRef = 190FC4151DA21207006D311B /* bokeh.png */; };
 		190FC4191DA2122D006D311B /* Confetti.sks in Resources */ = {isa = PBXBuildFile; fileRef = 190FC4181DA2122D006D311B /* Confetti.sks */; };
 		190FC41B1DA21361006D311B /* confetti.png in Resources */ = {isa = PBXBuildFile; fileRef = 190FC41A1DA21361006D311B /* confetti.png */; };
+		190FC41E1DA2F783006D311B /* pixel-tank_turret.png in Resources */ = {isa = PBXBuildFile; fileRef = 190FC41C1DA2F783006D311B /* pixel-tank_turret.png */; };
+		190FC41F1DA2F783006D311B /* pixel-tank_party.png in Resources */ = {isa = PBXBuildFile; fileRef = 190FC41D1DA2F783006D311B /* pixel-tank_party.png */; };
 		1983126D1D9A0A7A00346871 /* Explosion1.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1983126A1D9A0A7A00346871 /* Explosion1.wav */; };
 		1983126E1D9A0A7A00346871 /* Explosion2.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1983126B1D9A0A7A00346871 /* Explosion2.wav */; };
 		1983126F1D9A0A7A00346871 /* Hurt.wav in Resources */ = {isa = PBXBuildFile; fileRef = 1983126C1D9A0A7A00346871 /* Hurt.wav */; };
@@ -42,6 +44,8 @@
 		190FC4151DA21207006D311B /* bokeh.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bokeh.png; sourceTree = "<group>"; };
 		190FC4181DA2122D006D311B /* Confetti.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Confetti.sks; sourceTree = "<group>"; };
 		190FC41A1DA21361006D311B /* confetti.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = confetti.png; path = Assets.xcassets/Assets.xcassets/confetti.png; sourceTree = "<group>"; };
+		190FC41C1DA2F783006D311B /* pixel-tank_turret.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pixel-tank_turret.png"; path = "Assets.xcassets/Assets.xcassets/pixel-tank_turret.png"; sourceTree = "<group>"; };
+		190FC41D1DA2F783006D311B /* pixel-tank_party.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pixel-tank_party.png"; path = "Assets.xcassets/Assets.xcassets/pixel-tank_party.png"; sourceTree = "<group>"; };
 		1983126A1D9A0A7A00346871 /* Explosion1.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = Explosion1.wav; path = Assets.xcassets/Explosion1.wav; sourceTree = "<group>"; };
 		1983126B1D9A0A7A00346871 /* Explosion2.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = Explosion2.wav; path = Assets.xcassets/Explosion2.wav; sourceTree = "<group>"; };
 		1983126C1D9A0A7A00346871 /* Hurt.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = Hurt.wav; path = Assets.xcassets/Hurt.wav; sourceTree = "<group>"; };
@@ -108,6 +112,8 @@
 		A03E70561D885790006C50E9 /* iOS_Shooter */ = {
 			isa = PBXGroup;
 			children = (
+				190FC41C1DA2F783006D311B /* pixel-tank_turret.png */,
+				190FC41D1DA2F783006D311B /* pixel-tank_party.png */,
 				190FC41A1DA21361006D311B /* confetti.png */,
 				1983127E1D9A20A700346871 /* Super Power Cool Dude.mp3 */,
 				1983127C1D9A1FA900346871 /* SmokeTrail.sks */,
@@ -198,6 +204,7 @@
 				1983127D1D9A1FA900346871 /* SmokeTrail.sks in Resources */,
 				A03E705A1D885790006C50E9 /* GameScene.sks in Resources */,
 				19CEA4311D8E670E0098620E /* spark.png in Resources */,
+				190FC41F1DA2F783006D311B /* pixel-tank_party.png in Resources */,
 				A03E70661D885790006C50E9 /* LaunchScreen.storyboard in Resources */,
 				A03E70611D885790006C50E9 /* Main.storyboard in Resources */,
 				190FC41B1DA21361006D311B /* confetti.png in Resources */,
@@ -211,6 +218,7 @@
 				190FC4131DA201E7006D311B /* spark.png in Resources */,
 				A0AAD5E81D985F2C001B638D /* Assets.xcassets in Resources */,
 				1983126E1D9A0A7A00346871 /* Explosion2.wav in Resources */,
+				190FC41E1DA2F783006D311B /* pixel-tank_turret.png in Resources */,
 				1983126D1D9A0A7A00346871 /* Explosion1.wav in Resources */,
 				190FC40F1DA1F90C006D311B /* white_balloon.png in Resources */,
 			);

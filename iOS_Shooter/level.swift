@@ -52,6 +52,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
     var currentLevel: Int;
     var levelData: LevelData;
     var player1Node : SKSpriteNode! ;
+    var player1Turret : SKSpriteNode! ;
     var player2Node : SKSpriteNode! ;
     var player1ScoreLabel: SKLabelNode! ;
     var player2ScoreLabel: SKLabelNode! ;
@@ -65,6 +66,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
     var btmBulletCollector: SKSpriteNode!;
     var isTouching: Bool;
     var touchLocation: CGPoint?;
+    var touchCooldown: Bool;
     
     struct PhysicsCategory {
         static let None      : UInt32 = 0
@@ -99,6 +101,8 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         
         isTouching = false;
         touchLocation = nil;
+        
+        touchCooldown = false;
         
         super.init(size:size);
         
@@ -162,6 +166,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         self.addChild(levelLabel);
         self.addChild(groundNode);
         self.addChild(player1Node);
+        self.addChild(player1Turret);
         //self.addChild(player2Node);
         
 //        addTanks();
@@ -207,7 +212,13 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
             // You shot down a projectile coming towards you.
             // boom
             let explosionEffect = SKEmitterNode.init(fileNamed: "Pop");
-            explosionEffect?.position = (contact.bodyA.node?.position)!;
+            if let aNode = contact.bodyA.node {
+                explosionEffect?.position = aNode.position;
+            } else {
+                if let aNode = contact.bodyA.node {
+                    explosionEffect?.position = aNode.position;
+                }
+            }
             explosionEffect?.targetNode = self;
             explosionEffect?.particleSize = CGSize.init(width: 20, height: 20);
             self.addChild(explosionEffect!);
@@ -215,6 +226,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
             // remove
             contact.bodyA.node?.removeFromParent();
             contact.bodyB.node?.removeFromParent();
+            
             run(SKAction.playSoundFileNamed("Explosion3.wav", waitForCompletion: false))
             break;
         case 10:
@@ -234,11 +246,13 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         case 20:
             // You shot the balloon.
             // balloon ref
-            var balloon:SKSpriteNode
+            var balloon:SKSpriteNode;
             if let b:SKSpriteNode = (contact.bodyA.node as? SKSpriteNode) {
                 balloon = b;
+            } else if let b:SKSpriteNode = (contact.bodyB.node as? SKSpriteNode) {
+                balloon = b;
             } else {
-                balloon = (contact.bodyB.node as? SKSpriteNode)!;
+                return
             }
             // boom
             let explosionEffect = SKEmitterNode.init(fileNamed: "Pop");
@@ -418,9 +432,13 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
     
     func initialisePlayers(){
         
-        player1Node = SKSpriteNode(imageNamed: "player1");
+        player1Node = SKSpriteNode(imageNamed: "pixel-tank_party");
         player1Node.position = CGPoint(x: self.size.width/6, y: 70);
         player1Node.zPosition = 3.0
+        
+        player1Turret = SKSpriteNode(imageNamed: "pixel-tank_turret")
+        player1Turret.position = CGPoint(x: self.size.width/6 - 1, y: 60);
+        player1Turret.zPosition = 2.0
         
         // TODO: - Physics for the Player -
         
@@ -456,15 +474,36 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         }
         touchLocation = touch.location(in: self)
         
-        // play shoot sound
-        run(SKAction.playSoundFileNamed("Explosion2.wav", waitForCompletion: false))
-        
         //        shootProjectile(touchLocation: touchLocation);
         
         // We need to shoot continously. We need to start creating a lot of projectiles. So, we need a function that creates a projectil and call that infinitely.
         isTouching = true;
-        shootNSTimer = Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(LevelScene.shootProjectile), userInfo: nil, repeats: true)
         
+        // get direction
+        var offset = (touchLocation! - player1Node.position)
+        if ( offset.y < 0 ){
+            offset.y = 0;
+        }
+        if ( offset.x < 0 ){
+            offset.x = 0;
+        }
+        let direction = offset.normalized();
+        
+        // rotate gun
+        player1Turret.zRotation = .pi/2 - atan(direction.x/direction.y)
+        
+        // play shoot sound
+        run(SKAction.playSoundFileNamed("Explosion2.wav", waitForCompletion: false))
+        
+        shootNSTimer = Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(LevelScene.shootProjectile), userInfo: nil, repeats: true)
+        if (self.touchCooldown == false) {
+            shootProjectile();
+            self.touchCooldown = true;
+            run(SKAction.sequence([
+                SKAction.wait(forDuration: 0.2),
+                SKAction.run ({ self.touchCooldown = false })
+                ]));
+        }
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -472,6 +511,20 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
             return
         }
         touchLocation = touch.location(in: self)
+        
+        // get direction
+        var offset = (touchLocation! - player1Node.position)
+        if ( offset.y < 0 ){
+            offset.y = 0;
+        }
+        if ( offset.x < 0 ){
+            offset.x = 0;
+        }
+        let direction = offset.normalized();
+        
+        // rotate gun
+        player1Turret.zRotation = .pi/2 - atan(direction.x/direction.y)
+
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -488,8 +541,11 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
             return;
         }
         
+        // play shoot sound
+        run(SKAction.playSoundFileNamed("Explosion2.wav", waitForCompletion: false))
+        
         // We need to shoot. So, we start with creating a new projectile.
-        print("Projectile Launched");
+        //print("Projectile Launched");
         
         //let projectile = SKSpriteNode(imageNamed: "projectile");
         let projectile = SKEmitterNode(fileNamed: "SmokeTrail")!
