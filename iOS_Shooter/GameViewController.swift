@@ -82,7 +82,7 @@ class GameViewController: UIViewController {
     func loadGameData(){
         self.gameData.fontSize = 24;
         self.gameData.fontColor = UIColor.red;
-        self.gameData.fontName = "Chalkduster";
+        self.gameData.fontName = "Futura-CondensedExtraBold";
         self.gameData.currentLevel = 1;
         self.gameData.player1 = Player();
         self.gameData.player2 = Player();
