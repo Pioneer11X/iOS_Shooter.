@@ -667,9 +667,6 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
             var nextballoonTime = levelData.balloonTime / 1.1;
             var nextTankDelayTime = levelData.tankDelayTime - 1;
             var nextTankProjectileTime = levelData.tankProjectileTime - 1;
-            if ( AppData.staticData.highScore < currentLevel ){
-                AppData.staticData.highScore = currentLevel;
-            }
             
 //            guard nextTankTime > 0 else {
 //                nextTankTime = 1
@@ -713,6 +710,9 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         player1LifeLabel.text = "Lives: \(self.gameData.player1.lifes)";
         player1ScoreLabel.text = "Score: \(self.gameData.player1.score)";
         highScoreLabel.text = "Highscore: \(AppData.staticData.highScore)";
+        if ( AppData.staticData.highScore < gameData.player1.score ){
+            AppData.staticData.highScore = gameData.player1.score;
+        }
     }
     
     func check( value: inout Double){
