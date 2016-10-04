@@ -549,7 +549,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         isTouching = true;
         
         // touched tank
-        if (touchLocation! - player1Node.position).length() < 100 {
+        if (touchLocation! - player1Node.position).length() < 50 {
             // sound
             run(SKAction.playSoundFileNamed("ChangeWeapon.wav", waitForCompletion: false))
             // Change weapon
