@@ -43,6 +43,7 @@ struct LevelData {
     var balloonProjectileTime: Double;
     var tankDelayTime: Double;
     var balloonDelayTime: Double;
+    var shootChance: Double;
 }
 
 class LevelScene: SKScene, SKPhysicsContactDelegate {
@@ -60,6 +61,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
     var levelLabel: SKLabelNode! ;
     var player1LifeLabel: SKLabelNode! ;
     var player2LifeLabel: SKLabelNode! ;
+    var bigLevelLabel: SKLabelNode! ;
     var gameData: GameData;
     var groundNode: SKSpriteNode! ;
     var sceneManager: GameViewController;
@@ -68,6 +70,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
     var isTouching: Bool;
     var touchLocation: CGPoint?;
     var touchCooldown: Bool;
+    var weapon: String = "chainReactionGun";
     
     struct PhysicsCategory {
         static let None      : UInt32 = 0
@@ -85,6 +88,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         
         // MARK: - Labels Initialisation -
         player1ScoreLabel = SKLabelNode(fontNamed: gameData.fontName);
+        bigLevelLabel = SKLabelNode(fontNamed: gameData.fontName);
         player2ScoreLabel = SKLabelNode(fontNamed: gameData.fontName);
         levelLabel = SKLabelNode(fontNamed: gameData.fontName);
         player1LifeLabel = SKLabelNode(fontNamed: gameData.fontName);
@@ -124,10 +128,10 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         initLabel(label: player1ScoreLabel, gameData: gameData, text: "Score: \(gameData.player1.score)", pos: CGPoint(x: self.size.width/4, y: self.size.height - 50 ) );
         initLabel(label: player2ScoreLabel, gameData: gameData, text: "Score: \(gameData.player1.score)", pos: CGPoint(x: 3 * self.size.width/4, y: self.size.height - 50 ) );
         initLabel(label: player1LifeLabel, gameData: gameData, text: "Lives: \(gameData.player1.lifes)", pos: CGPoint(x: self.size.width/4, y: self.size.height - 100 ) );
-        initLabel(label: player2LifeLabel, gameData: gameData, text: "Lives: \(gameData.player2.lifes)", pos: CGPoint(x: 3 * self.size.width/4, y: self.size.height - 100 ) );
+        initLabel(label: player2LifeLabel, gameData: gameData, text: "Lives: \(gameData.player1.lifes)", pos: CGPoint(x: 3 * self.size.width/4, y: self.size.height - 100 ) );
+        initLabel(label: bigLevelLabel, gameData: gameData, text: "LEVEL UP!", pos: CGPoint(x: self.size.width/2, y: self.size.height/2 ) );
+        bigLevelLabel.fontSize = 100;
         initLabel(label: highScoreLabel, gameData: gameData, text: "Highscore: \(AppData.staticData.highScore)", pos: CGPoint(x: 3 * self.size.width/4, y: self.size.height - 100 ) );
-        
-        
         
         groundNode.position = CGPoint(x: self.size.width/2, y: 10 );
         groundNode.zPosition = 2.0
@@ -167,6 +171,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         initialisePlayers();
         
         self.addChild(player1ScoreLabel);
+        self.addChild(bigLevelLabel);
         //self.addChild(player2ScoreLabel);
         self.addChild(player1LifeLabel);
         //self.addChild(player2LifeLabel);
@@ -184,6 +189,22 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
                 SKAction.wait(forDuration: levelData.tankDelayTime)
                 ])
         ))*/
+        
+        // show level up if new level
+        if (currentLevel > 1) {
+            bigLevelLabel.run(
+                SKAction.sequence([
+                SKAction.repeat(
+                    SKAction.sequence( [
+                        SKAction.scale(by: 0.5, duration: 0.3),
+                        SKAction.scale(by: 2, duration: 0.3)
+                        ]), count: 5),
+                SKAction.removeFromParent()]))
+
+        } else {
+            bigLevelLabel.removeFromParent()
+        }
+        
         run(SKAction.repeatForever(
             SKAction.sequence([
                 SKAction.wait(forDuration: levelData.balloonDelayTime),
@@ -230,9 +251,21 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
             explosionEffect?.particleSize = CGSize.init(width: 20, height: 20);
             self.addChild(explosionEffect!);
             explosionEffect?.run(SKAction.sequence([SKAction.wait(forDuration: 1),SKAction.removeFromParent()]))
-            // remove
-            contact.bodyA.node?.removeFromParent();
-            contact.bodyB.node?.removeFromParent();
+            if (weapon == "tunnelGun") {
+                // remove enemy projectile
+                if (contact.bodyA.categoryBitMask < contact.bodyB.categoryBitMask) {
+                    contact.bodyA.node?.removeFromParent();
+                } else {
+                    contact.bodyB.node?.removeFromParent();
+                }
+                
+                break;
+            }
+            else {
+                // remove
+                contact.bodyA.node?.removeFromParent();
+                contact.bodyB.node?.removeFromParent();
+            }
             
             run(SKAction.playSoundFileNamed("Explosion3.wav", waitForCompletion: false))
             break;
@@ -253,40 +286,57 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         case 20:
             // You shot the balloon.
             // balloon ref
-            var balloon:SKSpriteNode;
-            if let b:SKSpriteNode = (contact.bodyA.node as? SKSpriteNode) {
-                balloon = b;
-            } else if let b:SKSpriteNode = (contact.bodyB.node as? SKSpriteNode) {
-                balloon = b;
+            var balloon:SKSpriteNode?;
+            var shot:SKEmitterNode?;
+            if (contact.bodyA.categoryBitMask < contact.bodyB.categoryBitMask) {
+                balloon = contact.bodyB.node as? SKSpriteNode
+                shot = contact.bodyA.node as? SKEmitterNode
             } else {
-                return
+                balloon = contact.bodyA.node as? SKSpriteNode
+                shot = contact.bodyB.node as? SKEmitterNode
             }
-            // boom
-            let explosionEffect = SKEmitterNode.init(fileNamed: "Pop");
-            explosionEffect?.position = balloon.position;
-            explosionEffect?.targetNode = self;
-            self.addChild(explosionEffect!);
-            explosionEffect?.run(SKAction.sequence([SKAction.wait(forDuration: 1),SKAction.removeFromParent()]));
-            // confetti
-            let confetti = SKEmitterNode.init(fileNamed: "Confetti");
-            confetti?.position = balloon.position;
-            // chain reaction
-            for _ in (0..<3) {
-                makeExplosionProjectile(origin: balloon.position,
-                                        direction: CGPoint.init(x: Double((Float(-1)..<Float(1)).random()),
-                                                                y: Double((Float(-1)..<Float(1)).random())));
+            if let b:SKSpriteNode = balloon {
+                // boom
+                let explosionEffect = SKEmitterNode.init(fileNamed: "Pop");
+                explosionEffect?.position = b.position;
+                explosionEffect?.targetNode = self;
+                self.addChild(explosionEffect!);
+                explosionEffect?.run(SKAction.sequence([SKAction.wait(forDuration: 1),SKAction.removeFromParent()]));
+                // confetti
+                let confetti = SKEmitterNode.init(fileNamed: "Confetti");
+                confetti?.position = b.position;
+                
+                // get new color
+                confetti?.particleColorSequence = nil;
+                confetti?.particleColorBlendFactor = 1.0;
+                confetti?.particleColor = b.color;
+                confetti?.targetNode = self;
+                self.addChild(confetti!);
+                confetti?.run(SKAction.sequence([SKAction.wait(forDuration: 2),SKAction.removeFromParent()]));
+                
+                switch (weapon) {
+                case "chainReactionGun":
+                    // chain reaction
+                    for _ in (0..<3) {
+                        makeExplosionProjectile(origin: b.position,
+                                                direction: CGPoint.init(x: Double((Float(-1)..<Float(1)).random()),
+                                                                        y: Double((Float(-1)..<Float(1)).random())));
+                    }
+                    b.removeFromParent();
+                    shot?.removeFromParent();
+                    break;
+                    
+                case "tunnelGun":
+                    b.removeFromParent();
+                    break;
+                    
+                default:
+                    b.removeFromParent();
+                    shot?.removeFromParent();
+                    break;
+                }
             }
-
-            // get new color
-            confetti?.particleColorSequence = nil;
-            confetti?.particleColorBlendFactor = 1.0;
-            confetti?.particleColor = balloon.color;
-            confetti?.targetNode = self;
-            self.addChild(confetti!);
-            confetti?.run(SKAction.sequence([SKAction.wait(forDuration: 2),SKAction.removeFromParent()]));
-            // remove
-            contact.bodyA.node?.removeFromParent();
-            contact.bodyB.node?.removeFromParent();
+            
             self.gameData.player1.score += 2;
             updateLabels();
             run(SKAction.playSoundFileNamed("Explosion1.wav", waitForCompletion: false))
@@ -375,7 +425,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         let balloon = SKSpriteNode(imageNamed: "white_balloon");
         
         let balloonMoveDuration = levelData.balloonTime;
-        let balloonSpawn = CGPoint(x: self.size.width , y: self.size.height/2 + CGFloat(arc4random_uniform(UInt32(self.size.height/2)) ) );
+        let balloonSpawn = CGPoint(x: self.size.width , y: self.size.height * 0.1 + CGFloat(arc4random_uniform(UInt32(self.size.height * 0.8)) ) );
         
         balloon.xScale = 1;
         balloon.yScale = 1;
@@ -384,6 +434,12 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         balloon.zPosition = 3.0;
         balloon.color = UIColor.init(colorLiteralRed: (0.0..<1.0).random(), green: (0.0..<1.0).random(), blue: (0.0..<1.0).random(), alpha: Float(1));
         balloon.colorBlendFactor = 0.7;
+        
+        // bob effect
+        let rot:SKAction = SKAction.repeatForever(SKAction.sequence(
+            [SKAction.rotate(byAngle: .pi/4.0, duration: 1),
+             SKAction.rotate(byAngle: -.pi/4.0, duration: 1)]));
+        balloon.run(SKAction.repeatForever(rot));
         
         // MARK: - balloon Physics -
         balloon.physicsBody = SKPhysicsBody(rectangleOf: balloon.size);
@@ -492,6 +548,19 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         // We need to shoot continously. We need to start creating a lot of projectiles. So, we need a function that creates a projectil and call that infinitely.
         isTouching = true;
         
+        // touched tank
+        if (touchLocation! - player1Node.position).length() < 100 {
+            // sound
+            run(SKAction.playSoundFileNamed("ChangeWeapon.wav", waitForCompletion: false))
+            // Change weapon
+            if (weapon == "tunnelGun") {
+                weapon = "chainReactionGun";
+            } else {
+                weapon = "tunnelGun";
+            }
+            return;
+        }
+        
         // get direction
         var offset = (touchLocation! - player1Node.position)
         if ( offset.y < 0 ){
@@ -505,12 +574,22 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         // rotate gun
         player1Turret.zRotation = .pi/2 - atan(direction.x/direction.y)
         
-        shootNSTimer = Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(LevelScene.shootProjectile), userInfo: nil, repeats: true)
+        // fire rate
+        var fireRate:Double = 0.3;
+        switch(weapon) {
+            case "tunnelGun":
+                fireRate = 0.5;
+                break;
+            default:
+                break;
+        }
+        
+        shootNSTimer = Timer.scheduledTimer(timeInterval: fireRate, target: self, selector: #selector(LevelScene.shootProjectile), userInfo: nil, repeats: true)
         if (self.touchCooldown == false) {
             shootProjectile();
             self.touchCooldown = true;
             run(SKAction.sequence([
-                SKAction.wait(forDuration: 0.2),
+                SKAction.wait(forDuration: fireRate),
                 SKAction.run ({ self.touchCooldown = false })
                 ]))
         }
@@ -561,8 +640,9 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         let projectile = SKEmitterNode(fileNamed: "SmokeTrail")!
         projectile.position = CGPoint(x: player1Node.position.x + player1Node.size.width/3, y: 80 );
         projectile.targetNode = self;
-        //projectile.xScale = 0.1;
-        //projectile.yScale = 0.3;
+        if (weapon == "tunnelGun") {
+            projectile.particleSize = CGSize(width: 100, height: 100);
+        }
         
         self.addChild(projectile);
         
@@ -657,16 +737,17 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         if self.gameData.player1.lifes < 1 {
             self.sceneManager.loadGameOverScene();
         }
-        if self.gameData.player1.score > ( 25 * currentLevel ) {
+        if self.gameData.player1.score > ( 50 * currentLevel + 5 * currentLevel * currentLevel ) {
             // we move on to level 2
             
             let nextLevel = currentLevel + 1;
             var nextTankTime = levelData.tankTime - 1;
-            var nextballoonDelayTime = levelData.balloonDelayTime / 1.01;
-            var nextballoonProjectileTime = levelData.balloonProjectileTime / 1.1;
-            var nextballoonTime = levelData.balloonTime / 1.1;
+            var nextballoonDelayTime = levelData.balloonDelayTime * 0.9;
+            var nextballoonProjectileTime = levelData.balloonProjectileTime * 0.9;
+            var nextballoonTime = levelData.balloonTime * 0.8;
             var nextTankDelayTime = levelData.tankDelayTime - 1;
             var nextTankProjectileTime = levelData.tankProjectileTime - 1;
+            var nextShootChance = 0.05 + 0.1 * Double(currentLevel);
             
 //            guard nextTankTime > 0 else {
 //                nextTankTime = 1
@@ -701,9 +782,10 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
             check(value: &nextballoonTime);
             check(value: &nextballoonProjectileTime);
             check(value: &nextTankProjectileTime);
+            check(value: &nextShootChance);
             
             
-            let nextLevelData: LevelData = LevelData(currentLevel: nextLevel, tankTime: nextTankTime, balloonTime: nextballoonTime, tankProjectileTime: nextTankProjectileTime, balloonProjectileTime: nextballoonProjectileTime, tankDelayTime: nextTankDelayTime, balloonDelayTime: nextballoonDelayTime );
+            let nextLevelData: LevelData = LevelData(currentLevel: nextLevel, tankTime: nextTankTime, balloonTime: nextballoonTime, tankProjectileTime: nextTankProjectileTime, balloonProjectileTime: nextballoonProjectileTime, tankDelayTime: nextTankDelayTime, balloonDelayTime: nextballoonDelayTime, shootChance: nextShootChance );
             
             sceneManager.loadGameScene(level: nextLevelData);
         }
@@ -718,7 +800,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
     func check( value: inout Double){
         if value <= 1 {
             if value > 0 {
-            value = value/2;
+            //value = value/2;
             }
             else{
                 value = 1;

@@ -96,7 +96,7 @@ class GameData {
     
     var fontSize: CGFloat = 24;
     var fontColor = UIColor.red;
-    var fontName: String = "Chalkduster";
+    var fontName: String = "Futura-CondensedExtraBold";
     var currentLevel = 0;
     var player1: Player = Player();
     var player2: Player = Player();
