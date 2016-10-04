@@ -60,6 +60,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
     var levelLabel: SKLabelNode! ;
     var player1LifeLabel: SKLabelNode! ;
     var player2LifeLabel: SKLabelNode! ;
+    var bigLevelLabel: SKLabelNode! ;
     var gameData: GameData;
     var groundNode: SKSpriteNode! ;
     var sceneManager: GameViewController;
@@ -85,6 +86,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         
         // MARK: - Labels Initialisation -
         player1ScoreLabel = SKLabelNode(fontNamed: gameData.fontName);
+        bigLevelLabel = SKLabelNode(fontNamed: gameData.fontName);
         player2ScoreLabel = SKLabelNode(fontNamed: gameData.fontName);
         levelLabel = SKLabelNode(fontNamed: gameData.fontName);
         player1LifeLabel = SKLabelNode(fontNamed: gameData.fontName);
@@ -123,6 +125,8 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         initLabel(label: player2ScoreLabel, gameData: gameData, text: "Score: \(gameData.player1.score)", pos: CGPoint(x: 3 * self.size.width/4, y: self.size.height - 50 ) );
         initLabel(label: player1LifeLabel, gameData: gameData, text: "Lives: \(gameData.player1.lifes)", pos: CGPoint(x: self.size.width/4, y: self.size.height - 100 ) );
         initLabel(label: player2LifeLabel, gameData: gameData, text: "Lives: \(gameData.player1.lifes)", pos: CGPoint(x: 3 * self.size.width/4, y: self.size.height - 100 ) );
+        initLabel(label: bigLevelLabel, gameData: gameData, text: "LEVEL UP!", pos: CGPoint(x: self.size.width/2, y: self.size.height/2 ) );
+        bigLevelLabel.fontSize = 100;
         
         groundNode.position = CGPoint(x: self.size.width/2, y: 10 );
         groundNode.zPosition = 2.0
@@ -161,6 +165,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         initialisePlayers();
         
         self.addChild(player1ScoreLabel);
+        self.addChild(bigLevelLabel);
         //self.addChild(player2ScoreLabel);
         self.addChild(player1LifeLabel);
         //self.addChild(player2LifeLabel);
@@ -178,6 +183,22 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
                 SKAction.wait(forDuration: levelData.tankDelayTime)
                 ])
         ))*/
+        
+        // show level up if new level
+        if (currentLevel > 1) {
+            bigLevelLabel.run(
+                SKAction.sequence([
+                SKAction.repeat(
+                    SKAction.sequence( [
+                        SKAction.scale(by: 0.5, duration: 0.3),
+                        SKAction.scale(by: 2, duration: 0.3)
+                        ]), count: 5),
+                SKAction.removeFromParent()]))
+
+        } else {
+            bigLevelLabel.removeFromParent()
+        }
+        
         run(SKAction.repeatForever(
             SKAction.sequence([
                 SKAction.wait(forDuration: levelData.balloonDelayTime),
