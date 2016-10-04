@@ -11,12 +11,13 @@ import SpriteKit;
 // MARK: - Global Constant -
 // TODO: - Make a Global constant containing these trivial data somewhere else.
 
-let fontNameConst: String = "Chalkduster";
+let fontNameConst: String = "Futura-CondensedExtraBold";
 
 class HomeScene:SKScene{
     
     // MARK: - iVars -
     let sceneManager:GameViewController
+    var titleLabel: SKLabelNode = SKLabelNode(fontNamed: fontNameConst);
     var startGameLabel: SKLabelNode = SKLabelNode(fontNamed: fontNameConst);
 //    var startGameButton: 
     var instructionsLabel: SKLabelNode = SKLabelNode(fontNamed: fontNameConst);
@@ -33,16 +34,17 @@ class HomeScene:SKScene{
     
     override func didMove(to view: SKView) {
         backgroundColor = UIColor.yellow;
-        initLabels(labelName: startGameLabel, text: "Start", pos: CGPoint(x: self.size.width/2, y: 2 * self.size.height/3));
+        initLabels(labelName: titleLabel, text: "PARTY POPPER", pos: CGPoint(x: self.size.width/2, y: 3*self.size.height/4), fSize: 152);
+        initLabels(labelName: startGameLabel, text: "Start", pos: CGPoint(x: self.size.width/2, y: 2 * self.size.height/4), fSize: 52);
         //addChild(startGameLabel);
-        initLabels(labelName: instructionsLabel, text: "Instructions", pos: CGPoint(x: self.size.width/2 , y: self.size.height/3));
+        initLabels(labelName: instructionsLabel, text: "Instructions", pos: CGPoint(x: self.size.width/2 , y: self.size.height/3), fSize: 52);
         
         
     }
     
-    private func initLabels(labelName: SKLabelNode, text:String, pos: CGPoint){
+    private func initLabels(labelName: SKLabelNode, text:String, pos: CGPoint, fSize:CGFloat){
         labelName.text = text;
-        labelName.fontSize = 52;
+        labelName.fontSize = fSize;
         labelName.fontColor = SKColor.red;
         labelName.position = pos;
         

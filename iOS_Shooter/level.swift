@@ -263,6 +263,12 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
             // confetti
             let confetti = SKEmitterNode.init(fileNamed: "Confetti");
             confetti?.position = balloon.position;
+            // chain reaction
+            for _ in (0..<3) {
+                makeExplosionProjectile(origin: balloon.position,
+                                        direction: CGPoint.init(x: Double((Float(-1)..<Float(1)).random()),
+                                                                y: Double((Float(-1)..<Float(1)).random())));
+            }
 
             // get new color
             confetti?.particleColorSequence = nil;
@@ -492,9 +498,6 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         // rotate gun
         player1Turret.zRotation = .pi/2 - atan(direction.x/direction.y)
         
-        // play shoot sound
-        run(SKAction.playSoundFileNamed("Explosion2.wav", waitForCompletion: false))
-        
         shootNSTimer = Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(LevelScene.shootProjectile), userInfo: nil, repeats: true)
         if (self.touchCooldown == false) {
             shootProjectile();
@@ -502,7 +505,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
             run(SKAction.sequence([
                 SKAction.wait(forDuration: 0.2),
                 SKAction.run ({ self.touchCooldown = false })
-                ]));
+                ]))
         }
     }
     
@@ -609,9 +612,9 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         );
     }
     
-    func makeExplosionProjectile(direction:CGPoint) {
-        let projectile = SKEmitterNode(fileNamed: "SmokeTrail")!
-        projectile.position = CGPoint(x: player1Node.position.x + player1Node.size.width/3, y: 80 );
+    func makeExplosionProjectile(origin:CGPoint, direction:CGPoint) {
+        let projectile = SKEmitterNode(fileNamed: "ChainParticle")!
+        projectile.position = origin;
         projectile.targetNode = self;
         self.addChild(projectile);
         let projectileDest = direction * 2000 + projectile.position;
@@ -625,7 +628,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         projectile.physicsBody?.affectedByGravity = false;
         
         //        let projectileMove = SKAction.move(to: CGPoint(x:self.size.width,y:80), duration: 3.0);
-        let projectileMove = SKAction.move(to: projectileDest, duration: 3.0);
+        let projectileMove = SKAction.move(to: projectileDest, duration: 1.0);
         let projectileMoveDone = SKAction.removeFromParent();
 
         projectile.run(
@@ -633,7 +636,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
                 SKAction.sequence(
                     [
                         projectileMove,
-                        SKAction.wait(forDuration: 2),
+                        SKAction.wait(forDuration: 1),
                         projectileMoveDone,
                         ]
                 )
@@ -652,9 +655,9 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
             
             let nextLevel = currentLevel + 1;
             var nextTankTime = levelData.tankTime - 1;
-            var nextballoonDelayTime = levelData.balloonDelayTime - 1;
-            var nextballoonProjectileTime = levelData.balloonProjectileTime - 0.1;
-            var nextballoonTime = levelData.balloonTime - 0.1;
+            var nextballoonDelayTime = levelData.balloonDelayTime / 1.01;
+            var nextballoonProjectileTime = levelData.balloonProjectileTime / 1.1;
+            var nextballoonTime = levelData.balloonTime / 1.1;
             var nextTankDelayTime = levelData.tankDelayTime - 1;
             var nextTankProjectileTime = levelData.tankProjectileTime - 1;
             
