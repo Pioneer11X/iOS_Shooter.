@@ -574,12 +574,22 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         // rotate gun
         player1Turret.zRotation = .pi/2 - atan(direction.x/direction.y)
         
-        shootNSTimer = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(LevelScene.shootProjectile), userInfo: nil, repeats: true)
+        // fire rate
+        var fireRate:Double = 0.3;
+        switch(weapon) {
+            case "tunnelGun":
+                fireRate = 0.5;
+                break;
+            default:
+                break;
+        }
+        
+        shootNSTimer = Timer.scheduledTimer(timeInterval: fireRate, target: self, selector: #selector(LevelScene.shootProjectile), userInfo: nil, repeats: true)
         if (self.touchCooldown == false) {
             shootProjectile();
             self.touchCooldown = true;
             run(SKAction.sequence([
-                SKAction.wait(forDuration: 0.3),
+                SKAction.wait(forDuration: fireRate),
                 SKAction.run ({ self.touchCooldown = false })
                 ]))
         }
