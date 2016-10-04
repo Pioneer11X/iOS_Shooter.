@@ -57,6 +57,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
     var player2Node : SKSpriteNode! ;
     var player1ScoreLabel: SKLabelNode! ;
     var player2ScoreLabel: SKLabelNode! ;
+    var highScoreLabel: SKLabelNode! ;
     var levelLabel: SKLabelNode! ;
     var player1LifeLabel: SKLabelNode! ;
     var player2LifeLabel: SKLabelNode! ;
@@ -91,6 +92,8 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         levelLabel = SKLabelNode(fontNamed: gameData.fontName);
         player1LifeLabel = SKLabelNode(fontNamed: gameData.fontName);
         player2LifeLabel = SKLabelNode(fontNamed: gameData.fontName);
+        highScoreLabel = SKLabelNode(fontNamed: gameData.fontName);
+        
         self.gameData = gameData;
         self.currentLevel = levelData.currentLevel;
         self.levelData = levelData;
@@ -127,6 +130,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         initLabel(label: player2LifeLabel, gameData: gameData, text: "Lives: \(gameData.player1.lifes)", pos: CGPoint(x: 3 * self.size.width/4, y: self.size.height - 100 ) );
         initLabel(label: bigLevelLabel, gameData: gameData, text: "LEVEL UP!", pos: CGPoint(x: self.size.width/2, y: self.size.height/2 ) );
         bigLevelLabel.fontSize = 100;
+        initLabel(label: highScoreLabel, gameData: gameData, text: "Highscore: \(AppData.staticData.highScore)", pos: CGPoint(x: 3 * self.size.width/4, y: self.size.height - 100 ) );
         
         groundNode.position = CGPoint(x: self.size.width/2, y: 10 );
         groundNode.zPosition = 2.0
@@ -156,6 +160,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         
         self.addChild(topBulletCollector);
         self.addChild(btmBulletCollector);
+        self.addChild(highScoreLabel);
         
         // background music
         let backgroundMusic = SKAudioNode(fileNamed: "Super Power Cool Dude")
@@ -732,6 +737,10 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         }
         player1LifeLabel.text = "Lives: \(self.gameData.player1.lifes)";
         player1ScoreLabel.text = "Score: \(self.gameData.player1.score)";
+        highScoreLabel.text = "Highscore: \(AppData.staticData.highScore)";
+        if ( AppData.staticData.highScore < gameData.player1.score ){
+            AppData.staticData.highScore = gameData.player1.score;
+        }
     }
     
     func check( value: inout Double){

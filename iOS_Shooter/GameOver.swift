@@ -49,7 +49,7 @@ class GameOverScene: SKScene{
         for touch in touches{
             let location = touch.location(in: self);
             if playAgainLabel.contains(location){
-                let levelData: LevelData = LevelData(currentLevel: 1, tankTime: 7.0, balloonTime: 3.0, tankProjectileTime: 3.0, balloonProjectileTime: 2.0, tankDelayTime: 3.0, balloonDelayTime: 0.3, shootChance: 0.05);
+                let levelData: LevelData = LevelData(currentLevel: 1, tankTime: 7.0, balloonTime: 3.0, tankProjectileTime: 3.0, balloonProjectileTime: 2.0, tankDelayTime: 3.0, balloonDelayTime: 0.5, shootChance: 0.05);
                 self.sceneManager.gameData.player1.lifes = 3;
                 self.sceneManager.gameData.player1.score = 0;
                 self.sceneManager.gameData.player1.hits = 0;
