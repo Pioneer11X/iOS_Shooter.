@@ -60,7 +60,7 @@ class HomeScene:SKScene{
             
             if startGameLabel.contains(location){
                 print("Label Pressed");
-                let levelData: LevelData = LevelData(currentLevel: 1, tankTime: 7.0, balloonTime: 3.0, tankProjectileTime: 3.0, balloonProjectileTime: 2.0, tankDelayTime: 3.0, balloonDelayTime: 0.3 );
+                let levelData: LevelData = LevelData(currentLevel: 1, tankTime: 7.0, balloonTime: 3.0, tankProjectileTime: 3.0, balloonProjectileTime: 2.0, tankDelayTime: 3.0, balloonDelayTime: 0.8, shootChance: 0.05 );
 
                 sceneManager.loadGameScene(level: levelData);
                 // TODO: - Need to take them to the Game Scene.

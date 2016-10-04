@@ -43,6 +43,7 @@ struct LevelData {
     var balloonProjectileTime: Double;
     var tankDelayTime: Double;
     var balloonDelayTime: Double;
+    var shootChance: Double;
 }
 
 class LevelScene: SKScene, SKPhysicsContactDelegate {
@@ -368,7 +369,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         let balloon = SKSpriteNode(imageNamed: "white_balloon");
         
         let balloonMoveDuration = levelData.balloonTime;
-        let balloonSpawn = CGPoint(x: self.size.width , y: self.size.height/2 + CGFloat(arc4random_uniform(UInt32(self.size.height/2)) ) );
+        let balloonSpawn = CGPoint(x: self.size.width , y: self.size.height * 0.1 + CGFloat(arc4random_uniform(UInt32(self.size.height * 0.8)) ) );
         
         balloon.xScale = 1;
         balloon.yScale = 1;
@@ -377,6 +378,12 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         balloon.zPosition = 3.0;
         balloon.color = UIColor.init(colorLiteralRed: (0.0..<1.0).random(), green: (0.0..<1.0).random(), blue: (0.0..<1.0).random(), alpha: Float(1));
         balloon.colorBlendFactor = 0.7;
+        
+        // bob effect
+        let rot:SKAction = SKAction.repeatForever(SKAction.sequence(
+            [SKAction.rotate(byAngle: .pi/4.0, duration: 1),
+             SKAction.rotate(byAngle: -.pi/4.0, duration: 1)]));
+        balloon.run(SKAction.repeatForever(rot));
         
         // MARK: - balloon Physics -
         balloon.physicsBody = SKPhysicsBody(rectangleOf: balloon.size);
@@ -498,12 +505,12 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         // rotate gun
         player1Turret.zRotation = .pi/2 - atan(direction.x/direction.y)
         
-        shootNSTimer = Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(LevelScene.shootProjectile), userInfo: nil, repeats: true)
+        shootNSTimer = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(LevelScene.shootProjectile), userInfo: nil, repeats: true)
         if (self.touchCooldown == false) {
             shootProjectile();
             self.touchCooldown = true;
             run(SKAction.sequence([
-                SKAction.wait(forDuration: 0.2),
+                SKAction.wait(forDuration: 0.3),
                 SKAction.run ({ self.touchCooldown = false })
                 ]))
         }
@@ -650,16 +657,17 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         if self.gameData.player1.lifes < 1 {
             self.sceneManager.loadGameOverScene();
         }
-        if self.gameData.player1.score > ( 25 * currentLevel ) {
+        if self.gameData.player1.score > ( 50 * currentLevel + 5 * currentLevel * currentLevel ) {
             // we move on to level 2
             
             let nextLevel = currentLevel + 1;
             var nextTankTime = levelData.tankTime - 1;
-            var nextballoonDelayTime = levelData.balloonDelayTime / 1.01;
-            var nextballoonProjectileTime = levelData.balloonProjectileTime / 1.1;
-            var nextballoonTime = levelData.balloonTime / 1.1;
+            var nextballoonDelayTime = levelData.balloonDelayTime * 0.9;
+            var nextballoonProjectileTime = levelData.balloonProjectileTime * 0.9;
+            var nextballoonTime = levelData.balloonTime * 0.8;
             var nextTankDelayTime = levelData.tankDelayTime - 1;
             var nextTankProjectileTime = levelData.tankProjectileTime - 1;
+            var nextShootChance = 0.05 + 0.1 * Double(currentLevel);
             
 //            guard nextTankTime > 0 else {
 //                nextTankTime = 1
@@ -694,9 +702,10 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
             check(value: &nextballoonTime);
             check(value: &nextballoonProjectileTime);
             check(value: &nextTankProjectileTime);
+            check(value: &nextShootChance);
             
             
-            let nextLevelData: LevelData = LevelData(currentLevel: nextLevel, tankTime: nextTankTime, balloonTime: nextballoonTime, tankProjectileTime: nextTankProjectileTime, balloonProjectileTime: nextballoonProjectileTime, tankDelayTime: nextTankDelayTime, balloonDelayTime: nextballoonDelayTime );
+            let nextLevelData: LevelData = LevelData(currentLevel: nextLevel, tankTime: nextTankTime, balloonTime: nextballoonTime, tankProjectileTime: nextTankProjectileTime, balloonProjectileTime: nextballoonProjectileTime, tankDelayTime: nextTankDelayTime, balloonDelayTime: nextballoonDelayTime, shootChance: nextShootChance );
             
             sceneManager.loadGameScene(level: nextLevelData);
         }
@@ -707,7 +716,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
     func check( value: inout Double){
         if value <= 1 {
             if value > 0 {
-            value = value/2;
+            //value = value/2;
             }
             else{
                 value = 1;
