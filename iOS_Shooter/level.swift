@@ -70,6 +70,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
     var isTouching: Bool;
     var touchLocation: CGPoint?;
     var touchCooldown: Bool;
+    var weapon: String = "chainReactionGun";
     
     struct PhysicsCategory {
         static let None      : UInt32 = 0
@@ -250,9 +251,21 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
             explosionEffect?.particleSize = CGSize.init(width: 20, height: 20);
             self.addChild(explosionEffect!);
             explosionEffect?.run(SKAction.sequence([SKAction.wait(forDuration: 1),SKAction.removeFromParent()]))
-            // remove
-            contact.bodyA.node?.removeFromParent();
-            contact.bodyB.node?.removeFromParent();
+            if (weapon == "tunnelGun") {
+                // remove enemy projectile
+                if (contact.bodyA.categoryBitMask < contact.bodyB.categoryBitMask) {
+                    contact.bodyA.node?.removeFromParent();
+                } else {
+                    contact.bodyB.node?.removeFromParent();
+                }
+                
+                break;
+            }
+            else {
+                // remove
+                contact.bodyA.node?.removeFromParent();
+                contact.bodyB.node?.removeFromParent();
+            }
             
             run(SKAction.playSoundFileNamed("Explosion3.wav", waitForCompletion: false))
             break;
@@ -273,40 +286,57 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         case 20:
             // You shot the balloon.
             // balloon ref
-            var balloon:SKSpriteNode;
-            if let b:SKSpriteNode = (contact.bodyA.node as? SKSpriteNode) {
-                balloon = b;
-            } else if let b:SKSpriteNode = (contact.bodyB.node as? SKSpriteNode) {
-                balloon = b;
+            var balloon:SKSpriteNode?;
+            var shot:SKEmitterNode?;
+            if (contact.bodyA.categoryBitMask < contact.bodyB.categoryBitMask) {
+                balloon = contact.bodyB.node as? SKSpriteNode
+                shot = contact.bodyA.node as? SKEmitterNode
             } else {
-                return
+                balloon = contact.bodyA.node as? SKSpriteNode
+                shot = contact.bodyB.node as? SKEmitterNode
             }
-            // boom
-            let explosionEffect = SKEmitterNode.init(fileNamed: "Pop");
-            explosionEffect?.position = balloon.position;
-            explosionEffect?.targetNode = self;
-            self.addChild(explosionEffect!);
-            explosionEffect?.run(SKAction.sequence([SKAction.wait(forDuration: 1),SKAction.removeFromParent()]));
-            // confetti
-            let confetti = SKEmitterNode.init(fileNamed: "Confetti");
-            confetti?.position = balloon.position;
-            // chain reaction
-            for _ in (0..<3) {
-                makeExplosionProjectile(origin: balloon.position,
-                                        direction: CGPoint.init(x: Double((Float(-1)..<Float(1)).random()),
-                                                                y: Double((Float(-1)..<Float(1)).random())));
+            if let b:SKSpriteNode = balloon {
+                // boom
+                let explosionEffect = SKEmitterNode.init(fileNamed: "Pop");
+                explosionEffect?.position = b.position;
+                explosionEffect?.targetNode = self;
+                self.addChild(explosionEffect!);
+                explosionEffect?.run(SKAction.sequence([SKAction.wait(forDuration: 1),SKAction.removeFromParent()]));
+                // confetti
+                let confetti = SKEmitterNode.init(fileNamed: "Confetti");
+                confetti?.position = b.position;
+                
+                // get new color
+                confetti?.particleColorSequence = nil;
+                confetti?.particleColorBlendFactor = 1.0;
+                confetti?.particleColor = b.color;
+                confetti?.targetNode = self;
+                self.addChild(confetti!);
+                confetti?.run(SKAction.sequence([SKAction.wait(forDuration: 2),SKAction.removeFromParent()]));
+                
+                switch (weapon) {
+                case "chainReactionGun":
+                    // chain reaction
+                    for _ in (0..<3) {
+                        makeExplosionProjectile(origin: b.position,
+                                                direction: CGPoint.init(x: Double((Float(-1)..<Float(1)).random()),
+                                                                        y: Double((Float(-1)..<Float(1)).random())));
+                    }
+                    b.removeFromParent();
+                    shot?.removeFromParent();
+                    break;
+                    
+                case "tunnelGun":
+                    b.removeFromParent();
+                    break;
+                    
+                default:
+                    b.removeFromParent();
+                    shot?.removeFromParent();
+                    break;
+                }
             }
-
-            // get new color
-            confetti?.particleColorSequence = nil;
-            confetti?.particleColorBlendFactor = 1.0;
-            confetti?.particleColor = balloon.color;
-            confetti?.targetNode = self;
-            self.addChild(confetti!);
-            confetti?.run(SKAction.sequence([SKAction.wait(forDuration: 2),SKAction.removeFromParent()]));
-            // remove
-            contact.bodyA.node?.removeFromParent();
-            contact.bodyB.node?.removeFromParent();
+            
             self.gameData.player1.score += 2;
             updateLabels();
             run(SKAction.playSoundFileNamed("Explosion1.wav", waitForCompletion: false))
@@ -518,6 +548,19 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         // We need to shoot continously. We need to start creating a lot of projectiles. So, we need a function that creates a projectil and call that infinitely.
         isTouching = true;
         
+        // touched tank
+        if (touchLocation! - player1Node.position).length() < 100 {
+            // sound
+            run(SKAction.playSoundFileNamed("ChangeWeapon.wav", waitForCompletion: false))
+            // Change weapon
+            if (weapon == "tunnelGun") {
+                weapon = "chainReactionGun";
+            } else {
+                weapon = "tunnelGun";
+            }
+            return;
+        }
+        
         // get direction
         var offset = (touchLocation! - player1Node.position)
         if ( offset.y < 0 ){
@@ -587,8 +630,9 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         let projectile = SKEmitterNode(fileNamed: "SmokeTrail")!
         projectile.position = CGPoint(x: player1Node.position.x + player1Node.size.width/3, y: 80 );
         projectile.targetNode = self;
-        //projectile.xScale = 0.1;
-        //projectile.yScale = 0.3;
+        if (weapon == "tunnelGun") {
+            projectile.particleSize = CGSize(width: 100, height: 100);
+        }
         
         self.addChild(projectile);
         
