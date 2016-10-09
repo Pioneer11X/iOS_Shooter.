@@ -54,13 +54,10 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
     var levelData: LevelData;
     var player1Node : SKSpriteNode! ;
     var player1Turret : SKSpriteNode! ;
-    var player2Node : SKSpriteNode! ;
     var player1ScoreLabel: SKLabelNode! ;
-    var player2ScoreLabel: SKLabelNode! ;
     var highScoreLabel: SKLabelNode! ;
     var levelLabel: SKLabelNode! ;
     var player1LifeLabel: SKLabelNode! ;
-    var player2LifeLabel: SKLabelNode! ;
     var bigLevelLabel: SKLabelNode! ;
     var gameData: GameData;
     var groundNode: SKSpriteNode! ;
@@ -89,10 +86,8 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         // MARK: - Labels Initialisation -
         player1ScoreLabel = SKLabelNode(fontNamed: gameData.fontName);
         bigLevelLabel = SKLabelNode(fontNamed: gameData.fontName);
-        player2ScoreLabel = SKLabelNode(fontNamed: gameData.fontName);
         levelLabel = SKLabelNode(fontNamed: gameData.fontName);
         player1LifeLabel = SKLabelNode(fontNamed: gameData.fontName);
-        player2LifeLabel = SKLabelNode(fontNamed: gameData.fontName);
         highScoreLabel = SKLabelNode(fontNamed: gameData.fontName);
         
         self.gameData = gameData;
@@ -101,7 +96,6 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         self.sceneManager = sceneManager;
         
         groundNode = SKSpriteNode(imageNamed: "ground");
-        player2Node = SKSpriteNode(imageNamed: "player2");
         
         btmBulletCollector = SKSpriteNode(imageNamed: "projectile");
         topBulletCollector = SKSpriteNode(imageNamed: "projectile");
@@ -126,9 +120,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         
         initLabel(label: levelLabel, gameData: gameData, text: "Round: \(currentLevel)", pos: CGPoint(x: self.size.width/2 , y: self.size.height - 50 ) );
         initLabel(label: player1ScoreLabel, gameData: gameData, text: "Score: \(gameData.player1.score)", pos: CGPoint(x: self.size.width/4, y: self.size.height - 50 ) );
-        initLabel(label: player2ScoreLabel, gameData: gameData, text: "Score: \(gameData.player1.score)", pos: CGPoint(x: 3 * self.size.width/4, y: self.size.height - 50 ) );
         initLabel(label: player1LifeLabel, gameData: gameData, text: "Lives: \(gameData.player1.lifes)", pos: CGPoint(x: self.size.width/4, y: self.size.height - 100 ) );
-        initLabel(label: player2LifeLabel, gameData: gameData, text: "Lives: \(gameData.player1.lifes)", pos: CGPoint(x: 3 * self.size.width/4, y: self.size.height - 100 ) );
         initLabel(label: bigLevelLabel, gameData: gameData, text: "LEVEL UP!", pos: CGPoint(x: self.size.width/2, y: self.size.height/2 ) );
         bigLevelLabel.fontSize = 100;
         initLabel(label: highScoreLabel, gameData: gameData, text: "Highscore: \(AppData.staticData.highScore)", pos: CGPoint(x: 3 * self.size.width/4, y: self.size.height - 100 ) );
@@ -172,14 +164,11 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         
         self.addChild(player1ScoreLabel);
         self.addChild(bigLevelLabel);
-        //self.addChild(player2ScoreLabel);
         self.addChild(player1LifeLabel);
-        //self.addChild(player2LifeLabel);
         self.addChild(levelLabel);
         self.addChild(groundNode);
         self.addChild(player1Node);
         self.addChild(player1Turret);
-        //self.addChild(player2Node);
         
 //        addTanks();
         
@@ -518,12 +507,6 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         player1Node.physicsBody?.collisionBitMask = PhysicsCategory.None;
         player1Node.physicsBody?.affectedByGravity = false;
         
-        
-        player2Node = SKSpriteNode(imageNamed: "player2");
-//        player2Node.xScale = 0.1;
-//        player2Node.yScale = 0.1;
-        player2Node.position = CGPoint(x: 5 * self.size.width/6, y: 70 );
-        player2Node.zPosition = 3.0
     }
     
     func initLabel(label: SKLabelNode, gameData: GameData, text: String, pos: CGPoint){
