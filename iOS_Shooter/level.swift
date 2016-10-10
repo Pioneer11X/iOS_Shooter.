@@ -65,6 +65,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
     var bigLevelLabel: SKLabelNode! ;
     var comboLabel: SKLabelNode!;
     var newWeaponLabel: SKLabelNode!;
+    var levelTimerLabel: SKLabelNode!;
     var gameData: GameData;
     var groundNode: SKSpriteNode! ;
     var sceneManager: GameViewController;
@@ -77,6 +78,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
     var combo: Int = 0;
     var comboEndTimer: Timer!;
     var comboEndInterval: Double = 1;
+    var secondsLeft: Int = 30;
     
     struct PhysicsCategory {
         static let None      : UInt32 = 0
@@ -102,6 +104,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         highScoreLabel = SKLabelNode(fontNamed: gameData.fontName);
         comboLabel = SKLabelNode(fontNamed: gameData.fontName);
         newWeaponLabel = SKLabelNode(fontNamed: gameData.fontName);
+        levelTimerLabel = SKLabelNode(fontNamed: gameData.fontName);
         
         self.gameData = gameData;
         self.currentLevel = levelData.currentLevel;
@@ -141,7 +144,12 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         initLabel(label: bigLevelLabel, gameData: gameData, text: "LEVEL UP!", pos: CGPoint(x: self.size.width/2, y: self.size.height/2 ) );
         initLabel(label: newWeaponLabel, gameData: gameData, text: "Basic Gun", pos: CGPoint(x: self.size.width/2 , y: self.size.height/2 ) );
         initLabel(label: highScoreLabel, gameData: gameData, text: "Highscore: \(AppData.staticData.highScore)", pos: CGPoint(x: 3 * self.size.width/4, y: self.size.height - 100 ) );
-        newWeaponLabel.color = UIColor.black;
+        initLabel(label: levelTimerLabel, gameData: gameData, text: "30", pos: CGPoint(x: self.size.width/2 , y: self.size.height/4 ) );
+        levelTimerLabel.fontColor = UIColor.black;
+        levelTimerLabel.fontSize = gameData.fontSize * 30;
+        levelTimerLabel.zPosition = 0;
+        levelTimerLabel.alpha = 0.2;
+        newWeaponLabel.fontColor = UIColor.black;
         newWeaponLabel.fontSize = gameData.fontSize * 2;
         newWeaponLabel.run(SKAction.sequence(
             [SKAction.fadeAlpha(to: 1, duration: 0.1),
@@ -207,6 +215,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         self.addChild(player1Node);
         self.addChild(player1Turret);
         //self.addChild(player2Node);
+        self.addChild(levelTimerLabel);
         
 //        addTanks();
         
@@ -216,6 +225,15 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
                 SKAction.wait(forDuration: levelData.tankDelayTime)
                 ])
         ))*/
+        
+        self.run(SKAction.repeatForever( SKAction.sequence(
+            [
+                SKAction.run({
+                    self.secondsLeft -= 1;
+                    self.levelTimerLabel.text = "\(self.secondsLeft)";
+                }),
+                SKAction.wait(forDuration: 1)
+            ])));
         
         // show level up if new level
         if (currentLevel > 1) {
