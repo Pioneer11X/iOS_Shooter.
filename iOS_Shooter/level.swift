@@ -379,8 +379,6 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
                     shot?.removeFromParent();
                     break;
                 }
-                // back to basic weapon
-                weapon = "simpleGun";
                 // clear timer
                 comboEndTimer?.invalidate();
                 // start next timer
