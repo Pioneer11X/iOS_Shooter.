@@ -26,6 +26,7 @@
 		19A170A11DABEB3C007C3502 /* birthday-background-placeholder.png in Resources */ = {isa = PBXBuildFile; fileRef = 19A170A01DABEB3C007C3502 /* birthday-background-placeholder.png */; };
 		19A170A31DABEEB2007C3502 /* BigShot.sks in Resources */ = {isa = PBXBuildFile; fileRef = 19A170A21DABEEB2007C3502 /* BigShot.sks */; };
 		19A170A51DABF5CD007C3502 /* Birthday-Present-Transparent.png in Resources */ = {isa = PBXBuildFile; fileRef = 19A170A41DABF5CD007C3502 /* Birthday-Present-Transparent.png */; };
+		19C4744D1DABFBE000D9D0FD /* SpecialParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 19C4744C1DABFBE000D9D0FD /* SpecialParticle.sks */; };
 		19CEA4311D8E670E0098620E /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 19CEA42F1D8E670E0098620E /* spark.png */; };
 		A002A3D81D96BF9000BC56E3 /* HomeScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = A002A3D71D96BF9000BC56E3 /* HomeScene.swift */; };
 		A03E70581D885790006C50E9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03E70571D885790006C50E9 /* AppDelegate.swift */; };
@@ -62,6 +63,7 @@
 		19A170A01DABEB3C007C3502 /* birthday-background-placeholder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "birthday-background-placeholder.png"; path = "Assets.xcassets/Assets.xcassets/birthday-background-placeholder.png"; sourceTree = "<group>"; };
 		19A170A21DABEEB2007C3502 /* BigShot.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = BigShot.sks; sourceTree = "<group>"; };
 		19A170A41DABF5CD007C3502 /* Birthday-Present-Transparent.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Birthday-Present-Transparent.png"; path = "Assets.xcassets/Assets.xcassets/Birthday-Present-Transparent.png"; sourceTree = "<group>"; };
+		19C4744C1DABFBE000D9D0FD /* SpecialParticle.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = SpecialParticle.sks; sourceTree = "<group>"; };
 		19CEA42F1D8E670E0098620E /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = spark.png; path = ../spark.png; sourceTree = "<group>"; };
 		A002A3D71D96BF9000BC56E3 /* HomeScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeScene.swift; sourceTree = "<group>"; };
 		A03E70541D885790006C50E9 /* iOS_Shooter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iOS_Shooter.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -132,6 +134,7 @@
 				1983127E1D9A20A700346871 /* Super Power Cool Dude.mp3 */,
 				1983127C1D9A1FA900346871 /* SmokeTrail.sks */,
 				1987A6D91DA32D0F00F7FBE7 /* ChainParticle.sks */,
+				19C4744C1DABFBE000D9D0FD /* SpecialParticle.sks */,
 				190FC4101DA201E7006D311B /* Pop.sks */,
 				190FC4181DA2122D006D311B /* Confetti.sks */,
 				1983127A1D9A1D8400346871 /* tank_by_florianrenner.jpg */,
@@ -238,6 +241,7 @@
 				190FC4121DA201E7006D311B /* Pop.sks in Resources */,
 				190FC4171DA21207006D311B /* bokeh.png in Resources */,
 				19A170A31DABEEB2007C3502 /* BigShot.sks in Resources */,
+				19C4744D1DABFBE000D9D0FD /* SpecialParticle.sks in Resources */,
 				19A170A51DABF5CD007C3502 /* Birthday-Present-Transparent.png in Resources */,
 				1983126F1D9A0A7A00346871 /* Hurt.wav in Resources */,
 				19A170A11DABEB3C007C3502 /* birthday-background-placeholder.png in Resources */,

@@ -64,6 +64,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
     var player2LifeLabel: SKLabelNode! ;
     var bigLevelLabel: SKLabelNode! ;
     var comboLabel: SKLabelNode!;
+    var newWeaponLabel: SKLabelNode!;
     var gameData: GameData;
     var groundNode: SKSpriteNode! ;
     var sceneManager: GameViewController;
@@ -72,7 +73,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
     var isTouching: Bool;
     var touchLocation: CGPoint?;
     var touchCooldown: Bool;
-    var weapon: String = "chainReactionGun";
+    var weapon: String = "simpleGun";
     var combo: Int = 0;
     var comboEndTimer: Timer!;
     var comboEndInterval: Double = 1;
@@ -100,6 +101,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         player2LifeLabel = SKLabelNode(fontNamed: gameData.fontName);
         highScoreLabel = SKLabelNode(fontNamed: gameData.fontName);
         comboLabel = SKLabelNode(fontNamed: gameData.fontName);
+        newWeaponLabel = SKLabelNode(fontNamed: gameData.fontName);
         
         self.gameData = gameData;
         self.currentLevel = levelData.currentLevel;
@@ -137,7 +139,14 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         initLabel(label: player1LifeLabel, gameData: gameData, text: "Lives: \(gameData.player1.lifes)", pos: CGPoint(x: self.size.width/4, y: self.size.height - 100 ) );
         initLabel(label: player2LifeLabel, gameData: gameData, text: "Lives: \(gameData.player1.lifes)", pos: CGPoint(x: 3 * self.size.width/4, y: self.size.height - 100 ) );
         initLabel(label: bigLevelLabel, gameData: gameData, text: "LEVEL UP!", pos: CGPoint(x: self.size.width/2, y: self.size.height/2 ) );
+        initLabel(label: newWeaponLabel, gameData: gameData, text: "Basic Gun", pos: CGPoint(x: self.size.width/2 , y: self.size.height/2 ) );
         initLabel(label: highScoreLabel, gameData: gameData, text: "Highscore: \(AppData.staticData.highScore)", pos: CGPoint(x: 3 * self.size.width/4, y: self.size.height - 100 ) );
+        newWeaponLabel.color = UIColor.black;
+        newWeaponLabel.fontSize = gameData.fontSize * 2;
+        newWeaponLabel.run(SKAction.sequence(
+            [SKAction.fadeAlpha(to: 1, duration: 0.1),
+             SKAction.fadeAlpha(to: 0, duration: 1)]
+        ));
         // combo label
         comboLabel.text = "";
         comboLabel.fontSize = gameData.fontSize * 10;
@@ -193,6 +202,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         self.addChild(player1LifeLabel);
         //self.addChild(player2LifeLabel);
         self.addChild(levelLabel);
+        self.addChild(newWeaponLabel);
         self.addChild(groundNode);
         self.addChild(player1Node);
         self.addChild(player1Turret);
@@ -259,13 +269,22 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
             // You shot down a projectile coming towards you.
             // boom
             let explosionEffect = SKEmitterNode.init(fileNamed: "Pop");
+            var validNode:SKNode!;
             if let aNode = contact.bodyA.node {
-                explosionEffect?.position = aNode.position;
+                validNode = aNode;
+                
             } else {
-                if let aNode = contact.bodyA.node {
-                    explosionEffect?.position = aNode.position;
+                if let bNode = contact.bodyB.node {
+                    validNode = bNode;
                 }
             }
+            // get a new weapon
+            getRandomWeapon();
+            // show the new weapon
+            showNewWeaponText(origin: validNode!.position);
+            
+            // explosion!
+            explosionEffect?.position = validNode!.position;
             explosionEffect?.targetNode = self;
             explosionEffect?.particleSize = CGSize.init(width: 20, height: 20);
             self.addChild(explosionEffect!);
@@ -336,6 +355,10 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
                 confetti?.run(SKAction.sequence([SKAction.wait(forDuration: 2),SKAction.removeFromParent()]));
                 
                 switch (weapon) {
+                case "simpleGun":
+                    b.removeFromParent();
+                    shot?.removeFromParent();
+                        break;
                 case "chainReactionGun":
                     // chain reaction
                     for _ in (0..<3) {
@@ -356,6 +379,8 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
                     shot?.removeFromParent();
                     break;
                 }
+                // back to basic weapon
+                weapon = "simpleGun";
                 // clear timer
                 comboEndTimer?.invalidate();
                 // start next timer
@@ -606,14 +631,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         
         // touched tank
         if (touchLocation! - player1Node.position).length() < 50 {
-            // sound
-            run(SKAction.playSoundFileNamed("ChangeWeapon.wav", waitForCompletion: false))
-            // Change weapon
-            if (weapon == "tunnelGun") {
-                weapon = "chainReactionGun";
-            } else {
-                weapon = "tunnelGun";
-            }
+            // do nothing
             return;
         }
         
@@ -759,6 +777,8 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
                 )
             )
         );
+        
+        // reset weapon
     }
     
     func makeExplosionProjectile(origin:CGPoint, direction:CGPoint) {
@@ -872,6 +892,44 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
     
     func randomBetween(min: Int, max: Int)->Int {
         return Int(UInt32(min) + arc4random_uniform(UInt32(max)));
+    }
+    
+    func getRandomWeapon() {
+        // sound
+        run(SKAction.playSoundFileNamed("ChangeWeapon.wav", waitForCompletion: false))
+        // Change weapon
+        if (randomBetween(min: 0, max: 2) > 0) {
+            weapon = "chainReactionGun";
+        } else {
+            weapon = "tunnelGun";
+        }
+    }
+    
+    func showNewWeaponText(origin:CGPoint) {
+        if (randomBetween(min: 0, max: 2) > 0)
+        {
+            newWeaponLabel.text = "GOT: Sparkle Shot"
+            weapon = "chainReactionGun";
+        } else {
+            newWeaponLabel.text = "GOT: Power Shot"
+            weapon = "tunnelGun";
+        }
+        newWeaponLabel.removeAllActions();
+        //newWeaponLabel.alpha = 0;
+        newWeaponLabel.zPosition = 10; // move to front
+        let emitter = SKEmitterNode(fileNamed: "SpecialParticle")!;
+        self.addChild(emitter);
+        emitter.zPosition = 9;
+        emitter.xScale = 0.75;
+        emitter.yScale = 0.75;
+        emitter.position = origin;
+        emitter.run(SKAction.move(to: CGPoint(x: 200, y: 150), duration: 0.1));
+        newWeaponLabel.position = CGPoint(x: 200, y: 140);
+        newWeaponLabel.alpha = 0;
+        newWeaponLabel.run(SKAction.sequence(
+            [SKAction.fadeAlpha(to: 1, duration: 0.5),
+             SKAction.fadeAlpha(to: 0, duration: 0.1)]
+        ));
     }
 }
 
