@@ -22,13 +22,17 @@
                                 <frame key="frameInset" minX="541" minY="478" width="20" height="20"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </activityIndicatorView>
-                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" misplaced="YES" image="tank_by_florianrenner.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="Li0-pq-hvh">
-                                <frame key="frameInset" minX="0.0%" minY="0.0%" width="100.00%" height="100.00%"/>
-                            </imageView>
+                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" image="tank_by_florianrenner.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="Li0-pq-hvh"/>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="Li0-pq-hvh" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="0Ae-dV-NPJ"/>
                             <constraint firstItem="Li0-pq-hvh" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="3mc-iE-zWy"/>
+                            <constraint firstAttribute="trailing" secondItem="Li0-pq-hvh" secondAttribute="trailing" id="49P-1j-Ptv"/>
+                            <constraint firstItem="Li0-pq-hvh" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="GUy-HS-zZ9"/>
+                            <constraint firstItem="Li0-pq-hvh" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="IST-E3-3p4"/>
+                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="Li0-pq-hvh" secondAttribute="bottom" id="hOh-lN-c8x"/>
+                            <constraint firstItem="Li0-pq-hvh" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="hZW-fz-CyL"/>
                             <constraint firstItem="Li0-pq-hvh" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="mRe-Xt-93T"/>
                         </constraints>
                     </view>

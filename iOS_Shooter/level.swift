@@ -52,6 +52,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
     
     var currentLevel: Int;
     var levelData: LevelData;
+    var backgroundNode: SKSpriteNode! ;
     var player1Node : SKSpriteNode! ;
     var player1Turret : SKSpriteNode! ;
     var player2Node : SKSpriteNode! ;
@@ -62,6 +63,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
     var player1LifeLabel: SKLabelNode! ;
     var player2LifeLabel: SKLabelNode! ;
     var bigLevelLabel: SKLabelNode! ;
+    var comboLabel: SKLabelNode!;
     var gameData: GameData;
     var groundNode: SKSpriteNode! ;
     var sceneManager: GameViewController;
@@ -71,6 +73,9 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
     var touchLocation: CGPoint?;
     var touchCooldown: Bool;
     var weapon: String = "chainReactionGun";
+    var combo: Int = 0;
+    var comboEndTimer: Timer!;
+    var comboEndInterval: Double = 1;
     
     struct PhysicsCategory {
         static let None      : UInt32 = 0
@@ -94,12 +99,14 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         player1LifeLabel = SKLabelNode(fontNamed: gameData.fontName);
         player2LifeLabel = SKLabelNode(fontNamed: gameData.fontName);
         highScoreLabel = SKLabelNode(fontNamed: gameData.fontName);
+        comboLabel = SKLabelNode(fontNamed: gameData.fontName);
         
         self.gameData = gameData;
         self.currentLevel = levelData.currentLevel;
         self.levelData = levelData;
         self.sceneManager = sceneManager;
         
+        backgroundNode = SKSpriteNode(imageNamed: "birthday-background-placeholder");
         groundNode = SKSpriteNode(imageNamed: "ground");
         player2Node = SKSpriteNode(imageNamed: "player2");
         
@@ -130,11 +137,19 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         initLabel(label: player1LifeLabel, gameData: gameData, text: "Lives: \(gameData.player1.lifes)", pos: CGPoint(x: self.size.width/4, y: self.size.height - 100 ) );
         initLabel(label: player2LifeLabel, gameData: gameData, text: "Lives: \(gameData.player1.lifes)", pos: CGPoint(x: 3 * self.size.width/4, y: self.size.height - 100 ) );
         initLabel(label: bigLevelLabel, gameData: gameData, text: "LEVEL UP!", pos: CGPoint(x: self.size.width/2, y: self.size.height/2 ) );
-        bigLevelLabel.fontSize = 100;
         initLabel(label: highScoreLabel, gameData: gameData, text: "Highscore: \(AppData.staticData.highScore)", pos: CGPoint(x: 3 * self.size.width/4, y: self.size.height - 100 ) );
+        // combo label
+        comboLabel.text = "";
+        comboLabel.fontSize = gameData.fontSize * 10;
+        comboLabel.fontColor = UIColor.red;
+        comboLabel.zPosition = 3
+        bigLevelLabel.fontSize = 100;
         
         groundNode.position = CGPoint(x: self.size.width/2, y: 10 );
         groundNode.zPosition = 2.0
+        
+        backgroundNode.zPosition = -1;
+        backgroundNode.position = CGPoint(x: self.size.width/2, y: self.size.height/2);
         
         topBulletCollector.position = CGPoint(x: 0, y: self.size.height);
         btmBulletCollector.position = CGPoint(x: self.size.width, y: 0);
@@ -162,6 +177,8 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         self.addChild(topBulletCollector);
         self.addChild(btmBulletCollector);
         self.addChild(highScoreLabel);
+        self.addChild(comboLabel);
+        self.addChild(backgroundNode);
         
         // background music
         let backgroundMusic = SKAudioNode(fileNamed: "Super Power Cool Dude")
@@ -214,6 +231,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         
     }
     
+    // MARK: - Begin Contact -
     func didBegin(_ contact: SKPhysicsContact) {
         let contactMask = contact.bodyA.categoryBitMask + contact.bodyB.categoryBitMask;
 //        print(contact.bodyA.categoryBitMask);
@@ -236,6 +254,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
             updateLabels();
             run(SKAction.playSoundFileNamed("Explosion1.wav", waitForCompletion: false))
             break;
+        // MARK: - Projectile Shot -
         case 6:
             // You shot down a projectile coming towards you.
             // boom
@@ -269,6 +288,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
             
             run(SKAction.playSoundFileNamed("Explosion3.wav", waitForCompletion: false))
             break;
+        // MARK: - Player Shot -
         case 10:
             // You were shot.
             self.gameData.player1.lifes += -1;
@@ -283,6 +303,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
             self.sceneManager.loadGameOverScene();
             // TODO: - Call the End game Scene.
             break;
+        // MARK: - Balloon Shot -
         case 20:
             // You shot the balloon.
             // balloon ref
@@ -335,6 +356,14 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
                     shot?.removeFromParent();
                     break;
                 }
+                // clear timer
+                comboEndTimer?.invalidate();
+                // start next timer
+                comboEndTimer = Timer.scheduledTimer(timeInterval: comboEndInterval, target: self, selector: #selector(LevelScene.endCombo), userInfo: nil, repeats: false);
+                // combo up!
+                combo += 1;
+                // show the combo ui
+                showCombo(origin: b.position);
             }
             
             self.gameData.player1.score += 2;
@@ -354,6 +383,21 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         }
         
         
+    }
+    
+    func showCombo(origin:CGPoint) {
+        comboLabel.text = "X\(combo)";
+        comboLabel.removeAllActions();
+        comboLabel.alpha = 1;
+        comboLabel.xScale = 0.1;
+        comboLabel.yScale = 0.1;
+        comboLabel.position = origin;
+        comboLabel.run(SKAction.fadeAlpha(to: 0, duration: comboEndInterval));
+        comboLabel.run(SKAction.scale(by: 20, duration: comboEndInterval));
+    }
+    
+    func endCombo() {
+        combo = 0;
     }
     
     func addTanks(){
@@ -427,6 +471,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         let balloonMoveDuration = levelData.balloonTime;
         let balloonSpawn = CGPoint(x: self.size.width , y: self.size.height * 0.1 + CGFloat(arc4random_uniform(UInt32(self.size.height * 0.8)) ) );
         
+        balloon.alpha = 0.8;
         balloon.xScale = 1;
         balloon.yScale = 1;
         //balloon.zRotation = .pi/4 ;
@@ -637,7 +682,13 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         //print("Projectile Launched");
         
         //let projectile = SKSpriteNode(imageNamed: "projectile");
-        let projectile = SKEmitterNode(fileNamed: "SmokeTrail")!
+        var projectile:SKEmitterNode!
+        // switch based on weapon
+        if (weapon == "chainReactionGun") {
+           projectile = SKEmitterNode(fileNamed: "ChainParticle")!
+        } else {
+           projectile = SKEmitterNode(fileNamed: "BigShot")!
+        }
         projectile.position = CGPoint(x: player1Node.position.x + player1Node.size.width/3, y: 80 );
         projectile.targetNode = self;
         if (weapon == "tunnelGun") {

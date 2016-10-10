@@ -63,7 +63,7 @@ class GameViewController: UIViewController {
 
     override var supportedInterfaceOrientations : UIInterfaceOrientationMask {
         if UIDevice.current.userInterfaceIdiom == .pad {
-            return .landscape
+            return UIInterfaceOrientationMask.landscape
         } else {
             // TODO: - Should we put this here -
             return .landscape
