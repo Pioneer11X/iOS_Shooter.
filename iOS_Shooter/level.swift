@@ -515,13 +515,23 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         
         // MARK: - NPC projectile logic
         
-        //let balloonProjectile = SKSpriteNode(imageNamed: "projectile");
-        let balloonProjectile = SKEmitterNode(fileNamed: "SmokeTrail")!
-        //balloonProjectile.xScale = 0.1;
-        //balloonProjectile.yScale = 0.1;
+        let balloonProjectile = SKSpriteNode(imageNamed: "Birthday-Present-Transparent");
+        balloonProjectile.zPosition = 4;
+        let balloonProjEffect = SKEmitterNode(fileNamed: "SmokeTrail")!
+        balloonProjectile.xScale = 0.05;
+        balloonProjectile.yScale = 0.05;
+        balloonProjEffect.particleSize = CGSize(width: 100, height: 100);
         balloonProjectile.position = CGPoint(x: balloon.position.x - balloon.size.width/3, y: balloon.position.y);
-        balloonProjectile.targetNode = self;
+        //balloonProjEffect.position = CGPoint(x: balloon.position.x - balloon.size.width/3, y: balloon.position.y);
+        balloonProjEffect.targetNode = self;
         self.addChild(balloonProjectile);
+        balloonProjectile.addChild(balloonProjEffect);
+        balloonProjEffect.position = CGPoint(x: 0, y: 0);
+        // bob effect
+        let rot:SKAction = SKAction.repeatForever(SKAction.sequence(
+            [SKAction.rotate(byAngle: .pi/4.0, duration: 0.1),
+             SKAction.rotate(byAngle: -.pi/4.0, duration: 0.1)]));
+        balloonProjectile.run(SKAction.repeatForever(rot));
         
         //let direction = player1Node.position - balloon.position;
         
@@ -540,6 +550,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         let balloonProjectileActionDone = SKAction.removeFromParent();
         
         balloonProjectile.run(SKAction.sequence([balloonProjectileAction,balloonProjectileActionDone]));
+        //balloonProjEffect.run(SKAction.sequence([balloonProjectileAction,balloonProjectileActionDone]));
         
         
     }
