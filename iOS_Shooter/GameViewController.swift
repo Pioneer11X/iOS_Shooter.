@@ -45,6 +45,12 @@ class GameViewController: UIViewController {
         skView.presentScene(scene);
     }
     
+    func loadCreditsScreen(){
+        let screenSize:CGSize = CGSize(width:screenbounds.width, height: screenbounds.height);
+        let scene = CreditsScene(size: screenSize, scaleMode: scaleMode, sceneManager: self);
+        skView.presentScene(scene);
+    }
+    
     func loadGameScene(level: LevelData){
         let screenSize:CGSize = CGSize(width:screenbounds.width, height: screenbounds.height);
         let scene = LevelScene( levelData: level, gameData: gameData, size: screenSize,scaleMode: scaleMode, sceneManager: self)
