@@ -23,6 +23,10 @@
 		1983127D1D9A1FA900346871 /* SmokeTrail.sks in Resources */ = {isa = PBXBuildFile; fileRef = 1983127C1D9A1FA900346871 /* SmokeTrail.sks */; };
 		1983127F1D9A20A700346871 /* Super Power Cool Dude.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1983127E1D9A20A700346871 /* Super Power Cool Dude.mp3 */; };
 		1987A6DA1DA32D0F00F7FBE7 /* ChainParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 1987A6D91DA32D0F00F7FBE7 /* ChainParticle.sks */; };
+		19A170A11DABEB3C007C3502 /* birthday-background-placeholder.png in Resources */ = {isa = PBXBuildFile; fileRef = 19A170A01DABEB3C007C3502 /* birthday-background-placeholder.png */; };
+		19A170A31DABEEB2007C3502 /* BigShot.sks in Resources */ = {isa = PBXBuildFile; fileRef = 19A170A21DABEEB2007C3502 /* BigShot.sks */; };
+		19A170A51DABF5CD007C3502 /* Birthday-Present-Transparent.png in Resources */ = {isa = PBXBuildFile; fileRef = 19A170A41DABF5CD007C3502 /* Birthday-Present-Transparent.png */; };
+		19C4744D1DABFBE000D9D0FD /* SpecialParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 19C4744C1DABFBE000D9D0FD /* SpecialParticle.sks */; };
 		19CEA4311D8E670E0098620E /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 19CEA42F1D8E670E0098620E /* spark.png */; };
 		A001C5F51DAA08ED007F81E2 /* CreditsScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = A001C5F41DAA08ED007F81E2 /* CreditsScene.swift */; };
 		A002A3D81D96BF9000BC56E3 /* HomeScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = A002A3D71D96BF9000BC56E3 /* HomeScene.swift */; };
@@ -57,6 +61,10 @@
 		1983127C1D9A1FA900346871 /* SmokeTrail.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = SmokeTrail.sks; sourceTree = "<group>"; };
 		1983127E1D9A20A700346871 /* Super Power Cool Dude.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "Super Power Cool Dude.mp3"; path = "Assets.xcassets/Super Power Cool Dude.mp3"; sourceTree = "<group>"; };
 		1987A6D91DA32D0F00F7FBE7 /* ChainParticle.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = ChainParticle.sks; sourceTree = "<group>"; };
+		19A170A01DABEB3C007C3502 /* birthday-background-placeholder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "birthday-background-placeholder.png"; path = "Assets.xcassets/Assets.xcassets/birthday-background-placeholder.png"; sourceTree = "<group>"; };
+		19A170A21DABEEB2007C3502 /* BigShot.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = BigShot.sks; sourceTree = "<group>"; };
+		19A170A41DABF5CD007C3502 /* Birthday-Present-Transparent.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Birthday-Present-Transparent.png"; path = "Assets.xcassets/Assets.xcassets/Birthday-Present-Transparent.png"; sourceTree = "<group>"; };
+		19C4744C1DABFBE000D9D0FD /* SpecialParticle.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = SpecialParticle.sks; sourceTree = "<group>"; };
 		19CEA42F1D8E670E0098620E /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = spark.png; path = ../spark.png; sourceTree = "<group>"; };
 		A001C5F41DAA08ED007F81E2 /* CreditsScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreditsScene.swift; sourceTree = "<group>"; };
 		A002A3D71D96BF9000BC56E3 /* HomeScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeScene.swift; sourceTree = "<group>"; };
@@ -119,13 +127,17 @@
 		A03E70561D885790006C50E9 /* iOS_Shooter */ = {
 			isa = PBXGroup;
 			children = (
+				19A170A41DABF5CD007C3502 /* Birthday-Present-Transparent.png */,
 				A0DE11261DA332670054F748 /* VC */,
+				19A170A21DABEEB2007C3502 /* BigShot.sks */,
+				19A170A01DABEB3C007C3502 /* birthday-background-placeholder.png */,
 				190FC41C1DA2F783006D311B /* pixel-tank_turret.png */,
 				190FC41D1DA2F783006D311B /* pixel-tank_party.png */,
 				190FC41A1DA21361006D311B /* confetti.png */,
 				1983127E1D9A20A700346871 /* Super Power Cool Dude.mp3 */,
 				1983127C1D9A1FA900346871 /* SmokeTrail.sks */,
 				1987A6D91DA32D0F00F7FBE7 /* ChainParticle.sks */,
+				19C4744C1DABFBE000D9D0FD /* SpecialParticle.sks */,
 				190FC4101DA201E7006D311B /* Pop.sks */,
 				190FC4181DA2122D006D311B /* Confetti.sks */,
 				1983127A1D9A1D8400346871 /* tank_by_florianrenner.jpg */,
@@ -231,7 +243,11 @@
 				1983127F1D9A20A700346871 /* Super Power Cool Dude.mp3 in Resources */,
 				190FC4121DA201E7006D311B /* Pop.sks in Resources */,
 				190FC4171DA21207006D311B /* bokeh.png in Resources */,
+				19A170A31DABEEB2007C3502 /* BigShot.sks in Resources */,
+				19C4744D1DABFBE000D9D0FD /* SpecialParticle.sks in Resources */,
+				19A170A51DABF5CD007C3502 /* Birthday-Present-Transparent.png in Resources */,
 				1983126F1D9A0A7A00346871 /* Hurt.wav in Resources */,
+				19A170A11DABEB3C007C3502 /* birthday-background-placeholder.png in Resources */,
 				1983127B1D9A1D8400346871 /* tank_by_florianrenner.jpg in Resources */,
 				190FC4131DA201E7006D311B /* spark.png in Resources */,
 				A0AAD5E81D985F2C001B638D /* Assets.xcassets in Resources */,
@@ -384,6 +400,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.sample.iOS-Shooter";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Debug;
 		};
@@ -397,6 +414,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.sample.iOS-Shooter";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Release;
 		};
