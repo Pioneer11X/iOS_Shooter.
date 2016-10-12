@@ -63,6 +63,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
     var comboLabel: SKLabelNode!;
     var newWeaponLabel: SKLabelNode!;
     var levelTimerLabel: SKLabelNode!;
+    var pauseTextLabel: SKLabelNode!;
     var gameData: GameData;
     var groundNode: SKSpriteNode! ;
     var sceneManager: GameViewController;
@@ -76,6 +77,48 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
     var comboEndTimer: Timer!;
     var comboEndInterval: Double = 1;
     var secondsLeft: Int = 30;
+    
+    // MARK: - Pausing Logic
+    var gameLoopPaused:Bool = true{
+        didSet{
+            print("gameLoopPaused=\(gameLoopPaused)");
+            //gameLoopPaused?runPause
+        }
+    }
+    
+    private func runPauseAction(){
+        print(#function);
+        
+        self.view?.isPaused = true;
+        self.physicsWorld.speed = 0.0;
+        
+        /*
+        let pauseAction = SKAction.run {
+            self.view?.isPaused = true;
+            print(self.physicsWorld.speed);
+            self.physicsWorld.speed = 0.0; // Stop Physics?
+        }
+        
+        run(pauseAction);
+        */
+    }
+    
+    private func runUnpauseAction(){
+        print(#function);
+        
+        self.view?.isPaused = false;
+        self.physicsWorld.speed = 1.0;
+        /*
+        let unpauseAction = SKAction.run {
+            self.physicsWorld.speed = 1.0;
+            self.view?.isPaused = false;
+        }
+ 
+        //unpauseAction.timingMode = .easeIn;
+        run(unpauseAction);
+        */
+
+    }
     
     struct PhysicsCategory {
         static let None      : UInt32 = 0
@@ -100,6 +143,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         comboLabel = SKLabelNode(fontNamed: gameData.fontName);
         newWeaponLabel = SKLabelNode(fontNamed: gameData.fontName);
         levelTimerLabel = SKLabelNode(fontNamed: gameData.fontName);
+        pauseTextLabel = SKLabelNode(fontNamed: gameData.fontName);
         
         self.gameData = gameData;
         self.currentLevel = levelData.currentLevel;
@@ -137,6 +181,9 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         initLabel(label: newWeaponLabel, gameData: gameData, text: "Basic Gun", pos: CGPoint(x: self.size.width/2 , y: self.size.height/2 ) );
         initLabel(label: highScoreLabel, gameData: gameData, text: "Highscore: \(AppData.staticData.highScore)", pos: CGPoint(x: 3 * self.size.width/4, y: self.size.height - 100 ) );
         initLabel(label: levelTimerLabel, gameData: gameData, text: "30", pos: CGPoint(x: self.size.width/2 , y: self.size.height/4 ) );
+        initLabel(label: pauseTextLabel, gameData: gameData, text: "Pause", pos: CGPoint(x: 3 * self.size.width/4 , y: self.size.height - 50 ) );
+        
+        
         levelTimerLabel.fontColor = UIColor.black;
         levelTimerLabel.fontSize = gameData.fontSize * 30;
         levelTimerLabel.zPosition = 0;
@@ -205,6 +252,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         self.addChild(player1Node);
         self.addChild(player1Turret);
         self.addChild(levelTimerLabel);
+        self.addChild(pauseTextLabel);
         
 //        addTanks();
         
@@ -631,6 +679,18 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         // touched tank
         if (touchLocation! - player1Node.position).length() < 50 {
             // do nothing
+            return;
+        }
+        
+        if ( pauseTextLabel.contains(touchLocation!)){
+            gameLoopPaused = !gameLoopPaused;
+            if ( pauseTextLabel.text == "Pause" ){
+                pauseTextLabel.text = "Unpause";
+                runPauseAction();
+            } else {
+                pauseTextLabel.text = "Pause";
+                runUnpauseAction();
+            }
             return;
         }
         
