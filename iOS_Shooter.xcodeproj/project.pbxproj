@@ -36,6 +36,7 @@
 		A03E705E1D885790006C50E9 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03E705D1D885790006C50E9 /* GameViewController.swift */; };
 		A03E70611D885790006C50E9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A03E705F1D885790006C50E9 /* Main.storyboard */; };
 		A03E70661D885790006C50E9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A03E70641D885790006C50E9 /* LaunchScreen.storyboard */; };
+		A045B29D1DB310F100F8F29F /* utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A045B29C1DB310F100F8F29F /* utils.swift */; };
 		A089F0121D9A0AA3002C6C16 /* GameOver.swift in Sources */ = {isa = PBXBuildFile; fileRef = A089F0111D9A0AA3002C6C16 /* GameOver.swift */; };
 		A0AAD5E01D97199A001B638D /* InstructionsScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0AAD5DF1D97199A001B638D /* InstructionsScene.swift */; };
 		A0AAD5E21D975E99001B638D /* level.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0AAD5E11D975E99001B638D /* level.swift */; };
@@ -76,6 +77,7 @@
 		A03E70601D885790006C50E9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		A03E70651D885790006C50E9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A03E70671D885790006C50E9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A045B29C1DB310F100F8F29F /* utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = utils.swift; sourceTree = "<group>"; };
 		A089F0111D9A0AA3002C6C16 /* GameOver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameOver.swift; sourceTree = "<group>"; };
 		A0AAD5DF1D97199A001B638D /* InstructionsScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstructionsScene.swift; sourceTree = "<group>"; };
 		A0AAD5E11D975E99001B638D /* level.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = level.swift; sourceTree = "<group>"; };
@@ -127,14 +129,11 @@
 		A03E70561D885790006C50E9 /* iOS_Shooter */ = {
 			isa = PBXGroup;
 			children = (
-				19A170A41DABF5CD007C3502 /* Birthday-Present-Transparent.png */,
+				A045B29E1DB3111100F8F29F /* Assets */,
+				A002A3D61D96BF6A00BC56E3 /* Scenes */,
+				A045B29B1DB310E400F8F29F /* Utils */,
 				A0DE11261DA332670054F748 /* VC */,
 				19A170A21DABEEB2007C3502 /* BigShot.sks */,
-				19A170A01DABEB3C007C3502 /* birthday-background-placeholder.png */,
-				190FC41C1DA2F783006D311B /* pixel-tank_turret.png */,
-				190FC41D1DA2F783006D311B /* pixel-tank_party.png */,
-				190FC41A1DA21361006D311B /* confetti.png */,
-				1983127E1D9A20A700346871 /* Super Power Cool Dude.mp3 */,
 				1983127C1D9A1FA900346871 /* SmokeTrail.sks */,
 				1987A6D91DA32D0F00F7FBE7 /* ChainParticle.sks */,
 				19C4744C1DABFBE000D9D0FD /* SpecialParticle.sks */,
@@ -142,29 +141,49 @@
 				190FC4181DA2122D006D311B /* Confetti.sks */,
 				1983127A1D9A1D8400346871 /* tank_by_florianrenner.jpg */,
 				A0AAD5E71D985F2C001B638D /* Assets.xcassets */,
-				190FC40E1DA1F90C006D311B /* white_balloon.png */,
-				198312701D9A0BA700346871 /* Explosion3.wav */,
-				1983126A1D9A0A7A00346871 /* Explosion1.wav */,
-				1983126B1D9A0A7A00346871 /* Explosion2.wav */,
-				1983126C1D9A0A7A00346871 /* Hurt.wav */,
-				19CEA42F1D8E670E0098620E /* spark.png */,
-				A002A3D61D96BF6A00BC56E3 /* Scenes */,
 				A03E70571D885790006C50E9 /* AppDelegate.swift */,
 				A03E70591D885790006C50E9 /* GameScene.sks */,
-				A03E705D1D885790006C50E9 /* GameViewController.swift */,
 				A03E705F1D885790006C50E9 /* Main.storyboard */,
 				A03E70641D885790006C50E9 /* LaunchScreen.storyboard */,
 				A03E70671D885790006C50E9 /* Info.plist */,
-				A0AAD5E31D9767AF001B638D /* player.swift */,
-				190FC4111DA201E7006D311B /* spark.png */,
-				190FC4151DA21207006D311B /* bokeh.png */,
 			);
 			path = iOS_Shooter;
+			sourceTree = "<group>";
+		};
+		A045B29B1DB310E400F8F29F /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				A0AAD5E31D9767AF001B638D /* player.swift */,
+				A045B29C1DB310F100F8F29F /* utils.swift */,
+			);
+			name = Utils;
+			sourceTree = "<group>";
+		};
+		A045B29E1DB3111100F8F29F /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				190FC4111DA201E7006D311B /* spark.png */,
+				190FC4151DA21207006D311B /* bokeh.png */,
+				190FC40E1DA1F90C006D311B /* white_balloon.png */,
+				198312701D9A0BA700346871 /* Explosion3.wav */,
+				190FC41C1DA2F783006D311B /* pixel-tank_turret.png */,
+				190FC41D1DA2F783006D311B /* pixel-tank_party.png */,
+				190FC41A1DA21361006D311B /* confetti.png */,
+				1983127E1D9A20A700346871 /* Super Power Cool Dude.mp3 */,
+				1983126A1D9A0A7A00346871 /* Explosion1.wav */,
+				1983126B1D9A0A7A00346871 /* Explosion2.wav */,
+				19A170A01DABEB3C007C3502 /* birthday-background-placeholder.png */,
+				19A170A41DABF5CD007C3502 /* Birthday-Present-Transparent.png */,
+				1983126C1D9A0A7A00346871 /* Hurt.wav */,
+				19CEA42F1D8E670E0098620E /* spark.png */,
+			);
+			name = Assets;
 			sourceTree = "<group>";
 		};
 		A0DE11261DA332670054F748 /* VC */ = {
 			isa = PBXGroup;
 			children = (
+				A03E705D1D885790006C50E9 /* GameViewController.swift */,
 				A0DE11271DA332790054F748 /* AppData.swift */,
 			);
 			name = VC;
@@ -266,6 +285,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A03E705C1D885790006C50E9 /* GameScene.swift in Sources */,
+				A045B29D1DB310F100F8F29F /* utils.swift in Sources */,
 				A001C5F51DAA08ED007F81E2 /* CreditsScene.swift in Sources */,
 				A0AAD5E01D97199A001B638D /* InstructionsScene.swift in Sources */,
 				A002A3D81D96BF9000BC56E3 /* HomeScene.swift in Sources */,

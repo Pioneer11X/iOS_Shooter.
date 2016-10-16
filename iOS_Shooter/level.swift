@@ -9,44 +9,11 @@
 import SpriteKit;
 import Foundation;
 
-func + (left: CGPoint, right: CGPoint) -> CGPoint {
-    return CGPoint(x: left.x + right.x, y: left.y + right.y)
-}
 
-func - (left: CGPoint, right: CGPoint) -> CGPoint {
-    return CGPoint(x: left.x - right.x, y: left.y - right.y)
-}
 
-func * (point: CGPoint, scalar: CGFloat) -> CGPoint {
-    return CGPoint(x: point.x * scalar, y: point.y * scalar)
-}
-
-func / (point: CGPoint, scalar: CGFloat) -> CGPoint {
-    return CGPoint(x: point.x / scalar, y: point.y / scalar)
-}
-
-extension CGPoint {
-    func length() -> CGFloat {
-        return sqrt(x*x + y*y)
-    }
-    
-    func normalized() -> CGPoint {
-        return self / length()
-    }
-}
-
-struct LevelData {
-    var currentLevel: Int;
-    var tankTime: Double;
-    var balloonTime: Double;
-    var tankProjectileTime: Double;
-    var balloonProjectileTime: Double;
-    var tankDelayTime: Double;
-    var balloonDelayTime: Double;
-    var shootChance: Double;
-}
 
 class LevelScene: SKScene, SKPhysicsContactDelegate {
+    
     
     // MARK: - iVars for Levels
     
@@ -63,6 +30,8 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
     var comboLabel: SKLabelNode!;
     var newWeaponLabel: SKLabelNode!;
     var levelTimerLabel: SKLabelNode!;
+    
+    // MARK: - Pausing Labels -
     var pauseTextLabel: SKLabelNode!;
     var gameData: GameData;
     var groundNode: SKSpriteNode! ;
@@ -172,6 +141,8 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
     
     override func didMove(to view: SKView){
         
+        GameState.isPaused = false;
+        
         self.physicsWorld.contactDelegate = self;
         
         initLabel(label: levelLabel, gameData: gameData, text: "Round: \(currentLevel)", pos: CGPoint(x: self.size.width/2 , y: self.size.height - 50 ) );
@@ -213,22 +184,11 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         btmBulletCollector.zRotation = .pi/2;
         btmBulletCollector.xScale = 5;
         
-        topBulletCollector.physicsBody = SKPhysicsBody(rectangleOf: topBulletCollector.size);
-        topBulletCollector.physicsBody?.isDynamic = true;
-        topBulletCollector.physicsBody?.categoryBitMask = PhysicsCategory.BulletCollector;
-        topBulletCollector.physicsBody?.contactTestBitMask = PhysicsCategory.Projectile + PhysicsCategory.PlayerProjectile;
-        topBulletCollector.physicsBody?.collisionBitMask = PhysicsCategory.None;
-        topBulletCollector.physicsBody?.affectedByGravity = false;
         
-        btmBulletCollector.physicsBody = SKPhysicsBody(rectangleOf: btmBulletCollector.size);
-        btmBulletCollector.physicsBody?.isDynamic = true;
-        btmBulletCollector.physicsBody?.categoryBitMask = PhysicsCategory.BulletCollector;
-        btmBulletCollector.physicsBody?.contactTestBitMask = PhysicsCategory.Projectile + PhysicsCategory.PlayerProjectile;
-        btmBulletCollector.physicsBody?.collisionBitMask = PhysicsCategory.None;
-        btmBulletCollector.physicsBody?.affectedByGravity = false;
+        initPhysics(bulletCollector: topBulletCollector);
+        initPhysics(bulletCollector: btmBulletCollector);
         
-        topBulletCollector.zPosition = -1.0;
-        btmBulletCollector.zPosition = -1.0;
+        
         
         self.addChild(topBulletCollector);
         self.addChild(btmBulletCollector);
@@ -253,6 +213,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         self.addChild(player1Turret);
         self.addChild(levelTimerLabel);
         self.addChild(pauseTextLabel);
+        
         
 //        addTanks();
         
@@ -662,6 +623,16 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         label.zPosition = 3
     }
     
+    func initPhysics(bulletCollector: SKSpriteNode){
+        bulletCollector.physicsBody = SKPhysicsBody(rectangleOf: bulletCollector.size);
+        bulletCollector.physicsBody?.isDynamic = true;
+        bulletCollector.physicsBody?.categoryBitMask = PhysicsCategory.BulletCollector;
+        bulletCollector.physicsBody?.contactTestBitMask = PhysicsCategory.Projectile + PhysicsCategory.PlayerProjectile;
+        bulletCollector.physicsBody?.collisionBitMask = PhysicsCategory.None;
+        bulletCollector.physicsBody?.affectedByGravity = false;
+        bulletCollector.zPosition = -1.0;
+    }
+    
     var shootNSTimer = Timer();
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -691,7 +662,6 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
                 pauseTextLabel.text = "Pause";
                 runUnpauseAction();
             }
-            return;
         }
         
         // get direction
