@@ -58,18 +58,19 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
     private func runPauseAction(){
         print(#function);
         
-        self.view?.isPaused = true;
-        self.physicsWorld.speed = 0.0;
+        self.pauseTextLabel.text = "Resume";
+//        pauseTextLabel.removeFromParent();
+//        self.addChild(pauseTextLabel);
+        let waitAction = SKAction.wait(forDuration: 0.1);
+        run(SKAction.sequence([
+            waitAction,
+            SKAction.run {
+                self.view?.isPaused = true;
+                self.physicsWorld.speed = 0.0;
+            }
+            ]))
         
-        /*
-        let pauseAction = SKAction.run {
-            self.view?.isPaused = true;
-            print(self.physicsWorld.speed);
-            self.physicsWorld.speed = 0.0; // Stop Physics?
-        }
         
-        run(pauseAction);
-        */
     }
     
     private func runUnpauseAction(){
@@ -77,15 +78,8 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         
         self.view?.isPaused = false;
         self.physicsWorld.speed = 1.0;
-        /*
-        let unpauseAction = SKAction.run {
-            self.physicsWorld.speed = 1.0;
-            self.view?.isPaused = false;
-        }
- 
-        //unpauseAction.timingMode = .easeIn;
-        run(unpauseAction);
-        */
+        pauseTextLabel.text = "Pause";
+        
 
     }
     
@@ -654,14 +648,23 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         }
         
         if ( pauseTextLabel.contains(touchLocation!)){
-            gameLoopPaused = !gameLoopPaused;
-            if ( pauseTextLabel.text == "Pause" ){
+            
+            if ( gameLoopPaused ){
+//                let pauseImage = SKSpriteNode(imageNamed: "play-button.png");
+//                pauseImage.xScale = 0.5;
+//                pauseImage.yScale = 0.5;
+//                pauseImage.position = CGPoint(x:self.size.width/2, y: self.size.height/2);
+//                pauseImage.alpha = 0.5;
+//                pauseImage.zPosition = 4.0;
+//                self.addChild(pauseImage);
                 pauseTextLabel.text = "Unpause";
                 runPauseAction();
+//                self.sceneManager.loadPauseScene();
             } else {
-                pauseTextLabel.text = "Pause";
                 runUnpauseAction();
+//                pauseTextLabel.text = "Pause";
             }
+            gameLoopPaused = !gameLoopPaused;
         }
         
         // get direction

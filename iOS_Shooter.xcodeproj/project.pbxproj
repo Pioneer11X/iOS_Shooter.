@@ -37,6 +37,8 @@
 		A03E70611D885790006C50E9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A03E705F1D885790006C50E9 /* Main.storyboard */; };
 		A03E70661D885790006C50E9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A03E70641D885790006C50E9 /* LaunchScreen.storyboard */; };
 		A045B29D1DB310F100F8F29F /* utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A045B29C1DB310F100F8F29F /* utils.swift */; };
+		A07C89E11DB40E6000D2833D /* PausedScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = A07C89E01DB40E6000D2833D /* PausedScene.swift */; };
+		A07C89E31DB4122500D2833D /* play-button.png in Resources */ = {isa = PBXBuildFile; fileRef = A07C89E21DB4122500D2833D /* play-button.png */; };
 		A089F0121D9A0AA3002C6C16 /* GameOver.swift in Sources */ = {isa = PBXBuildFile; fileRef = A089F0111D9A0AA3002C6C16 /* GameOver.swift */; };
 		A0AAD5E01D97199A001B638D /* InstructionsScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0AAD5DF1D97199A001B638D /* InstructionsScene.swift */; };
 		A0AAD5E21D975E99001B638D /* level.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0AAD5E11D975E99001B638D /* level.swift */; };
@@ -78,6 +80,8 @@
 		A03E70651D885790006C50E9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A03E70671D885790006C50E9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A045B29C1DB310F100F8F29F /* utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = utils.swift; sourceTree = "<group>"; };
+		A07C89E01DB40E6000D2833D /* PausedScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PausedScene.swift; sourceTree = "<group>"; };
+		A07C89E21DB4122500D2833D /* play-button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "play-button.png"; sourceTree = "<group>"; };
 		A089F0111D9A0AA3002C6C16 /* GameOver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameOver.swift; sourceTree = "<group>"; };
 		A0AAD5DF1D97199A001B638D /* InstructionsScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstructionsScene.swift; sourceTree = "<group>"; };
 		A0AAD5E11D975E99001B638D /* level.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = level.swift; sourceTree = "<group>"; };
@@ -106,6 +110,7 @@
 				A0AAD5DF1D97199A001B638D /* InstructionsScene.swift */,
 				A001C5F41DAA08ED007F81E2 /* CreditsScene.swift */,
 				A0AAD5E11D975E99001B638D /* level.swift */,
+				A07C89E01DB40E6000D2833D /* PausedScene.swift */,
 			);
 			name = Scenes;
 			sourceTree = "<group>";
@@ -140,6 +145,7 @@
 				190FC4101DA201E7006D311B /* Pop.sks */,
 				190FC4181DA2122D006D311B /* Confetti.sks */,
 				1983127A1D9A1D8400346871 /* tank_by_florianrenner.jpg */,
+				A07C89E21DB4122500D2833D /* play-button.png */,
 				A0AAD5E71D985F2C001B638D /* Assets.xcassets */,
 				A03E70571D885790006C50E9 /* AppDelegate.swift */,
 				A03E70591D885790006C50E9 /* GameScene.sks */,
@@ -272,6 +278,7 @@
 				A0AAD5E81D985F2C001B638D /* Assets.xcassets in Resources */,
 				1983126E1D9A0A7A00346871 /* Explosion2.wav in Resources */,
 				190FC41E1DA2F783006D311B /* pixel-tank_turret.png in Resources */,
+				A07C89E31DB4122500D2833D /* play-button.png in Resources */,
 				1983126D1D9A0A7A00346871 /* Explosion1.wav in Resources */,
 				190FC40F1DA1F90C006D311B /* white_balloon.png in Resources */,
 			);
@@ -291,6 +298,7 @@
 				A002A3D81D96BF9000BC56E3 /* HomeScene.swift in Sources */,
 				A0AAD5E41D9767AF001B638D /* player.swift in Sources */,
 				A03E705E1D885790006C50E9 /* GameViewController.swift in Sources */,
+				A07C89E11DB40E6000D2833D /* PausedScene.swift in Sources */,
 				A0AAD5E21D975E99001B638D /* level.swift in Sources */,
 				A03E70581D885790006C50E9 /* AppDelegate.swift in Sources */,
 				A089F0121D9A0AA3002C6C16 /* GameOver.swift in Sources */,
