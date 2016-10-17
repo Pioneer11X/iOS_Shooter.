@@ -47,8 +47,13 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
     var comboEndInterval: Double = 1;
     var secondsLeft: Int = 30;
     
+    // MARK: - Pausing variables
+    var resumeImageLabel: SKSpriteNode;
+    var reloadLevelLabel: SKSpriteNode?;
+    var goToMainMenuLabel: SKSpriteNode?;
+    
     // MARK: - Pausing Logic
-    var gameLoopPaused:Bool = true{
+    var gameLoopPaused:Bool = false{
         didSet{
             print("gameLoopPaused=\(gameLoopPaused)");
             //gameLoopPaused?runPause
@@ -59,6 +64,8 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         print(#function);
         
         self.pauseTextLabel.text = "Resume";
+        self.addChild(resumeImageLabel);
+        
 //        pauseTextLabel.removeFromParent();
 //        self.addChild(pauseTextLabel);
         let waitAction = SKAction.wait(forDuration: 0.1);
@@ -75,10 +82,12 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
     
     private func runUnpauseAction(){
         print(#function);
+        print(gameLoopPaused);
         
         self.view?.isPaused = false;
         self.physicsWorld.speed = 1.0;
         pauseTextLabel.text = "Pause";
+        resumeImageLabel.removeFromParent();
         
 
     }
@@ -119,12 +128,21 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         btmBulletCollector = SKSpriteNode(imageNamed: "projectile");
         topBulletCollector = SKSpriteNode(imageNamed: "projectile");
         
+        resumeImageLabel = SKSpriteNode(imageNamed: "play-button.png");
+        
+        
         isTouching = false;
         touchLocation = nil;
         
         touchCooldown = false;
         
         super.init(size:size);
+        
+        resumeImageLabel.alpha = 0.7;
+        resumeImageLabel.position = CGPoint(x: self.size.width/2, y: self.size.height/2);
+        resumeImageLabel.xScale = 0.5;
+        resumeImageLabel.yScale = 0.5;
+        resumeImageLabel.zPosition = 5.0;
         
         
     }
@@ -208,16 +226,6 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         self.addChild(levelTimerLabel);
         self.addChild(pauseTextLabel);
         
-        
-//        addTanks();
-        
-        /*run(SKAction.repeatForever(
-            SKAction.sequence([
-                SKAction.run(addTanks),
-                SKAction.wait(forDuration: levelData.tankDelayTime)
-                ])
-        ))*/
-        
         self.run(SKAction.repeatForever( SKAction.sequence(
             [
                 SKAction.run({
@@ -226,6 +234,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
                 }),
                 SKAction.wait(forDuration: 1)
             ])));
+        
         
         // show level up if new level
         if (currentLevel > 1) {
@@ -254,10 +263,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
     // MARK: - Begin Contact -
     func didBegin(_ contact: SKPhysicsContact) {
         let contactMask = contact.bodyA.categoryBitMask + contact.bodyB.categoryBitMask;
-//        print(contact.bodyA.categoryBitMask);
-//        print(" ");
-//        print(contact.bodyB.categoryBitMask);
-//        print(contactMask);
+        
         switch contactMask {
         case 3: break
             // Do nothing. The tank/balloon projectile hit with the tank.
@@ -635,28 +641,30 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
             return
         }
         touchLocation = touch.location(in: self)
-        
-        //        shootProjectile(touchLocation: touchLocation);
-        
-        // We need to shoot continously. We need to start creating a lot of projectiles. So, we need a function that creates a projectil and call that infinitely.
         isTouching = true;
         
+        print("BP1");
+        // Check if the scene is paused, and the user would like to resume.
+        if gameLoopPaused{
+            print("BP2");
+            if self.resumeImageLabel.contains(touchLocation!){
+                print("BP3");
+                runUnpauseAction();
+                gameLoopPaused = !gameLoopPaused;
+                return;
+            }
+        }
+        
+        print("BP4");
         // touched tank
         if (touchLocation! - player1Node.position).length() < 50 {
             // do nothing
             return;
         }
         
-        if ( pauseTextLabel.contains(touchLocation!)){
+        if ( pauseTextLabel.contains(touchLocation!) && !gameLoopPaused ){
             
-            if ( gameLoopPaused ){
-//                let pauseImage = SKSpriteNode(imageNamed: "play-button.png");
-//                pauseImage.xScale = 0.5;
-//                pauseImage.yScale = 0.5;
-//                pauseImage.position = CGPoint(x:self.size.width/2, y: self.size.height/2);
-//                pauseImage.alpha = 0.5;
-//                pauseImage.zPosition = 4.0;
-//                self.addChild(pauseImage);
+            if ( !gameLoopPaused ){
                 pauseTextLabel.text = "Unpause";
                 runPauseAction();
 //                self.sceneManager.loadPauseScene();
@@ -665,6 +673,8 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
 //                pauseTextLabel.text = "Pause";
             }
             gameLoopPaused = !gameLoopPaused;
+            print(gameLoopPaused);
+            return;
         }
         
         // get direction
