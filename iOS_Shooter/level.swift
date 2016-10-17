@@ -999,7 +999,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
     
     private func reloadLevel(){
         // We need to reload the level. It means, we need to use the initialiser with the data we already passed it last time.
-        self.gameData.player1.score = currentLevel * 50 + 5 * currentLevel * currentLevel;
+        self.gameData.player1.score = (currentLevel - 1) * 50 + 5 * ( currentLevel - 1 ) * ( currentLevel - 1 );
         self.gameData.player1.lifes = self.gameData.player1.lifesAtLastLevel;
         sceneManager.loadGameScene(level: self.levelData);
         
