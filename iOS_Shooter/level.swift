@@ -119,7 +119,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         highScoreLabel = SKLabelNode(fontNamed: gameData.fontName);
         comboLabel = SKLabelNode(fontNamed: gameData.fontName);
         newWeaponLabel = SKLabelNode(fontNamed: gameData.fontName);
-        levelTimerLabel = SKLabelNode(fontNamed: gameData.fontName);
+        levelTimerLabel = SKLabelNode(fontNamed: "Andale Mono");
         pauseTextLabel = SKLabelNode(fontNamed: gameData.fontName);
         
         self.gameData = gameData;
@@ -182,7 +182,8 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         initLabel(label: bigLevelLabel, gameData: gameData, text: "LEVEL UP!", pos: CGPoint(x: self.size.width/2, y: self.size.height/2 ) );
         initLabel(label: newWeaponLabel, gameData: gameData, text: "Basic Gun", pos: CGPoint(x: self.size.width/2 , y: self.size.height/2 ) );
         initLabel(label: highScoreLabel, gameData: gameData, text: "Highscore: \(AppData.staticData.highScore)", pos: CGPoint(x: 3 * self.size.width/4, y: self.size.height - 100 ) );
-        initLabel(label: levelTimerLabel, gameData: gameData, text: "30", pos: CGPoint(x: self.size.width/2 , y: self.size.height/4 ) );
+        initLabel(label: levelTimerLabel, gameData: gameData, text: "30", pos: CGPoint(x: self.size.width/8 , y: self.size.height/4 ) );
+        levelTimerLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentMode.left;
         initLabel(label: pauseTextLabel, gameData: gameData, text: "Pause", pos: CGPoint(x: 3 * self.size.width/4 , y: self.size.height - 50 ) );
         
         
@@ -208,7 +209,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         
         backgroundNode.zPosition = -1;
         backgroundNode.position = CGPoint(x: self.size.width/2, y: self.size.height/2);
-        
+            
         topBulletCollector.position = CGPoint(x: 0, y: self.size.height);
         btmBulletCollector.position = CGPoint(x: self.size.width, y: 0);
         topBulletCollector.xScale = 5;
