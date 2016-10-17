@@ -13,7 +13,7 @@ class GameViewController: UIViewController {
     
     // MARK: - iVars -
     
-    var gameScene: GameScene?
+//    var gameScene: GameScene?
     var skView: SKView!
     let showDebugData = true;
     let screenbounds: CGRect = UIScreen.main.bounds
