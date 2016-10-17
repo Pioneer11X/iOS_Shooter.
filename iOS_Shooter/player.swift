@@ -11,5 +11,6 @@ class Player{
     var score:Int = 0;
     var hits:Int = 0;
     var lifes:Int = 3;
+    var lifesAtLastLevel = 3;
     
 }

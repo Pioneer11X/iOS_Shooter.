@@ -97,7 +97,7 @@ class GameViewController: UIViewController {
         self.gameData.fontName = "Futura-CondensedExtraBold";
         self.gameData.currentLevel = 1;
         self.gameData.player1 = Player();
-        self.gameData.player2 = Player();
+//        self.gameData.player2 = Player();
     }
     
  
@@ -111,6 +111,5 @@ class GameData {
     var fontName: String = "Futura-CondensedExtraBold";
     var currentLevel = 0;
     var player1: Player = Player();
-    var player2: Player = Player();
     
 }

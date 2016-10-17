@@ -30,9 +30,6 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
     var comboLabel: SKLabelNode!;
     var newWeaponLabel: SKLabelNode!;
     var levelTimerLabel: SKLabelNode!;
-    
-    // MARK: - Pausing Labels -
-    var pauseTextLabel: SKLabelNode!;
     var gameData: GameData;
     var groundNode: SKSpriteNode! ;
     var sceneManager: GameViewController;
@@ -47,10 +44,14 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
     var comboEndInterval: Double = 1;
     var secondsLeft: Int = 30;
     
+    // MARK: - Pausing Labels -
+    var pauseTextLabel: SKLabelNode!;
+    
+    
     // MARK: - Pausing variables
     var resumeImageLabel: SKSpriteNode;
-    var reloadLevelLabel: SKSpriteNode?;
-    var goToMainMenuLabel: SKSpriteNode?;
+    var reloadLevelLabel: SKSpriteNode;
+    var goToMainMenuLabel: SKSpriteNode;
     
     // MARK: - Pausing Logic
     var gameLoopPaused:Bool = false{
@@ -65,6 +66,8 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         
         self.pauseTextLabel.text = "Resume";
         self.addChild(resumeImageLabel);
+        self.addChild(reloadLevelLabel);
+        self.addChild(goToMainMenuLabel);
         
 //        pauseTextLabel.removeFromParent();
 //        self.addChild(pauseTextLabel);
@@ -88,6 +91,8 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         self.physicsWorld.speed = 1.0;
         pauseTextLabel.text = "Pause";
         resumeImageLabel.removeFromParent();
+        reloadLevelLabel.removeFromParent();
+        goToMainMenuLabel.removeFromParent();
         
 
     }
@@ -129,6 +134,8 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         topBulletCollector = SKSpriteNode(imageNamed: "projectile");
         
         resumeImageLabel = SKSpriteNode(imageNamed: "play-button.png");
+        reloadLevelLabel = SKSpriteNode(imageNamed: "play-button.png");
+        goToMainMenuLabel = SKSpriteNode(imageNamed: "play-button.png");
         
         
         isTouching = false;
@@ -143,6 +150,18 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         resumeImageLabel.xScale = 0.5;
         resumeImageLabel.yScale = 0.5;
         resumeImageLabel.zPosition = 5.0;
+        
+        reloadLevelLabel.alpha = 0.7;
+        reloadLevelLabel.position = CGPoint(x: 3 * self.size.width/4, y: self.size.height/2);
+        reloadLevelLabel.xScale = 0.3;
+        reloadLevelLabel.yScale = 0.3;
+        reloadLevelLabel.zPosition = 5.0;
+        
+        goToMainMenuLabel.alpha = 0.7;
+        goToMainMenuLabel.position = CGPoint(x: self.size.width/4, y: self.size.height/2);
+        goToMainMenuLabel.xScale = 0.3;
+        goToMainMenuLabel.yScale = 0.3;
+        goToMainMenuLabel.zPosition = 5.0;
         
         
     }
@@ -635,6 +654,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
     
     var shootNSTimer = Timer();
     
+    // MARK: - Interactivity Methods
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
         guard let touch = touches.first else {
@@ -643,19 +663,21 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         touchLocation = touch.location(in: self)
         isTouching = true;
         
-        print("BP1");
         // Check if the scene is paused, and the user would like to resume.
         if gameLoopPaused{
-            print("BP2");
             if self.resumeImageLabel.contains(touchLocation!){
-                print("BP3");
                 runUnpauseAction();
                 gameLoopPaused = !gameLoopPaused;
+                return;
+            }else if self.reloadLevelLabel.contains(touchLocation!){
+                reloadLevel();
+                return;
+            }else if self.goToMainMenuLabel.contains(touchLocation!){
+                sceneManager.loadHomeScene();
                 return;
             }
         }
         
-        print("BP4");
         // touched tank
         if (touchLocation! - player1Node.position).length() < 50 {
             // do nothing
@@ -864,6 +886,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         if self.gameData.player1.score > ( 50 * currentLevel + 5 * currentLevel * currentLevel ) {
             // we move on to level 2
             
+            self.gameData.player1.lifesAtLastLevel = self.gameData.player1.lifes;
             let nextLevel = currentLevel + 1;
             var nextTankTime = levelData.tankTime - 1;
             var nextballoonDelayTime = levelData.balloonDelayTime * 0.9;
@@ -972,6 +995,14 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
             [SKAction.fadeAlpha(to: 1, duration: 0.5),
              SKAction.fadeAlpha(to: 0, duration: 0.1)]
         ));
+    }
+    
+    private func reloadLevel(){
+        // We need to reload the level. It means, we need to use the initialiser with the data we already passed it last time.
+        self.gameData.player1.score = currentLevel * 50 + 5 * currentLevel * currentLevel;
+        self.gameData.player1.lifes = self.gameData.player1.lifesAtLastLevel;
+        sceneManager.loadGameScene(level: self.levelData);
+        
     }
 }
 
