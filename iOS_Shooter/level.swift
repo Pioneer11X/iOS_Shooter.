@@ -867,22 +867,6 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         //        let projectileMove = SKAction.move(to: CGPoint(x:self.size.width,y:80), duration: 3.0);
         let projectileMove = SKAction.move(to: projectileDest, duration: 3.0);
         let projectileMoveDone = SKAction.removeFromParent();
-        //        projectile.run(
-        //            SKAction.repeatForever(
-        //                SKAction.sequence(
-        //                    [
-        //                    SKAction.sequence(
-        //                        [
-        //                        projectileMove,
-        //                        projectileMoveDone,
-        //                        ]
-        //                    ),
-        //                    // TODO: -- The control never reaches this point since, the bullet never ends.
-        //                    SKAction.wait(forDuration: 2)
-        //                    ]
-        //                )
-        //            )
-        //        );
         projectile.run(
             SKAction.repeatForever(
                 SKAction.sequence(
@@ -1071,11 +1055,10 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
     
     private func backgroundPause(){
         NotificationCenter.default.addObserver(self, selector: #selector(callPauseMenu), name: NSNotification.Name.UIApplicationWillResignActive, object: nil);
-//        NotificationCenter.default.addObserver(self, selector: #selector(runPauseAction), name: NSNotification.Name.UIApplicationDidEnterBackground, object: nil);
-//        NotificationCenter.default.addObserver(self, selector: #selector(runPauseAction), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil);
     }
     
     @objc private func callPauseMenu(){
+        // we need to call pause and set the boolean flag.
         runPauseAction();
         self.gameLoopPaused = true;
     }
