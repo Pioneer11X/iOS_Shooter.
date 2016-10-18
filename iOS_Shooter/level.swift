@@ -51,7 +51,8 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
     var scoreBar: SKShapeNode;
     
     // MARK: - Pausing Labels -
-    var pauseTextLabel: SKLabelNode!;
+    //var pauseTextLabel: SKLabelNode!;
+    var pauseTextLabel: SKSpriteNode;
     
     
     // MARK: - Pausing variables
@@ -70,7 +71,6 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
     private func runPauseAction(){
         print(#function);
         
-        self.pauseTextLabel.text = "Resume";
         self.addChild(resumeImageLabel);
         self.addChild(reloadLevelLabel);
         self.addChild(goToMainMenuLabel);
@@ -95,7 +95,6 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         
         self.view?.isPaused = false;
         self.physicsWorld.speed = 1.0;
-        pauseTextLabel.text = "Pause";
         resumeImageLabel.removeFromParent();
         reloadLevelLabel.removeFromParent();
         goToMainMenuLabel.removeFromParent();
@@ -126,12 +125,13 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         comboLabel = SKLabelNode(fontNamed: gameData.fontName);
         newWeaponLabel = SKLabelNode(fontNamed: gameData.fontName);
         levelTimerLabel = SKLabelNode(fontNamed: "Andale Mono");
-        pauseTextLabel = SKLabelNode(fontNamed: gameData.fontName);
+        pauseTextLabel = SKSpriteNode(imageNamed: "pause-2.png");
         
         self.gameData = gameData;
         self.currentLevel = levelData.currentLevel;
         self.levelData = levelData;
         self.sceneManager = sceneManager;
+        
         
         backgroundNode = SKSpriteNode(imageNamed: "birthday-background-placeholder");
         groundNode = SKSpriteNode(imageNamed: "ground");
@@ -139,9 +139,9 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         btmBulletCollector = SKSpriteNode(imageNamed: "projectile");
         topBulletCollector = SKSpriteNode(imageNamed: "projectile");
         
-        resumeImageLabel = SKSpriteNode(imageNamed: "play-button.png");
-        reloadLevelLabel = SKSpriteNode(imageNamed: "play-button.png");
-        goToMainMenuLabel = SKSpriteNode(imageNamed: "play-button.png");
+        resumeImageLabel = SKSpriteNode(imageNamed: "multimedia-file-edited.png");
+        reloadLevelLabel = SKSpriteNode(imageNamed: "refresh-button.png");
+        goToMainMenuLabel = SKSpriteNode(imageNamed: "home-button.png");
         
         isTouching = false;
         touchLocation = nil;
@@ -184,6 +184,8 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         goToMainMenuLabel.xScale = 0.3;
         goToMainMenuLabel.yScale = 0.3;
         goToMainMenuLabel.zPosition = 5.0;
+
+        backgroundPause();
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -201,11 +203,14 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         initLabel(label: player1LifeLabel, gameData: gameData, text: "Lives: \(gameData.player1.lifes)", pos: CGPoint(x: self.size.width/4, y: self.size.height - 100 ) );
         initLabel(label: bigLevelLabel, gameData: gameData, text: "LEVEL UP!", pos: CGPoint(x: self.size.width/2, y: self.size.height/2 ) );
         initLabel(label: newWeaponLabel, gameData: gameData, text: "Basic Gun", pos: CGPoint(x: self.size.width/2 , y: self.size.height/2 ) );
-        initLabel(label: highScoreLabel, gameData: gameData, text: "Highscore: \(AppData.staticData.highScore)", pos: CGPoint(x: 3 * self.size.width/4, y: self.size.height - 100 ) );
-        initLabel(label: levelTimerLabel, gameData: gameData, text: "30", pos: CGPoint(x: self.size.width/8 , y: self.size.height/4 ) );
-        levelTimerLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentMode.left;
-        initLabel(label: pauseTextLabel, gameData: gameData, text: "Pause", pos: CGPoint(x: 3 * self.size.width/4 , y: self.size.height - 50 ) );
-        
+
+//        initLabel(label: highScoreLabel, gameData: gameData, text: "Highscore: \(AppData.staticData.highScore)", pos: CGPoint(x: 3 * self.size.width/4, y: self.size.height - 100 ) );
+        initLabel(label: highScoreLabel, gameData: gameData, text: "Highscore: \(AppData.staticData.highScore)", pos: CGPoint(x: 2 * self.size.width/4, y: self.size.height - 100 ) );
+        initLabel(label: levelTimerLabel, gameData: gameData, text: "30", pos: CGPoint(x: self.size.width/2 , y: self.size.height/4 ) );
+//        initLabel(label: pauseTextLabel, gameData: gameData, text: "Pause", pos: CGPoint(x: 3 * self.size.width/4 , y: self.size.height - 50 ) );
+        pauseTextLabel.position = CGPoint(x: 5 * self.size.width/6 , y: self.size.height - 75 );
+        pauseTextLabel.xScale = 0.1;
+        pauseTextLabel.yScale = 0.1;
         
         levelTimerLabel.fontColor = UIColor.black;
         levelTimerLabel.fontSize = gameData.fontSize * 30;
@@ -731,7 +736,6 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         if ( pauseTextLabel.contains(touchLocation!) && !gameLoopPaused ){
             
             if ( !gameLoopPaused ){
-                pauseTextLabel.text = "Unpause";
                 runPauseAction();
 //                self.sceneManager.loadPauseScene();
             } else {
@@ -1059,12 +1063,25 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
     
     private func reloadLevel(){
         // We need to reload the level. It means, we need to use the initialiser with the data we already passed it last time.
-        self.gameData.player1.score = currentLevel * 50 + 5 * currentLevel * currentLevel;
+        self.gameData.player1.score = (currentLevel - 1) * 50 + 5 * ( currentLevel - 1 ) * ( currentLevel - 1 );
         self.gameData.player1.lifes = self.gameData.player1.lifesAtLastLevel;
         sceneManager.loadGameScene(level: self.levelData);
         
     }
+    
+    private func backgroundPause(){
+        NotificationCenter.default.addObserver(self, selector: #selector(callPauseMenu), name: NSNotification.Name.UIApplicationWillResignActive, object: nil);
+//        NotificationCenter.default.addObserver(self, selector: #selector(runPauseAction), name: NSNotification.Name.UIApplicationDidEnterBackground, object: nil);
+//        NotificationCenter.default.addObserver(self, selector: #selector(runPauseAction), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil);
+    }
+    
+    @objc private func callPauseMenu(){
+        runPauseAction();
+        self.gameLoopPaused = true;
+    }
 }
+
+
 
 // http://stackoverflow.com/questions/25050309/swift-random-float-between-0-and-1
 extension Range {
