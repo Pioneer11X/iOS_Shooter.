@@ -120,7 +120,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         newWeaponLabel = SKLabelNode(fontNamed: gameData.fontName);
         levelTimerLabel = SKLabelNode(fontNamed: gameData.fontName);
 //        pauseTextLabel = SKLabelNode(fontNamed: gameData.fontName);
-        pauseTextLabel = SKSpriteNode(imageNamed: "black-wrench.png");
+        pauseTextLabel = SKSpriteNode(imageNamed: "pause-2.png");
         
         self.gameData = gameData;
         self.currentLevel = levelData.currentLevel;
