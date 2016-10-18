@@ -16,7 +16,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
     
     
     // MARK: - projectile type data
-    enum ProjectileType { case NORMAL, SPARKLE, LARGE };
+    enum ProjectileType:Int { case NORMAL = 0, SPARKLE, LARGE, RAILGUN };
     var projectiles:Dictionary<SKNode, ProjectileType> = [:];
     
     // MARK: - iVars for Levels
@@ -381,6 +381,9 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
                         
                     case .LARGE:
                         break;
+                    
+                    case .RAILGUN:
+                        break;
                         
                     default:
                         s.removeFromParent();
@@ -458,6 +461,9 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
                         break;
                         
                     case .LARGE:
+                        break;
+                        
+                    case .RAILGUN:
                         break;
                         
                     default:
@@ -872,19 +878,18 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         
         //let projectile = SKSpriteNode(imageNamed: "projectile");
         var projectile:SKEmitterNode!
-        // switch based on weapon
+        // assign appropriate partcle
         if (weapon == .SPARKLE) {
             projectile = SKEmitterNode(fileNamed: "ChainParticle")!
-            projectiles[projectile] = .SPARKLE;
+        } else if (weapon == .RAILGUN) {
+            projectile = SKEmitterNode(fileNamed: "Laser")!
         }
-        if (weapon == .LARGE) {
+        else {
             projectile = SKEmitterNode(fileNamed: "BigShot")!
-            projectiles[projectile] = .LARGE;
         }
-        if (weapon == .NORMAL) {
-            projectile = SKEmitterNode(fileNamed: "BigShot")!
-            projectiles[projectile] = .NORMAL;
-        }
+        // set type
+        projectiles[projectile] = weapon;
+        // set starting pos
         projectile.position = CGPoint(x: player1Node.position.x + player1Node.size.width/3, y: 80 );
         projectile.targetNode = self;
         
@@ -917,8 +922,21 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         projectile.physicsBody?.collisionBitMask = PhysicsCategory.None;
         projectile.physicsBody?.affectedByGravity = false;
         
+        var duration = 3.0;
+        // custom weapon speeds
+        switch (weapon) {
+        case .RAILGUN:
+            duration = 0.5;
+            break;
+        case .LARGE:
+            duration = 5.0;
+            break;
+        default:
+            break;
+        }
+        
         //        let projectileMove = SKAction.move(to: CGPoint(x:self.size.width,y:80), duration: 3.0);
-        let projectileMove = SKAction.move(to: projectileDest, duration: 3.0);
+        let projectileMove = SKAction.move(to: projectileDest, duration: duration);
         let projectileMoveDone = SKAction.removeFromParent();
         projectile.run(
             SKAction.repeatForever(
@@ -1065,21 +1083,23 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         // sound
         run(SKAction.playSoundFileNamed("ChangeWeapon.wav", waitForCompletion: false))
         // Change weapon
-        if (randomBetween(min: 0, max: 2) > 0) {
-            weapon = .SPARKLE;
-        } else {
-            weapon = .LARGE;
-        }
+        weapon = ProjectileType(rawValue: randomBetween(min: 1, max: 3))!;
     }
     
     func showNewWeaponText(origin:CGPoint) {
-        if (randomBetween(min: 0, max: 2) > 0)
-        {
-            newWeaponLabel.text = "GOT: Sparkle Shot"
-            weapon = .SPARKLE;
-        } else {
-            newWeaponLabel.text = "GOT: Power Shot"
-            weapon = .LARGE;
+        switch (weapon) {
+        case .SPARKLE:
+            newWeaponLabel.text = "Sparkle Shot";
+            break;
+        case .LARGE:
+            newWeaponLabel.text = "Power Shot";
+            break;
+        case .RAILGUN:
+            newWeaponLabel.text = "Railgun";
+            break;
+        default:
+            newWeaponLabel.text = "???";
+            break;
         }
         newWeaponLabel.removeAllActions();
         //newWeaponLabel.alpha = 0;
