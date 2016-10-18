@@ -603,7 +603,13 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
 //        }
         
         if randomBetween(min: 0, max: 3) > 1 {
-            callballoonProjectile(balloon: balloon)
+            balloon.run(
+                SKAction.sequence( [
+                SKAction.wait(  forDuration: Double( (Float(0)..<Float(2)).random() )  ),
+                SKAction.run({
+                    self.callballoonProjectile(balloon: balloon)
+                })
+            ] ) );
         }
     }
     
@@ -942,10 +948,10 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
             
             self.gameData.player1.lifesAtLastLevel = self.gameData.player1.lifes;
             let nextLevel = currentLevel + 1;
-            var nextTankTime = levelData.tankTime - 0.1;
+            var nextTankTime = levelData.tankTime * 0.99;
             var nextballoonDelayTime = levelData.balloonDelayTime * 0.9;
             var nextballoonProjectileTime = levelData.balloonProjectileTime * 0.9;
-            var nextballoonTime = levelData.balloonTime * 0.8;
+            var nextballoonTime = levelData.balloonTime * 0.95;
             var nextTankDelayTime = levelData.tankDelayTime - 1;
             var nextTankProjectileTime = levelData.tankProjectileTime - 1;
             var nextShootChance = 0.05 + 0.1 * Double(currentLevel);
