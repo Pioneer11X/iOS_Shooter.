@@ -280,6 +280,10 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
             [
                 SKAction.run({
                     self.secondsLeft -= 1;
+                    if self.secondsLeft < 0 {
+                        self.gameData.player1.lifes = 0;
+                        self.updateLabels();
+                    }
                     self.levelTimerLabel.text = "\(self.secondsLeft)";
                 }),
                 SKAction.wait(forDuration: 1)
@@ -651,7 +655,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         if randomBetween(min: 0, max: 3) > 1 {
             balloon.run(
                 SKAction.sequence( [
-                SKAction.wait(  forDuration: Double( (Float(0)..<Float(2)).random() )  ),
+                SKAction.wait(  forDuration: Double( (Float(0)..<Float(5)).random() )  ),
                 SKAction.run({
                     self.callballoonProjectile(balloon: balloon)
                 })

@@ -18,22 +18,62 @@
                         <rect key="frame" x="0.0" y="0.0" width="1024" height="1366"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="E1k-i1-sTV">
-                                <frame key="frameInset" minX="541" minY="478" width="20" height="20"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </activityIndicatorView>
-                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" image="tank_by_florianrenner.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="Li0-pq-hvh"/>
+                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" misplaced="YES" image="birthday-background-placeholder.png" translatesAutoresizingMaskIntoConstraints="NO" id="SLs-Gh-tTB">
+                                <frame key="frameInset" minX="-90" minY="283" width="1200" height="801"/>
+                            </imageView>
+                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" fixedFrame="YES" image="white_balloon.png" translatesAutoresizingMaskIntoConstraints="NO" id="H9x-rj-2Gn">
+                                <frame key="frameInset" minX="305" minY="265" width="111" height="139"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                            </imageView>
+                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" fixedFrame="YES" image="white_balloon.png" translatesAutoresizingMaskIntoConstraints="NO" id="kQK-Rr-i9h">
+                                <frame key="frameInset" minX="541" minY="331" width="111" height="139"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                            </imageView>
+                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" fixedFrame="YES" image="white_balloon.png" translatesAutoresizingMaskIntoConstraints="NO" id="jjn-m5-F9b">
+                                <frame key="frameInset" minX="846" minY="390" width="111" height="139"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                            </imageView>
+                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" fixedFrame="YES" image="white_balloon.png" translatesAutoresizingMaskIntoConstraints="NO" id="lCG-dI-Fj0">
+                                <frame key="frameInset" minX="265" minY="573" width="111" height="139"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                            </imageView>
+                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" fixedFrame="YES" image="white_balloon.png" translatesAutoresizingMaskIntoConstraints="NO" id="NsI-17-Djc">
+                                <frame key="frameInset" minX="645" minY="675" width="111" height="139"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                            </imageView>
+                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" fixedFrame="YES" image="white_balloon.png" translatesAutoresizingMaskIntoConstraints="NO" id="BJ3-u3-yOK">
+                                <frame key="frameInset" minX="814" minY="953" width="111" height="139"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                            </imageView>
+                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" fixedFrame="YES" image="white_balloon.png" translatesAutoresizingMaskIntoConstraints="NO" id="ruV-TW-o6H">
+                                <frame key="frameInset" minX="733" minY="136" width="111" height="139"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                            </imageView>
+                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" fixedFrame="YES" image="white_balloon.png" translatesAutoresizingMaskIntoConstraints="NO" id="Wdv-Xu-Tgr">
+                                <frame key="frameInset" minX="450" minY="757" width="111" height="139"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                            </imageView>
+                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" fixedFrame="YES" image="white_balloon.png" translatesAutoresizingMaskIntoConstraints="NO" id="omw-Gq-3kH">
+                                <frame key="frameInset" minX="165" minY="859" width="111" height="139"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                            </imageView>
+                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" fixedFrame="YES" image="white_balloon.png" translatesAutoresizingMaskIntoConstraints="NO" id="S84-ev-xHx">
+                                <frame key="frameInset" minX="97" minY="331" width="111" height="139"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                            </imageView>
+                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" fixedFrame="YES" image="white_balloon.png" translatesAutoresizingMaskIntoConstraints="NO" id="lPH-PG-hPC">
+                                <frame key="frameInset" minY="675" width="111" height="139"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                            </imageView>
+                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" fixedFrame="YES" image="white_balloon.png" translatesAutoresizingMaskIntoConstraints="NO" id="lFP-oE-8YD">
+                                <frame key="frameInset" minX="196" minY="76" width="111" height="139"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="Li0-pq-hvh" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="0Ae-dV-NPJ"/>
-                            <constraint firstItem="Li0-pq-hvh" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="3mc-iE-zWy"/>
-                            <constraint firstAttribute="trailing" secondItem="Li0-pq-hvh" secondAttribute="trailing" id="49P-1j-Ptv"/>
-                            <constraint firstItem="Li0-pq-hvh" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="GUy-HS-zZ9"/>
-                            <constraint firstItem="Li0-pq-hvh" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="IST-E3-3p4"/>
-                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="Li0-pq-hvh" secondAttribute="bottom" id="hOh-lN-c8x"/>
-                            <constraint firstItem="Li0-pq-hvh" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="hZW-fz-CyL"/>
-                            <constraint firstItem="Li0-pq-hvh" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="mRe-Xt-93T"/>
+                            <constraint firstItem="SLs-Gh-tTB" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="aMe-Dh-wDN"/>
+                            <constraint firstItem="SLs-Gh-tTB" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="op5-Q8-wUB"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -43,6 +83,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="tank_by_florianrenner.jpg" width="683" height="850"/>
+        <image name="birthday-background-placeholder.png" width="1200" height="801"/>
+        <image name="white_balloon.png" width="111" height="139"/>
     </resources>
 </document>

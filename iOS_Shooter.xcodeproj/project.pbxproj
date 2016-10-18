@@ -421,7 +421,7 @@
 				DEVELOPMENT_TEAM = KT6L3A8T5R;
 				INFOPLIST_FILE = iOS_Shooter/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.sample.iOS-Shooter";
+				PRODUCT_BUNDLE_IDENTIFIER = com.sample.PartyPopper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 2;
@@ -435,7 +435,7 @@
 				DEVELOPMENT_TEAM = KT6L3A8T5R;
 				INFOPLIST_FILE = iOS_Shooter/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.sample.iOS-Shooter";
+				PRODUCT_BUNDLE_IDENTIFIER = com.sample.PartyPopper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 2;
