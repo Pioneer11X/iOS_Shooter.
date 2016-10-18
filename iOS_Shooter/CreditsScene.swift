@@ -14,6 +14,7 @@ class CreditsScene: SKScene{
     // MARK: - iVars
     let sceneManager: GameViewController;
     var creditsLabel: SKLabelNode = SKLabelNode(fontNamed: fontNameConst);
+    var creditsLabel2: SKLabelNode = SKLabelNode(fontNamed: fontNameConst);
     var goBackLabel: SKLabelNode = SKLabelNode(fontNamed: fontNameConst);
     
     init(size: CGSize, scaleMode: SKSceneScaleMode, sceneManager: GameViewController) {
@@ -29,14 +30,15 @@ class CreditsScene: SKScene{
     override func didMove(to view: SKView) {
         
         backgroundColor = UIColor.yellow;
-        initLabels(labelName: creditsLabel, text: "Developers:\nSravan.\nBenjamin.", pos: CGPoint( x: self.size.width/2, y: self.size.height/4), fontSize: 36 );
+        initLabels(labelName: creditsLabel, text: "Developers:\nSravan.\nBenjamin.", pos: CGPoint( x: self.size.width/2, y: self.size.height/2), fontSize: 52 );
+        initLabels(labelName: creditsLabel2, text: "Pause Menu Icons: Freepik at flaticon.com", pos: CGPoint( x: self.size.width/2, y: self.size.height/4), fontSize: 36 );
         initLabels(labelName: goBackLabel, text: "Back", pos: CGPoint( x: self.size.width/2, y: 3 * self.size.height/4 ) , fontSize: 52);
         
     }
     
     private func initLabels(labelName: SKLabelNode, text:String, pos: CGPoint, fontSize: CGFloat ){
         labelName.text = text;
-        labelName.fontSize = 52;
+        labelName.fontSize = fontSize;
         labelName.fontColor = SKColor.red;
         labelName.position = pos;
         
