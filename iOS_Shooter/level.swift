@@ -127,6 +127,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         self.levelData = levelData;
         self.sceneManager = sceneManager;
         
+        
         backgroundNode = SKSpriteNode(imageNamed: "birthday-background-placeholder");
         groundNode = SKSpriteNode(imageNamed: "ground");
         
@@ -163,7 +164,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         goToMainMenuLabel.yScale = 0.3;
         goToMainMenuLabel.zPosition = 5.0;
         
-        
+        backgroundPause();
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -1006,7 +1007,20 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         sceneManager.loadGameScene(level: self.levelData);
         
     }
+    
+    private func backgroundPause(){
+        NotificationCenter.default.addObserver(self, selector: #selector(callPauseMenu), name: NSNotification.Name.UIApplicationWillResignActive, object: nil);
+//        NotificationCenter.default.addObserver(self, selector: #selector(runPauseAction), name: NSNotification.Name.UIApplicationDidEnterBackground, object: nil);
+//        NotificationCenter.default.addObserver(self, selector: #selector(runPauseAction), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil);
+    }
+    
+    @objc private func callPauseMenu(){
+        runPauseAction();
+        self.gameLoopPaused = true;
+    }
 }
+
+
 
 // http://stackoverflow.com/questions/25050309/swift-random-float-between-0-and-1
 extension Range {
