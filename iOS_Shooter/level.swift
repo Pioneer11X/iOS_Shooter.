@@ -384,8 +384,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         // MARK: - Player Shot -
         case 10:
             // You were shot.
-            // TODO: - Change back to subtract 1 -
-            self.gameData.player1.lifes += 1;
+            self.gameData.player1.lifes -= 1;
             updateLabels();
             run(SKAction.playSoundFileNamed("Hurt.wav", waitForCompletion: false))
             break;
