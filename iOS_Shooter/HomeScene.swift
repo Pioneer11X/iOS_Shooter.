@@ -22,6 +22,7 @@ class HomeScene:SKScene{
 //    var startGameButton: 
     var instructionsLabel: SKLabelNode = SKLabelNode(fontNamed: fontNameConst);
     var creditsLabel: SKLabelNode = SKLabelNode(fontNamed: fontNameConst);
+    var backgroundNode: SKSpriteNode = SKSpriteNode(imageNamed: "birthday-background-placeholder.png");
     
     init(size: CGSize, scaleMode: SKSceneScaleMode, sceneManager: GameViewController) {
         self.sceneManager = sceneManager;
@@ -40,6 +41,11 @@ class HomeScene:SKScene{
         //addChild(startGameLabel);
         initLabels(labelName: instructionsLabel, text: "Instructions", pos: CGPoint(x: self.size.width/2 , y: 2 * self.size.height/5), fSize: 52);
         initLabels(labelName: creditsLabel, text: "Credits", pos: CGPoint(x: self.size.width/2, y: self.size.height/5), fSize: 52);
+        
+        backgroundNode.position = CGPoint(x: self.size.width/2, y: self.size.height/2);
+        backgroundNode.zPosition = -1;
+        self.addChild(backgroundNode);
+        
         
         
     }
