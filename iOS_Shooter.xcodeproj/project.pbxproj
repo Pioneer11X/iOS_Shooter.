@@ -28,6 +28,7 @@
 		19A170A51DABF5CD007C3502 /* Birthday-Present-Transparent.png in Resources */ = {isa = PBXBuildFile; fileRef = 19A170A41DABF5CD007C3502 /* Birthday-Present-Transparent.png */; };
 		19C4744D1DABFBE000D9D0FD /* SpecialParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 19C4744C1DABFBE000D9D0FD /* SpecialParticle.sks */; };
 		19CEA4311D8E670E0098620E /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 19CEA42F1D8E670E0098620E /* spark.png */; };
+		19DD1B8B1DB5C371006A25B0 /* Laser.sks in Resources */ = {isa = PBXBuildFile; fileRef = 19DD1B8A1DB5C371006A25B0 /* Laser.sks */; };
 		A001C5F51DAA08ED007F81E2 /* CreditsScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = A001C5F41DAA08ED007F81E2 /* CreditsScene.swift */; };
 		A002A3D81D96BF9000BC56E3 /* HomeScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = A002A3D71D96BF9000BC56E3 /* HomeScene.swift */; };
 		A03E70581D885790006C50E9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A03E70571D885790006C50E9 /* AppDelegate.swift */; };
@@ -67,6 +68,7 @@
 		19A170A41DABF5CD007C3502 /* Birthday-Present-Transparent.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Birthday-Present-Transparent.png"; path = "Assets.xcassets/Assets.xcassets/Birthday-Present-Transparent.png"; sourceTree = "<group>"; };
 		19C4744C1DABFBE000D9D0FD /* SpecialParticle.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = SpecialParticle.sks; sourceTree = "<group>"; };
 		19CEA42F1D8E670E0098620E /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = spark.png; path = ../spark.png; sourceTree = "<group>"; };
+		19DD1B8A1DB5C371006A25B0 /* Laser.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Laser.sks; sourceTree = "<group>"; };
 		A001C5F41DAA08ED007F81E2 /* CreditsScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreditsScene.swift; sourceTree = "<group>"; };
 		A002A3D71D96BF9000BC56E3 /* HomeScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeScene.swift; sourceTree = "<group>"; };
 		A03E70541D885790006C50E9 /* iOS_Shooter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iOS_Shooter.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -137,6 +139,7 @@
 				1987A6D91DA32D0F00F7FBE7 /* ChainParticle.sks */,
 				19C4744C1DABFBE000D9D0FD /* SpecialParticle.sks */,
 				190FC4101DA201E7006D311B /* Pop.sks */,
+				19DD1B8A1DB5C371006A25B0 /* Laser.sks */,
 				190FC4181DA2122D006D311B /* Confetti.sks */,
 				1983127A1D9A1D8400346871 /* tank_by_florianrenner.jpg */,
 				A07C89E21DB4122500D2833D /* play-button.png */,
@@ -249,6 +252,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				19DD1B8B1DB5C371006A25B0 /* Laser.sks in Resources */,
 				1983127D1D9A1FA900346871 /* SmokeTrail.sks in Resources */,
 				A03E705A1D885790006C50E9 /* GameScene.sks in Resources */,
 				19CEA4311D8E670E0098620E /* spark.png in Resources */,
