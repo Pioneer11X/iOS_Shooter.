@@ -15,6 +15,10 @@ import Foundation;
 class LevelScene: SKScene, SKPhysicsContactDelegate {
     
     
+    // MARK: - projectile type data
+    enum ProjectileType { case NORMAL, SPARKLE, LARGE };
+    var projectiles:Dictionary<SKNode, ProjectileType> = [:];
+    
     // MARK: - iVars for Levels
     
     var currentLevel: Int;
@@ -38,11 +42,13 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
     var isTouching: Bool;
     var touchLocation: CGPoint?;
     var touchCooldown: Bool;
-    var weapon: String = "simpleGun";
+    var weapon: ProjectileType = .NORMAL;
     var combo: Int = 0;
     var comboEndTimer: Timer!;
     var comboEndInterval: Double = 1;
     var secondsLeft: Int = 30;
+    var scoreBarOutline: SKShapeNode;
+    var scoreBar: SKShapeNode;
     
     // MARK: - Pausing Labels -
     //var pauseTextLabel: SKLabelNode!;
@@ -118,8 +124,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         highScoreLabel = SKLabelNode(fontNamed: gameData.fontName);
         comboLabel = SKLabelNode(fontNamed: gameData.fontName);
         newWeaponLabel = SKLabelNode(fontNamed: gameData.fontName);
-        levelTimerLabel = SKLabelNode(fontNamed: gameData.fontName);
-//        pauseTextLabel = SKLabelNode(fontNamed: gameData.fontName);
+        levelTimerLabel = SKLabelNode(fontNamed: "Andale Mono");
         pauseTextLabel = SKSpriteNode(imageNamed: "pause-2.png");
         
         self.gameData = gameData;
@@ -138,11 +143,27 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         reloadLevelLabel = SKSpriteNode(imageNamed: "refresh-button.png");
         goToMainMenuLabel = SKSpriteNode(imageNamed: "home-button.png");
         
-        
         isTouching = false;
         touchLocation = nil;
         
         touchCooldown = false;
+        
+        // player score UI
+        // fill
+        scoreBar = SKShapeNode.init(rect: CGRect.init(x:0,y:0,width:size.width/2,height:30));
+        scoreBar.strokeColor = UIColor.init(white: 0, alpha: 0);
+        scoreBar.fillColor = UIColor.green;
+        scoreBar.zPosition = 10;
+        // outline
+        scoreBarOutline = SKShapeNode.init(rect: CGRect.init(x:0,y:0,width:size.width/2,height:30));
+        scoreBarOutline.lineWidth = 5;
+        scoreBarOutline.zPosition = 11;
+        scoreBarOutline.strokeColor = UIColor.white;
+        // bottom of the screen
+        scoreBar.position = CGPoint(x: size.width/4,y: 10);
+        scoreBarOutline.position = CGPoint(x: size.width/4,y: 10);
+        // start empty
+        scoreBar.xScale = 0;
         
         super.init(size:size);
         
@@ -163,7 +184,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         goToMainMenuLabel.xScale = 0.3;
         goToMainMenuLabel.yScale = 0.3;
         goToMainMenuLabel.zPosition = 5.0;
-        
+
         backgroundPause();
     }
     
@@ -182,6 +203,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         initLabel(label: player1LifeLabel, gameData: gameData, text: "Lives: \(gameData.player1.lifes)", pos: CGPoint(x: self.size.width/4, y: self.size.height - 100 ) );
         initLabel(label: bigLevelLabel, gameData: gameData, text: "LEVEL UP!", pos: CGPoint(x: self.size.width/2, y: self.size.height/2 ) );
         initLabel(label: newWeaponLabel, gameData: gameData, text: "Basic Gun", pos: CGPoint(x: self.size.width/2 , y: self.size.height/2 ) );
+
 //        initLabel(label: highScoreLabel, gameData: gameData, text: "Highscore: \(AppData.staticData.highScore)", pos: CGPoint(x: 3 * self.size.width/4, y: self.size.height - 100 ) );
         initLabel(label: highScoreLabel, gameData: gameData, text: "Highscore: \(AppData.staticData.highScore)", pos: CGPoint(x: 2 * self.size.width/4, y: self.size.height - 100 ) );
         initLabel(label: levelTimerLabel, gameData: gameData, text: "30", pos: CGPoint(x: self.size.width/2 , y: self.size.height/4 ) );
@@ -212,7 +234,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         
         backgroundNode.zPosition = -1;
         backgroundNode.position = CGPoint(x: self.size.width/2, y: self.size.height/2);
-        
+            
         topBulletCollector.position = CGPoint(x: 0, y: self.size.height);
         btmBulletCollector.position = CGPoint(x: self.size.width, y: 0);
         topBulletCollector.xScale = 5;
@@ -223,7 +245,8 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         initPhysics(bulletCollector: topBulletCollector);
         initPhysics(bulletCollector: btmBulletCollector);
         
-        
+        self.addChild(scoreBar);
+        self.addChild(scoreBarOutline);
         
         self.addChild(topBulletCollector);
         self.addChild(btmBulletCollector);
@@ -308,13 +331,31 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
             // You shot down a projectile coming towards you.
             // boom
             let explosionEffect = SKEmitterNode.init(fileNamed: "Pop");
-            var validNode:SKNode!;
-            if let aNode = contact.bodyA.node {
-                validNode = aNode;
-                
+            
+            // store a more clearly named reference to the projectiles
+            var playerProjectile:SKPhysicsBody!;
+            var otherProjectile:SKPhysicsBody!
+            
+            // which one is the player projectile?
+            if (contact.bodyA.categoryBitMask < contact.bodyB.categoryBitMask) {
+                playerProjectile = contact.bodyA;
+                otherProjectile = contact.bodyB;
             } else {
-                if let bNode = contact.bodyB.node {
-                    validNode = bNode;
+                playerProjectile = contact.bodyB;
+                otherProjectile = contact.bodyA;
+            }
+            
+            // since we are already checking the validity of the player proj node, store it for below
+            var playerProjectileNodeValid = false;
+            
+            // check which node (if any) can be used for position
+            var validNode:SKNode!;
+            if (playerProjectile.node != nil) {
+                playerProjectileNodeValid = true;
+                validNode = playerProjectile.node;
+            } else {
+                if let anotherNode = otherProjectile.node {
+                    validNode = anotherNode;
                 }
             }
             // get a new weapon
@@ -328,20 +369,14 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
             explosionEffect?.particleSize = CGSize.init(width: 20, height: 20);
             self.addChild(explosionEffect!);
             explosionEffect?.run(SKAction.sequence([SKAction.wait(forDuration: 1),SKAction.removeFromParent()]))
-            if (weapon == "tunnelGun") {
-                // remove enemy projectile
-                if (contact.bodyA.categoryBitMask < contact.bodyB.categoryBitMask) {
-                    contact.bodyA.node?.removeFromParent();
-                } else {
-                    contact.bodyB.node?.removeFromParent();
-                }
-                
-                break;
-            }
-            else {
-                // remove
-                contact.bodyA.node?.removeFromParent();
-                contact.bodyB.node?.removeFromParent();
+            
+            // remove enemy's projectile
+            otherProjectile.node?.removeFromParent();
+            
+            // large projectiles are not destroyed in collision
+            if (playerProjectileNodeValid && projectiles[playerProjectile.node!] != .LARGE) {
+                // remove player projectile
+                playerProjectile.node?.removeFromParent();
             }
             
             run(SKAction.playSoundFileNamed("Explosion3.wav", waitForCompletion: false))
@@ -349,7 +384,8 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         // MARK: - Player Shot -
         case 10:
             // You were shot.
-            self.gameData.player1.lifes += -1;
+            // TODO: - Change back to subtract 1 -
+            self.gameData.player1.lifes += 1;
             updateLabels();
             run(SKAction.playSoundFileNamed("Hurt.wav", waitForCompletion: false))
             break;
@@ -393,31 +429,34 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
                 self.addChild(confetti!);
                 confetti?.run(SKAction.sequence([SKAction.wait(forDuration: 2),SKAction.removeFromParent()]));
                 
-                switch (weapon) {
-                case "simpleGun":
-                    b.removeFromParent();
-                    shot?.removeFromParent();
+                // destroy the shot and other effects
+                if (shot != nil) {
+                    switch (projectiles[shot!]) {
+                    case .SPARKLE?:
+                        // chain reaction
+                        for _ in (0..<3) {
+                            makeExplosionProjectile(origin: b.position,
+                                direction: CGPoint.init(
+                                    x: Double((Float(-1)..<Float(1)).random()),
+                                    y: Double((Float(-1)..<Float(1)).random())
+                                )
+                            );
+                        }
+                        shot?.removeFromParent();
                         break;
-                case "chainReactionGun":
-                    // chain reaction
-                    for _ in (0..<3) {
-                        makeExplosionProjectile(origin: b.position,
-                                                direction: CGPoint.init(x: Double((Float(-1)..<Float(1)).random()),
-                                                                        y: Double((Float(-1)..<Float(1)).random())));
+                        
+                    case .LARGE?:
+                        break;
+                        
+                    default:
+                        shot?.removeFromParent();
+                        break;
                     }
-                    b.removeFromParent();
-                    shot?.removeFromParent();
-                    break;
-                    
-                case "tunnelGun":
-                    b.removeFromParent();
-                    break;
-                    
-                default:
-                    b.removeFromParent();
-                    shot?.removeFromParent();
-                    break;
                 }
+                
+                // destroy the balloon
+                b.removeFromParent();
+                
                 // clear timer
                 comboEndTimer?.invalidate();
                 // start next timer
@@ -569,7 +608,13 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
 //        }
         
         if randomBetween(min: 0, max: 3) > 1 {
-            callballoonProjectile(balloon: balloon)
+            balloon.run(
+                SKAction.sequence( [
+                SKAction.wait(  forDuration: Double( (Float(0)..<Float(2)).random() )  ),
+                SKAction.run({
+                    self.callballoonProjectile(balloon: balloon)
+                })
+            ] ) );
         }
     }
     
@@ -718,8 +763,8 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         // fire rate
         var fireRate:Double = 0.3;
         switch(weapon) {
-            case "tunnelGun":
-                fireRate = 0.5;
+            case .LARGE:
+                //fireRate = 0.5;
                 break;
             default:
                 break;
@@ -780,15 +825,20 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         //let projectile = SKSpriteNode(imageNamed: "projectile");
         var projectile:SKEmitterNode!
         // switch based on weapon
-        if (weapon == "chainReactionGun") {
-           projectile = SKEmitterNode(fileNamed: "ChainParticle")!
+        if (weapon == .SPARKLE) {
+            projectile = SKEmitterNode(fileNamed: "ChainParticle")!
+            projectiles[projectile] = .SPARKLE;
         } else {
-           projectile = SKEmitterNode(fileNamed: "BigShot")!
+            projectile = SKEmitterNode(fileNamed: "BigShot")!
+            projectiles[projectile] = .LARGE;
         }
         projectile.position = CGPoint(x: player1Node.position.x + player1Node.size.width/3, y: 80 );
         projectile.targetNode = self;
-        if (weapon == "tunnelGun") {
+        
+        var colliderSize = 20;
+        if (weapon == .LARGE) {
             projectile.particleSize = CGSize(width: 100, height: 100);
+            colliderSize = 40;
         }
         
         self.addChild(projectile);
@@ -807,7 +857,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         //projectile.zRotation = 0 - atan(direction.x/direction.y)
         
         // MARK: - Physics for the projectile shot by the player.
-        projectile.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 20,height: 20));
+        projectile.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: colliderSize,height: colliderSize));
         projectile.physicsBody?.isDynamic = true;
         projectile.physicsBody?.categoryBitMask = PhysicsCategory.PlayerProjectile;
         projectile.physicsBody?.contactTestBitMask = PhysicsCategory.Projectile + PhysicsCategory.Tank;
@@ -850,6 +900,7 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
     
     func makeExplosionProjectile(origin:CGPoint, direction:CGPoint) {
         let projectile = SKEmitterNode(fileNamed: "ChainParticle")!
+        projectiles[projectile] = .SPARKLE;
         projectile.position = origin;
         projectile.targetNode = self;
         self.addChild(projectile);
@@ -882,6 +933,16 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func updateLabels(){
+        
+        func scoreCalc(lvl:Int)->Int {
+            return 50 * lvl + 5 * lvl * lvl
+        }
+        
+        // update score bar
+        self.scoreBar.xScale =
+            CGFloat( self.gameData.player1.score  - scoreCalc(lvl: currentLevel-1) ) /
+            CGFloat( scoreCalc(lvl: currentLevel) - scoreCalc(lvl: currentLevel-1) );
+        
         self.gameData.currentLevel = currentLevel;
         if self.gameData.player1.lifes < 1 {
             self.sceneManager.loadGameOverScene();
@@ -891,10 +952,10 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
             
             self.gameData.player1.lifesAtLastLevel = self.gameData.player1.lifes;
             let nextLevel = currentLevel + 1;
-            var nextTankTime = levelData.tankTime - 1;
+            var nextTankTime = levelData.tankTime * 0.99;
             var nextballoonDelayTime = levelData.balloonDelayTime * 0.9;
             var nextballoonProjectileTime = levelData.balloonProjectileTime * 0.9;
-            var nextballoonTime = levelData.balloonTime * 0.8;
+            var nextballoonTime = levelData.balloonTime * 0.95;
             var nextTankDelayTime = levelData.tankDelayTime - 1;
             var nextTankProjectileTime = levelData.tankProjectileTime - 1;
             var nextShootChance = 0.05 + 0.1 * Double(currentLevel);
@@ -967,9 +1028,9 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         run(SKAction.playSoundFileNamed("ChangeWeapon.wav", waitForCompletion: false))
         // Change weapon
         if (randomBetween(min: 0, max: 2) > 0) {
-            weapon = "chainReactionGun";
+            weapon = .SPARKLE;
         } else {
-            weapon = "tunnelGun";
+            weapon = .LARGE;
         }
     }
     
@@ -977,10 +1038,10 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         if (randomBetween(min: 0, max: 2) > 0)
         {
             newWeaponLabel.text = "GOT: Sparkle Shot"
-            weapon = "chainReactionGun";
+            weapon = .SPARKLE;
         } else {
             newWeaponLabel.text = "GOT: Power Shot"
-            weapon = "tunnelGun";
+            weapon = .LARGE;
         }
         newWeaponLabel.removeAllActions();
         //newWeaponLabel.alpha = 0;
