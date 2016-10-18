@@ -45,7 +45,8 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
     var secondsLeft: Int = 30;
     
     // MARK: - Pausing Labels -
-    var pauseTextLabel: SKLabelNode!;
+    //var pauseTextLabel: SKLabelNode!;
+    var pauseTextLabel: SKSpriteNode;
     
     
     // MARK: - Pausing variables
@@ -64,7 +65,6 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
     private func runPauseAction(){
         print(#function);
         
-        self.pauseTextLabel.text = "Resume";
         self.addChild(resumeImageLabel);
         self.addChild(reloadLevelLabel);
         self.addChild(goToMainMenuLabel);
@@ -89,7 +89,6 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         
         self.view?.isPaused = false;
         self.physicsWorld.speed = 1.0;
-        pauseTextLabel.text = "Pause";
         resumeImageLabel.removeFromParent();
         reloadLevelLabel.removeFromParent();
         goToMainMenuLabel.removeFromParent();
@@ -120,7 +119,8 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         comboLabel = SKLabelNode(fontNamed: gameData.fontName);
         newWeaponLabel = SKLabelNode(fontNamed: gameData.fontName);
         levelTimerLabel = SKLabelNode(fontNamed: gameData.fontName);
-        pauseTextLabel = SKLabelNode(fontNamed: gameData.fontName);
+//        pauseTextLabel = SKLabelNode(fontNamed: gameData.fontName);
+        pauseTextLabel = SKSpriteNode(imageNamed: "black-wrench.png");
         
         self.gameData = gameData;
         self.currentLevel = levelData.currentLevel;
@@ -133,9 +133,9 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         btmBulletCollector = SKSpriteNode(imageNamed: "projectile");
         topBulletCollector = SKSpriteNode(imageNamed: "projectile");
         
-        resumeImageLabel = SKSpriteNode(imageNamed: "play-button.png");
-        reloadLevelLabel = SKSpriteNode(imageNamed: "play-button.png");
-        goToMainMenuLabel = SKSpriteNode(imageNamed: "play-button.png");
+        resumeImageLabel = SKSpriteNode(imageNamed: "multimedia-file-edited.png");
+        reloadLevelLabel = SKSpriteNode(imageNamed: "refresh-button.png");
+        goToMainMenuLabel = SKSpriteNode(imageNamed: "home-button.png");
         
         
         isTouching = false;
@@ -181,10 +181,13 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         initLabel(label: player1LifeLabel, gameData: gameData, text: "Lives: \(gameData.player1.lifes)", pos: CGPoint(x: self.size.width/4, y: self.size.height - 100 ) );
         initLabel(label: bigLevelLabel, gameData: gameData, text: "LEVEL UP!", pos: CGPoint(x: self.size.width/2, y: self.size.height/2 ) );
         initLabel(label: newWeaponLabel, gameData: gameData, text: "Basic Gun", pos: CGPoint(x: self.size.width/2 , y: self.size.height/2 ) );
-        initLabel(label: highScoreLabel, gameData: gameData, text: "Highscore: \(AppData.staticData.highScore)", pos: CGPoint(x: 3 * self.size.width/4, y: self.size.height - 100 ) );
+//        initLabel(label: highScoreLabel, gameData: gameData, text: "Highscore: \(AppData.staticData.highScore)", pos: CGPoint(x: 3 * self.size.width/4, y: self.size.height - 100 ) );
+        initLabel(label: highScoreLabel, gameData: gameData, text: "Highscore: \(AppData.staticData.highScore)", pos: CGPoint(x: 2 * self.size.width/4, y: self.size.height - 100 ) );
         initLabel(label: levelTimerLabel, gameData: gameData, text: "30", pos: CGPoint(x: self.size.width/2 , y: self.size.height/4 ) );
-        initLabel(label: pauseTextLabel, gameData: gameData, text: "Pause", pos: CGPoint(x: 3 * self.size.width/4 , y: self.size.height - 50 ) );
-        
+//        initLabel(label: pauseTextLabel, gameData: gameData, text: "Pause", pos: CGPoint(x: 3 * self.size.width/4 , y: self.size.height - 50 ) );
+        pauseTextLabel.position = CGPoint(x: 5 * self.size.width/6 , y: self.size.height - 75 );
+        pauseTextLabel.xScale = 0.1;
+        pauseTextLabel.yScale = 0.1;
         
         levelTimerLabel.fontColor = UIColor.black;
         levelTimerLabel.fontSize = gameData.fontSize * 30;
@@ -687,7 +690,6 @@ class LevelScene: SKScene, SKPhysicsContactDelegate {
         if ( pauseTextLabel.contains(touchLocation!) && !gameLoopPaused ){
             
             if ( !gameLoopPaused ){
-                pauseTextLabel.text = "Unpause";
                 runPauseAction();
 //                self.sceneManager.loadPauseScene();
             } else {
